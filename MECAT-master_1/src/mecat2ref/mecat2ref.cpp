@@ -246,6 +246,64 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
     return (kk);
 
 }
+//自己加的
+int chang_refer_fastqfile(const char *fastaq, const char *fenfolder)
+{
+    FILE *fp, *ot;
+    int kk = 0,read_len;
+    char read_name[1000], onedata[RM], buff1[1000], buff2[RM], *fq, tempstr[200], *oq,ch;
+    sprintf(tempstr, "%s/refer.fq", fenfolder);
+    fp = fopen(fastaq, "r");
+    ot = fopen(tempstr, "w");
+    fq = (char *)malloc(100000000);
+    setvbuf(fp, fq, _IOFBF, 100000000);
+    oq = (char *)malloc(100000000);
+    setvbuf(ot, oq, _IOFBF, 100000000);
+    int num_read_items;
+    ch=getc(fp);
+    if(ch=='>')
+    {
+        kk=0;
+        for (; ch!=EOF; ch=getc(fp))
+        {
+            if(ch=='>')
+            {
+                num_read_items = fscanf(fp,"%[^\n]s",read_name);
+                assert(num_read_items = 1);
+                if(kk>0)
+                {
+                    onedata[read_len]='\0';
+                    fprintf(ot, "%d\t\%d\t%s\n", kk-1,read_len,onedata);
+                    read_len=0;
+                    kk++;
+                }
+                else
+                {
+                    kk++;
+                    read_len=0;
+                }
+            }
+            else if(ch!='\n'&&ch!='\r')onedata[read_len++]=ch;
+        }
+        onedata[read_len]='\0';
+        fprintf(ot, "%d\t\%d\t%s\n", kk-1,read_len,onedata);
+    }
+    else
+    {
+        fseek(fp, 0L, SEEK_SET);
+        while (fscanf(fp, "%[^\n]s", read_name) != EOF && fscanf(fp, "%s\n", onedata) != EOF && fscanf(fp, "%[^\n]s", buff1) != EOF && fscanf(fp, "%s\n", buff2) != EOF)
+        {
+            read_len=strlen(onedata);
+            fprintf(ot, "%d\t%d\t%s\n", ++kk,read_len,onedata);
+        }
+    }
+    fclose(fp);
+    fclose(ot);
+    free(fq);
+    free(oq);
+    return (kk);
+    
+}
 
 int firsttask(int argc, char *argv[])
 {
@@ -254,6 +312,7 @@ int firsttask(int argc, char *argv[])
 	if (flag == -1) { print_usage(); exit(1); }
 	
     int readcount = chang_fastqfile(options->reads, options->wrk_dir);
+    int refer_readcount=chang_refer_fastqfile(options->reference,options->wrk_dir);
 	char kkkkk[1024];
     sprintf(kkkkk, "config.txt");
     FILE* fileout = fopen(kkkkk, "w");
