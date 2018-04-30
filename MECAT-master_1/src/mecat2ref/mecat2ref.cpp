@@ -255,10 +255,10 @@ int chang_refer_fastqfile(const char *fastaq, const char *fenfolder)
     sprintf(tempstr, "%s/refer.fq", fenfolder);
     fp = fopen(fastaq, "r");
     ot = fopen(tempstr, "w");
-    fq = (char *)malloc(100000000);
-    setvbuf(fp, fq, _IOFBF, 100000000);
-    oq = (char *)malloc(100000000);
-    setvbuf(ot, oq, _IOFBF, 100000000);
+    fq = (char *)malloc(1000000000);
+    setvbuf(fp, fq, _IOFBF, 1000000000);
+    oq = (char *)malloc(1000000000);
+    setvbuf(ot, oq, _IOFBF, 1000000000);
     int num_read_items;
     ch=getc(fp);
     if(ch=='>')
