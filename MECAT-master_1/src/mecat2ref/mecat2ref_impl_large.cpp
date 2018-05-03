@@ -422,7 +422,7 @@ static void reference_mapping(int threadint)
                         for(i=0; i<count1; i++,leadarray++)
                         {
                             templong=(*leadarray)/ZV;
-                            u_k=(*leadarray)%ZV;
+                            u_k=(*leadarray)%ZV;//zv为1000
                             if(templong>=0)
                             {
                                 temp_spr=database+templong;
