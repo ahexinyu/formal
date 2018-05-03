@@ -198,8 +198,10 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
     fp = fopen(fastaq, "r");
     ot = fopen(tempstr, "w");
     fq = (char *)malloc(100000000);
+    if(fq==NULL)printf("false");
     setvbuf(fp, fq, _IOFBF, 100000000);
     oq = (char *)malloc(100000000);
+    if(fq==NULL)printf("false");
     setvbuf(ot, oq, _IOFBF, 100000000);
 	int num_read_items;
     ch=getc(fp);
