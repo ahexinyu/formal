@@ -372,7 +372,7 @@ int KMPmatch(char *ms, char *str)
     }
     return count;
 }
-static void filename(char *name,char *path1，int read_number){//path2是long read 文件
+static void filename(char *name,char *path1,int read_number){//path2是long read 文件
     long length;
     length=get_file_size(name);
     printf("%ld\n",length);
@@ -422,7 +422,6 @@ static void filename(char *name,char *path1，int read_number){//path2是long re
     FILE *fp2;
     fp2=fopen(path1,"r");
     int count2=read_number;//这个可以从源文件中找；readcountnumber是已知的
-    
     longreadinfo *info;
     char line1[1000];
     int h=0;
