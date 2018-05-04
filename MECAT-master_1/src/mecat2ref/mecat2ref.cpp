@@ -9,7 +9,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <dirent.h>
-
+#define RM 100000
 
 #include "output.h"
 #include "../common/defs.h"
