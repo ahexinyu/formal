@@ -193,7 +193,7 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
 {
     FILE *fp, *ot;
     int kk = 0,read_len;
-    char read_name[1000], onedata[1000000], buff1[1000], buff2[1000000], *fq, tempstr[200], *oq,ch;
+    char read_name[1000], onedata[RM], buff1[1000], buff2[RM], *fq, tempstr[200], *oq,ch;
     sprintf(tempstr, "%s/0.fq", fenfolder);
     fp = fopen(fastaq, "r");
     ot = fopen(tempstr, "w");
@@ -251,7 +251,7 @@ int chang_refer_fastqfile(const char *fastaq, const char *fenfolder)
 {
     FILE *fp, *ot;
     int kk = 0,read_len;
-    char read_name[1000], onedata[RM], buff1[1000], buff2[RM], *fq, tempstr[200], *oq,ch;
+    char read_name[1000], onedata[1000000], buff1[1000], buff2[1000000], *fq, tempstr[200], *oq,ch;
     sprintf(tempstr, "%s/refer.fq", fenfolder);
     fp = fopen(fastaq, "r");
     ot = fopen(tempstr, "w");
