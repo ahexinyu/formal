@@ -23,6 +23,17 @@ static int output_format = FMT_REF;
 static const int kDefaultOutputFormat = FMT_REF;
 static int tech;
 static const int kDefaultTech = TECH_PACBIO;
+typedef struct{
+    long start;//k-mer在参考基因组出现的开始位置
+    int readID;
+    int frequency;//出现次数
+    char string[13];
+    int next[13];//next数组。K_mer做比对的时候，
+}FRE_Kmer;
+typedef struct {
+    int readid;
+    char onedata[100];
+}longreadinfo;
 
 typedef struct
 {
@@ -304,6 +315,155 @@ int chang_refer_fastqfile(const char *fastaq, const char *fenfolder)
     return (kk);
     
 }
+int * getNextArray(char *ms)
+{
+    int *next = (int*)malloc(sizeof(int)*(strlen(ms)+1));
+    if(strlen(ms) == 1)
+    {
+        *next = -1;
+        return next;
+    }
+    next[0] = -1;
+    next[1] = 0;
+    int pos = 2;
+    int cn  = 0;
+    while(pos <= strlen(ms))
+    {
+        if(ms[pos-1] == ms[cn])
+            next[pos++] = ++cn;  //1
+        else if(cn>0)
+            cn = next[cn];       //2
+        else
+            next[pos++] = 0;     //3
+    }
+    //for(int i=0; i!=strlen(ms)+1; i++)
+    //  printf("next[%d] = %d\n", i, next[i]);
+    return next;
+}
+int KMPmatch(char *ms, char *str)
+{
+    int *next = getNextArray(ms);
+    int count = 0;
+    int msl  = strlen(ms);
+    int strl = strlen(str);
+    if(msl>strl)
+        return 0;
+    int mspos = 0;
+    int strpos = 0;
+    while(strpos < strl)
+    {
+        if(ms[mspos] == str[strpos])
+        {
+            mspos++,strpos++;           //4
+            if(mspos == msl)
+                count++;
+            if(strpos == strl)
+                return count;
+        }
+        else{
+            if(mspos == 0){
+                strpos++;           //5
+                if((strl-strpos) < msl)
+                    return count;
+            }
+            else
+                mspos = next[mspos];   //6
+        }
+    }
+    return count;
+}
+static void filename(char *name,char *path1，int read_number){//path2是long read 文件
+    long length;
+    length=get_file_size(name);
+    printf("%ld\n",length);
+    FILE* file_path=fopen(name,"r");
+    if(file_path!=NULL){
+        printf("sucess\n");
+    }
+    FRE_Kmer *Kmer_index;
+    int BC=20;int K_mer_length=12;
+    long K_mer_numbe=length/12;
+    Kmer_index=(FRE_Kmer *)malloc(sizeof(FRE_Kmer)*K_mer_numbe);//给K_mer分配内存空间
+    for(int QQ=0;QQ<=K_mer_numbe;QQ++){
+        Kmer_index[QQ].frequency=0;
+        Kmer_index[QQ].readID=0;
+        Kmer_index[QQ].string[0]='\0';
+        Kmer_index[QQ].start=0;
+        
+    }// 初始化
+    
+    if(Kmer_index!=NULL)printf(" K_MER success\n");
+    long number=K_mer_numbe;
+    
+    for(int h=0;h<number;h++){
+        char line[10000];
+        char str[10000];
+        int *l;//l表示read 的长度
+        int ii=0;int jj=0;
+        while(fgets(line,sizeof(line),file_path)){
+            sscanf(line,"%*d %*d %s",str);
+            //printf("%s\n",str);
+            for(int KK=0;KK<=strlen(str);KK++){
+                if(ii<12){
+                    Kmer_index[jj].string[ii]=str[KK];
+                    ii++;}
+                else{
+                    jj++;ii=0;
+                    KK=KK-11;
+                    Kmer_index[jj].string[ii]=str[KK];
+                    ii++;
+                }
+                // printf("%c",Kmer_index[jj].string[ii]=str[KK]);
+            }
+            
+        } //初始化FRE_kmer
+        //算相似度,block的长度是1000，K_mer的长度是20个。reference//K_mer长度为12？？？
+    }
+    FILE *fp2;
+    fp2=fopen(path1,"r");
+    int count2=read_number;//这个可以从源文件中找；readcountnumber是已知的
+    
+    longreadinfo *info;
+    char line1[1000];
+    int h=0;
+    info=(longreadinfo *)malloc(sizeof(longreadinfo)*count2);
+    if(info!=NULL)printf("success  info\n");
+    if(fp2!=NULL)printf("success22\n");
+    while(fgets(line1,sizeof(line1),fp2)){
+        
+        char str1[1000];
+        sscanf(line1,"%*d %*d %s",str1);
+        
+        for(int y=0;y<strlen(str1);y++){
+            info[h].onedata[y]=str1[y];
+        }
+        
+        info[h].readid=h;
+        
+        h++;
+        
+    }
+    
+    int count=0;int ff=0;//出现次数
+    
+    printf("test%s\n",info[1].onedata);
+    printf("test%d\n",info[0].readid);
+    for(int o=0;o<K_mer_numbe;o++){
+        for(int oo=0;oo<count2;oo++){
+            count=KMPmatch(Kmer_index[o].string,info[oo].onedata);
+            printf("%s\n",Kmer_index[o].string);
+            printf("%s\n",info[oo].onedata);
+            
+        }
+        ff=ff+count;
+        Kmer_index[o].frequency=ff;
+        printf("count is%d\n",ff);
+        
+        
+    }
+    
+    
+}
 
 int firsttask(int argc, char *argv[])
 {
@@ -313,6 +473,10 @@ int firsttask(int argc, char *argv[])
 	
     int readcount = chang_fastqfile(options->reads, options->wrk_dir);
     int refer_readcount=chang_refer_fastqfile(options->reference,options->wrk_dir);
+    char path_[100];char path2_[100];
+    sprintf(path_, "%s/0.fq",options->wrk_dir);
+    sprintf(path2_, "%s/refer.fq",options->wrk_dir);
+    filename(path2_,path_,readcount);
 	char kkkkk[1024];
     sprintf(kkkkk, "config.txt");
     FILE* fileout = fopen(kkkkk, "w");
