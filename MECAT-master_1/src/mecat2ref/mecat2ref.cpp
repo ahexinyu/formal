@@ -327,7 +327,7 @@ int * getNextArray(char *ms)
     next[1] = 0;
     int pos = 2;
     int cn  = 0;
-    while(pos <= strlen(ms))
+    while(pos<= strlen(ms))
     {
         if(ms[pos-1] == ms[cn])
             next[pos++] = ++cn;  //1
