@@ -9,7 +9,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <dirent.h>
-#define RM 100000
+
 
 #include "output.h"
 #include "../common/defs.h"
@@ -193,7 +193,7 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
 {
     FILE *fp, *ot;
     int kk = 0,read_len;
-    char read_name[1000], onedata[RM], buff1[1000], buff2[RM], *fq, tempstr[200], *oq,ch;
+    char read_name[1000], onedata[1000000], buff1[1000], buff2[1000000], *fq, tempstr[200], *oq,ch;
     sprintf(tempstr, "%s/0.fq", fenfolder);
     fp = fopen(fastaq, "r");
     ot = fopen(tempstr, "w");
@@ -260,7 +260,7 @@ int chang_refer_fastqfile(const char *fastaq, const char *fenfolder)
     oq = (char *)malloc(100000000);
     setvbuf(ot, oq, _IOFBF, 100000000);
     int num_read_items;
-   /* ch=getc(fp);
+    ch=getc(fp);
     if(ch=='>')
     {
         kk=0;
@@ -296,7 +296,7 @@ int chang_refer_fastqfile(const char *fastaq, const char *fenfolder)
             read_len=strlen(onedata);
             fprintf(ot, "%d\t%d\t%s\n", ++kk,read_len,onedata);
         }
-    }*/
+    }
     fclose(fp);
     fclose(ot);
     free(fq);
