@@ -327,7 +327,7 @@ int * getNextArray(char *ms)
     next[1] = 0;
     int pos = 2;
     int cn  = 0;
-    while(pos<= strlen(ms))
+    while(pos <= strlen(ms))
     {
         if(ms[pos-1] == ms[cn])
             next[pos++] = ++cn;  //1
@@ -371,6 +371,20 @@ int KMPmatch(char *ms, char *str)
         }
     }
     return count;
+}
+static long get_file_size(char *path)
+{
+    long filesize = -1;
+    struct stat statbuff;
+    if(stat(path, &statbuff) < 0)
+    {
+        return filesize;
+    }
+    else
+    {
+        filesize = statbuff.st_size;
+    }
+    return filesize;
 }
 static void filename(char *name,char *path1,int read_number){//path2是long read 文件
     long length;
