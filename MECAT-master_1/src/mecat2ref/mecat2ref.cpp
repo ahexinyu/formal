@@ -32,7 +32,7 @@ typedef struct{
 }FRE_Kmer;
 typedef struct {
     int readid;
-    char onedata[100];
+    char onedata[RM];
 }longreadinfo;
 
 typedef struct
@@ -427,7 +427,7 @@ static void filename(char *name,char *path1,int read_number){//path1是long read
                     Kmer_index[jj].string[ii]=str[KK];
                     ii++;
                 }
-                 printf("testezheyibu\n");
+                 //printf("testezheyibu\n");
             }
             
         } //初始化FRE_kmer
