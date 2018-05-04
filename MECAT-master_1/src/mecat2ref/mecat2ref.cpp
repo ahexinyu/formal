@@ -437,7 +437,7 @@ static void filename(char *name,char *path1,int read_number){//path2是long read
     fp2=fopen(path1,"r");
     int count2=read_number;//这个可以从源文件中找；readcountnumber是已知的
     longreadinfo *info;
-    char line1[rm];
+    char line1[RM];
     int h=0;
     info=(longreadinfo *)malloc(sizeof(longreadinfo)*count2);
     if(info!=NULL)printf("success  info\n");
