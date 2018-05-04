@@ -198,10 +198,8 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
     fp = fopen(fastaq, "r");
     ot = fopen(tempstr, "w");
     fq = (char *)malloc(100000000);
-    if(fq==NULL)printf("false");
     setvbuf(fp, fq, _IOFBF, 100000000);
     oq = (char *)malloc(100000000);
-    if(fq==NULL)printf("false");
     setvbuf(ot, oq, _IOFBF, 100000000);
 	int num_read_items;
     ch=getc(fp);
@@ -262,7 +260,7 @@ int chang_refer_fastqfile(const char *fastaq, const char *fenfolder)
     oq = (char *)malloc(100000000);
     setvbuf(ot, oq, _IOFBF, 100000000);
     int num_read_items;
-    ch=getc(fp);
+   /* ch=getc(fp);
     if(ch=='>')
     {
         kk=0;
@@ -298,7 +296,7 @@ int chang_refer_fastqfile(const char *fastaq, const char *fenfolder)
             read_len=strlen(onedata);
             fprintf(ot, "%d\t%d\t%s\n", ++kk,read_len,onedata);
         }
-    }
+    }*/
     fclose(fp);
     fclose(ot);
     free(fq);
