@@ -410,8 +410,8 @@ static void filename(char *name,char *path1,int read_number){//path2是long read
     long number=K_mer_numbe;
     
     for(int h=0;h<number;h++){
-        char line[10000];
-        char str[10000];
+        char line[1000000];
+        char str[10000000];
         int *l;//l表示read 的长度
         int ii=0;int jj=0;
         while(fgets(line,sizeof(line),file_path)){
@@ -437,14 +437,14 @@ static void filename(char *name,char *path1,int read_number){//path2是long read
     fp2=fopen(path1,"r");
     int count2=read_number;//这个可以从源文件中找；readcountnumber是已知的
     longreadinfo *info;
-    char line1[1000];
+    char line1[rm];
     int h=0;
     info=(longreadinfo *)malloc(sizeof(longreadinfo)*count2);
     if(info!=NULL)printf("success  info\n");
     if(fp2!=NULL)printf("success22\n");
     while(fgets(line1,sizeof(line1),fp2)){
         
-        char str1[1000];
+        char str1[RM];
         sscanf(line1,"%*d %*d %s",str1);
         
         for(int y=0;y<strlen(str1);y++){
