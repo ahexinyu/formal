@@ -410,8 +410,8 @@ static void filename(char *name,char *path1,int read_number){//path2是long read
     long number=K_mer_numbe;
     
     for(int h=0;h<number;h++){
-        char line[10000000];
-        char str[100000000];
+        char line[1000000000];
+        char str[10000000000];
         int *l;//l表示read 的长度
         int ii=0;int jj=0;
         while(fgets(line,sizeof(line),file_path)){
