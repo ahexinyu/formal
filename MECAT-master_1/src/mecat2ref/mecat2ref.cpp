@@ -435,7 +435,7 @@ static void filename(char *name,char *path1,int read_number){//path1是long read
     }
     FILE *fp2;
     fp2=fopen(path1,"r");
-   if(fp2!=NULL) printf("fp2sucess\n");
+    if(fp2==NULL) printf("fp2sucess\n");
     int count2=read_number;//这个可以从源文件中找；readcountnumber是已知的
     printf("%d\n",count2);
     longreadinfo *info;
@@ -490,7 +490,9 @@ int firsttask(int argc, char *argv[])
     int refer_readcount=chang_refer_fastqfile(options->reference,options->wrk_dir);
     char path_[100];char path2_[100];
     sprintf(path_, "%s/0.fq",options->wrk_dir);
+    printf("%s",path_);
     sprintf(path2_, "%s/refer.fq",options->wrk_dir);
+    printf("%s",path2_);
     filename(path2_,path_,readcount);
 	char kkkkk[1024];
     sprintf(kkkkk, "config.txt");
