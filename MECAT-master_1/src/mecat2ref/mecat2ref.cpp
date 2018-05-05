@@ -409,7 +409,7 @@ static void filename(char *name,char *path1,int read_number){//path1是long read
     if(Kmer_index!=NULL)printf(" K_MER success\n");
     long number=K_mer_numbe;
     
-    for(int h=0;h<number;h++){
+   /* for(int h=0;h<number;h++){
         char line[1000000];
         char str[1000000];
         int *l;//l表示read 的长度
@@ -432,7 +432,7 @@ static void filename(char *name,char *path1,int read_number){//path1是long read
             
         } //初始化FRE_kmer
         //算相似度,block的长度是1000，K_mer的长度是20个。reference//K_mer长度为12？？？
-    }
+    }*/
     FILE *fp2;
     fp2=fopen(path1,"r");
     if(fp2==NULL) printf("fp2sucess\n");
@@ -463,7 +463,7 @@ static void filename(char *name,char *path1,int read_number){//path1是long read
     
     printf("test%s\n",info[1].onedata);
     printf("test%d\n",info[0].readid);
-    for(int o=0;o<K_mer_numbe;o++){
+   /* for(int o=0;o<K_mer_numbe;o++){
         for(int oo=0;oo<count2;oo++){
             count=KMPmatch(Kmer_index[o].string,info[oo].onedata);
             printf("%s\n",Kmer_index[o].string);
@@ -475,7 +475,7 @@ static void filename(char *name,char *path1,int read_number){//path1是long read
         printf("count is%d\n",ff);
         
         
-    }
+    }*/
     
     
 }
