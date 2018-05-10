@@ -213,6 +213,7 @@ static void creat_ref_index(char *fastafile)
             countin[eit]=countin[eit]+1;
             eit=eit<<leftnum;
             eit=eit>>leftnum;
+             printf("this is eit%d\n",eit);
         }
     }
 
