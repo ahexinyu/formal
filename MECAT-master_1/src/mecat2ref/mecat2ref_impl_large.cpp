@@ -240,7 +240,7 @@ static void creat_ref_index(char *fastafile)
     start=0;
     for(i=0; i<seqcount; i++)
     {
-        printf("seqcount is");
+        printf("seqcount is\n");
         printf("%c",seq[i]);
         if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
         {

@@ -414,7 +414,7 @@ static void filename(char *name,char *path1,int read_number){//path1是long read
         char str[10000000];
         int *l;//l表示read 的长度
         int ii=0;int jj=0;
-        while(fgets(line,sizeof(line),file_path)){
+       /* while(fgets(line,sizeof(line),file_path)){
             sscanf(line,"%*d %*d %s",str);
             printf("%s\n",str);
             
@@ -428,10 +428,10 @@ static void filename(char *name,char *path1,int read_number){//path1是long read
                     Kmer_index[jj].string[ii]=str[KK];
                     ii++;
                 }
-                 //printf("testezheyibu\n");
+                 
             }
             
-        } 
+        } */
     }
     FILE *fp2;
     fp2=fopen(path1,"r");
