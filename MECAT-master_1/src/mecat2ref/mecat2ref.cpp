@@ -444,7 +444,7 @@ static void filename(char *name,char *path1,int read_number){//path1是long read
     info=(longreadinfo *)malloc(sizeof(longreadinfo)*count2);
     if(info!=NULL)printf("success  info\n");
     if(fp2!=NULL)printf("success22\n");
-    while(fgets(line1,sizeof(line1),fp2)){
+   /* while(fgets(line1,sizeof(line1),fp2)){
         
         char str1[RM];
         sscanf(line1,"%*d %*d %s",str1);
@@ -457,13 +457,13 @@ static void filename(char *name,char *path1,int read_number){//path1是long read
         
         h++;
         
-    }
+    }*/
     
     int count=0;int ff=0;//出现次数
     
     printf("test%s\n",info[1].onedata);
     printf("test%d\n",info[0].readid);
-    for(int o=0;o<K_mer_numbe;o++){
+  /*  for(int o=0;o<K_mer_numbe;o++){
         for(int oo=0;oo<count2;oo++){
             count=KMPmatch(Kmer_index[o].string,info[oo].onedata);
             printf("%s\n",Kmer_index[o].string);
@@ -475,7 +475,7 @@ static void filename(char *name,char *path1,int read_number){//path1是long read
         printf("count is%d\n",ff);
         
         
-    }
+    }*/
     
     
 }

@@ -100,7 +100,7 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len)
     }
     list_loc[SM]=loc;
     list_seed[SM]=seedn;
-    list_score[SM]=0;
+    list_score[SM]=0;//SM 和SI 是20 和21
     mini=-1;
     minval=10000;
     for(i=0; i<SM; i++)for(j=i+1; j<SI; j++)if(list_seed[j]-list_seed[i]>0&&list_loc[j]-list_loc[i]>0&&fabs((list_loc[j]-list_loc[i])/((list_seed[j]-list_seed[i])*len)-1.0)<ddfs_cutoff)
@@ -240,6 +240,7 @@ static void creat_ref_index(char *fastafile)
     start=0;
     for(i=0; i<seqcount; i++)
     {
+        printf("%c",seqcount[i]);
         if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
         {
             eit=0;
