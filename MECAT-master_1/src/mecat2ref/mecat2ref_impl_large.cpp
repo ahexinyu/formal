@@ -203,7 +203,7 @@ static void creat_ref_index(char *fastafile)
             eit=eit<<2;
             eit=eit+temp;
             start=start+1;
-            printf("%d",eit);
+            printf("%d\n",eit);
         }
         else if(start>=seed_len-1)
         {
