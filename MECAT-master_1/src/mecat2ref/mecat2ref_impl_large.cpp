@@ -51,7 +51,7 @@ static unsigned short atcttrans(char c)
 }
 
 static long sumvalue_x(int *intarry,int count)
-{
+{//countin countindex
     long i,sumval=0;
     for(i=0; i<count; i++)
     {
@@ -71,7 +71,7 @@ static int transnum_buchang(char *seqm,int *value,int *endn,int len_str,int read
     for(i=0; i<num; i++)
     {
         eit=0;
-        start=i*BC;
+        start=i*BC;//滑动窗口
         //if(i==num-1){eit=0;start=len_str-readnum;}
         for(j=0; j<readnum; j++)
         {
@@ -86,11 +86,11 @@ static int transnum_buchang(char *seqm,int *value,int *endn,int len_str,int read
         }
         value[i]=eit;
     }
-    return(num);
+    return(num);//extract_number
 }
 
 static void insert_loc(struct Back_List *spr,int loc,int seedn,float len)
-{
+{//insert_loc(temp_spr,u_k,k+1,BC)
     int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;
     for(i=0; i<SM; i++)
     {
@@ -137,7 +137,6 @@ static void creat_ref_index(char *fastafile)
     long length,count,i,start, rsize = 0;
     FILE *fasta,*fastaindex;
     char *seq,ch,nameall[200];
-    //
     if(seed_len==14)indexcount=268435456;
     else if(seed_len==13)indexcount=67108864;
     else if(seed_len==12)indexcount=16777216;
@@ -233,6 +232,7 @@ static void creat_ref_index(char *fastafile)
             countin[i]=0;
         }
         else databaseindex[i]=NULL;
+        printf("this is database%d",database[i]);
     }
 
     // printf("xiao");//10834098
@@ -242,7 +242,7 @@ static void creat_ref_index(char *fastafile)
     start=0;
     for(i=0; i<seqcount; i++)
     {
-        printf("%c",seq[i]);
+        //printf("%c",seq[i]);
         if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
         {
             eit=0;
@@ -255,6 +255,7 @@ static void creat_ref_index(char *fastafile)
             eit=eit<<2;
             eit=eit+temp;
             start=start+1;
+            printf("eit2%d",eit);
         }
         else if(start>=seed_len-1)
         {
@@ -269,7 +270,9 @@ static void creat_ref_index(char *fastafile)
             }
             eit=eit<<leftnum;
             eit=eit>>leftnum;
+            printf(" thiS IS eit2%d",eit);
         }
+        
     }
 }
 
@@ -300,7 +303,7 @@ static void reference_mapping(int threadint)
 	Back_List* fwd_database = (Back_List*)malloc(sizeof(Back_List) * j);
 	int* rev_index_list = (int*)malloc(sizeof(int) * j);
 	short* rev_index_score = (short*)malloc(sizeof(short) * j);
-	Back_List* rev_database = (Back_List*)malloc(sizeof(Back_List) * j);
+	Back_List* rev_database = (Back_List*)malloc(sizeof(Back_List) * j);//和参考基因有关的
 	for (i = 0; i < j; ++i) {
 		fwd_database[i].score = 0;
 		fwd_database[i].score2 = 0;
@@ -428,7 +431,7 @@ static void reference_mapping(int threadint)
                             u_k=(*leadarray)%ZV;//zv为1000
                             if(templong>=0)
                             {
-                                temp_spr=database+templong;
+                                temp_spr=database+templong;//temp_spr的类型是bakc_list
                                 if(temp_spr->score==0||temp_spr->seednum<k+1)
                                 {
                                     loc=++(temp_spr->score);
