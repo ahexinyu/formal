@@ -232,7 +232,7 @@ static void creat_ref_index(char *fastafile)
             countin[i]=0;
         }
         else databaseindex[i]=NULL;
-        printf("this is database%d",database[i]);
+        printf("this is database%d\n",databaseindex[i]);
     }
 
     // printf("xiao");//10834098
@@ -255,7 +255,7 @@ static void creat_ref_index(char *fastafile)
             eit=eit<<2;
             eit=eit+temp;
             start=start+1;
-            printf("eit2%d",eit);
+            printf("eit2%d\n",eit);
         }
         else if(start>=seed_len-1)
         {
@@ -270,7 +270,7 @@ static void creat_ref_index(char *fastafile)
             }
             eit=eit<<leftnum;
             eit=eit>>leftnum;
-            printf(" thiS IS eit2%d",eit);
+            printf(" thiS IS eit2%d\n",eit);
         }
         
     }
