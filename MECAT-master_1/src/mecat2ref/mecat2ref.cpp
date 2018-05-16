@@ -428,7 +428,7 @@ static void filename(char *name,char *path1,int read_number){//path1是long read
                     Kmer_index[jj].string[ii]=str[KK];
                     ii++;
                 }
-                 
+        
             }
             
         } */

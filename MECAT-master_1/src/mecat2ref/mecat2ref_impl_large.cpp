@@ -138,7 +138,7 @@ static void creat_ref_index(char *fastafile)
     FILE *fasta,*fastaindex;
     char *seq,ch,nameall[200];
     if(seed_len==14)indexcount=268435456;
-    else if(seed_len==13)indexcount=67108864;
+    else if(seed_len==13)indexcount=67108864;//2的26次方
     else if(seed_len==12)indexcount=16777216;
     else if(seed_len==11)indexcount=4194304;
     else if(seed_len==10)indexcount=1048576;
@@ -212,8 +212,9 @@ static void creat_ref_index(char *fastafile)
             countin[eit]=countin[eit]+1;
             eit=eit<<leftnum;
             eit=eit>>leftnum;
-             printf("this is eit%d\n",eit);
+            // printf("this is eit%d\n",eit);
         }
+        printf("%c",seq[i]);
     }
 
 
@@ -232,7 +233,7 @@ static void creat_ref_index(char *fastafile)
             countin[i]=0;
         }
         else databaseindex[i]=NULL;
-        printf("this is database%d\n",databaseindex[i]);
+       
     }
 
     // printf("xiao");//10834098
@@ -270,7 +271,7 @@ static void creat_ref_index(char *fastafile)
             }
             eit=eit<<leftnum;
             eit=eit>>leftnum;
-            printf(" thiS IS eit2%d\n",eit);
+            //printf(" thiS IS eit2%d\n",eit);
         }
         
     }
@@ -431,13 +432,13 @@ static void reference_mapping(int threadint)
                             u_k=(*leadarray)%ZV;//zv为1000
                             if(templong>=0)
                             {
-                                temp_spr=database+templong;//temp_spr的类型是bakc_list
+                                temp_spr=database+templong;//temp_spr的类型是back_list
                                 if(temp_spr->score==0||temp_spr->seednum<k+1)
                                 {
                                     loc=++(temp_spr->score);
                                     if(loc<=SM)
                                     {
-                                        temp_spr->loczhi[loc-1]=u_k;
+                                        temp_spr->loczhi[loc-1]=u_k;//位置
                                         temp_spr->seedno[loc-1]=k+1;
                                     }
                                     else insert_loc(temp_spr,u_k,k+1,BC);
@@ -446,7 +447,7 @@ static void reference_mapping(int threadint)
                                     if(endnum<s_k)endnum=s_k;
                                     if(temp_spr->index==-1)
                                     {
-                                        *(index_spr++)=templong;
+                                        *(index_spr++)=templong;//int repeat_loc = 0,*index_list,*index_spr;
                                         *(index_ss++)=s_k;
                                         temp_spr->index=j;
                                         j++;
@@ -459,7 +460,7 @@ static void reference_mapping(int threadint)
                     }
 				*pnblk = j;
                 cc1=j;
-                for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>6)
+                for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>6)//short int *index_score,*index_ss;
                     {
                         temp_spr=database+*index_spr;
                         if(temp_spr->score==0)continue;
