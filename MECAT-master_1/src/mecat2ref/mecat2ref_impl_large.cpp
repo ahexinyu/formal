@@ -301,8 +301,8 @@ static void build_read_index(char *fastafile){
     fasta=fopen(fastafile, "r");
     sprintf(nameall,"%s/readindex.txt",workpath);
     fastaindex=fopen(nameall,"w");
-    read_REFESQ=(char *)malloc((length+1000)*sizeof(char));
-    seq=read_REFESQ;int kk=1;
+    read_REFSEQ=(char *)malloc((length+1000)*sizeof(char));
+    seq=read_REFSEQ;int kk=1;
     for (ch=getc(fasta),count=0; ch!=EOF; ch=getc(fasta))
     {
         
