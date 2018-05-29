@@ -19,10 +19,12 @@ static int threadnum=2;
 static FILE **outfile;
 static pthread_mutex_t mutilock; 
 static int runnumber=0,runthreadnum=0, readcount,terminalnum;
-static int *countin;
+static int *countin;static int *countin1;
 static long **databaseindex,*allloc,seqcount,sumcount;
+static long **databaseindex1,*allloc1,seqcount1,sumcount1;
 static int seed_len;
 static char *REFSEQ;
+static char *read_REFSEQ;
 static char *savework,workpath[300],fastqfile[300];
 static ReadFasta *readinfo;
 
@@ -99,7 +101,7 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len)
         list_score[i]=0;
     }
     list_loc[SM]=loc;
-    list_seed[SM]=seedn;
+    list_seed[SM]=seedn;//seednumber
     list_score[SM]=0;//SM 和SI 是20 和21
     mini=-1;
     minval=10000;
@@ -112,7 +114,7 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len)
         {
             minval=list_score[i];
             mini=i;
-        }
+        }//找出最低的分数
     if(minval==SM)
     {
         spr->loczhi[SM-1]=loc;
@@ -125,7 +127,7 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len)
             spr->loczhi[i]=list_loc[i+1];
             spr->seedno[i]=list_seed[i+1];
         }
-        spr->score--;
+        spr->score--;//删掉最低一个
     }
 }
 
@@ -214,12 +216,13 @@ static void creat_ref_index(char *fastafile)
             eit=eit>>leftnum;
             // printf("this is eit%d\n",eit);
         }
-        printf("%c",seq[i]);
+       
+        //printf("%c",seq[i]);
     }
 
 
 //Max_index
-    sumcount=sumvalue_x(countin,indexcount);
+    sumcount=sumvalue_x(countin,indexcount);//有效Index K_mer的数量
     allloc=(long *)malloc(sumcount*sizeof(long));
     databaseindex=(long **)malloc((indexcount)*sizeof(long*));
 //allocate memory
@@ -256,7 +259,7 @@ static void creat_ref_index(char *fastafile)
             eit=eit<<2;
             eit=eit+temp;
             start=start+1;
-            printf("eit2%d\n",eit);
+            //printf("eit2%d\n",eit);
         }
         else if(start>=seed_len-1)
         {
@@ -267,7 +270,7 @@ static void creat_ref_index(char *fastafile)
             if(databaseindex[eit]!=NULL)
             {
                 countin[eit]=countin[eit]+1;
-                databaseindex[eit][countin[eit]-1]=i+2-seed_len;
+                databaseindex[eit][countin[eit]-1]=i+2-seed_len;//存的位置
             }
             eit=eit<<leftnum;
             eit=eit>>leftnum;
@@ -276,6 +279,165 @@ static void creat_ref_index(char *fastafile)
         
     }
 }
+static void build_read_index(char *fastafile){
+    
+    unsigned int eit,temp;
+    int  indexcount=0,leftnum=0;
+    long length,count,i,start, rsize = 0;
+    FILE *fasta,*fastaindex;
+    char *seq,ch,nameall[200];
+    if(seed_len==14)indexcount=268435456;
+    else if(seed_len==13)indexcount=67108864;//4的13次方
+    else if(seed_len==12)indexcount=16777216;
+    else if(seed_len==11)indexcount=4194304;
+    else if(seed_len==10)indexcount=1048576;
+    else if(seed_len==9)indexcount=262144;
+    else if(seed_len==8)indexcount=65536;
+    else if(seed_len==7)indexcount=16384;
+    else if(seed_len==6)indexcount=4096;
+    leftnum=34-2*seed_len;
+    //read reference seq
+    length=get_file_size(fastafile);
+    fasta=fopen(fastafile, "r");
+    sprintf(nameall,"%s/readindex.txt",workpath);
+    fastaindex=fopen(nameall,"w");
+    read_REFESQ=(char *)malloc((length+1000)*sizeof(char));
+    seq=read_REFESQ;int kk=1;
+    for (ch=getc(fasta),count=0; ch!=EOF; ch=getc(fasta))
+    {
+        
+        if(ch=='>')
+            
+        {
+            
+            //assert(fscanf(fasta,"%[^\n]s",nameall) == 1);
+            if (rsize) fprintf(fastaindex, "%ld\n", rsize);
+            rsize = 0;
+            
+            fprintf(fastaindex,"%ld\t%d\t",count,kk);
+            kk++;
+        }
+        
+        else if(ch!='\n'&&ch!='\r')
+        {
+            if(ch>'Z')ch=toupper(ch);
+            seq[count]=ch;
+            count=count+1;
+            ++rsize;
+        }
+        
+    }
+    fclose(fasta);
+    fprintf(fastaindex, "%ld\n", rsize);
+    fprintf(fastaindex,"%ld\t%s\n",count,"FileEnd");
+    seq[count]='\0';
+    fclose(fastaindex);
+    seqcount1=count;
+    printf("read count is%ld\n",seqcount1);
+    
+    
+    //printf("Constructing look-up table...\n");
+    countin1=(int *)malloc((indexcount)*sizeof(int));
+    for(i=0; i<indexcount; i++)countin1[i]=0;
+    
+    // Count the number
+    eit=0;
+    start=0;
+    for(i=0; i<seqcount1; i++)
+    {
+        //printf("%c",seq[i]);
+        if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
+        {
+            eit=0;
+            start=0;
+            continue;
+        }
+        temp=atcttrans(seq[i]);
+        if(start<seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+            //printf("countin is %d\n",eit);
+            
+        }
+        else if(start>=seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+            countin1[eit]=countin1[eit]+1;
+            printf("countin is %d\n",eit);//存的是countin
+            eit=eit<<leftnum;
+            eit=eit>>leftnum;
+            
+        //printf("eit is %d\n",eit);
+        }
+        
+    }
+    
+    
+    //Max_index
+    sumcount1=sumvalue_x(countin1,indexcount);
+    allloc1=(long *)malloc(sumcount1*sizeof(long));
+    databaseindex1=(long **)malloc((indexcount)*sizeof(long*));
+    //allocate memory
+    sumcount1=0;
+    for(i=0; i<indexcount; i++)
+    {
+        if(countin1[i]>0)
+        {
+            databaseindex1[i]=allloc1+sumcount1;
+            sumcount1=sumcount1+countin1[i];
+            countin1[i]=0;
+        }
+        else databaseindex1[i]=NULL;
+        
+    }
+    
+    // printf("xiao");//10834098
+    
+    //constructing the look-up table
+    eit=0;
+    start=0;
+    for(i=0; i<seqcount; i++)
+    {
+        //printf("%c\n",seq[i]);
+        if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
+        {
+            eit=0;
+            start=0;
+            continue;
+        }
+        temp=atcttrans(seq[i]);
+        if(start<seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+            // printf("eit2%d\n",eit);
+        }
+        else if(start>=seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+            
+            if(databaseindex1[eit]!=NULL)
+            {
+                countin1[eit]=countin1[eit]+1;
+                databaseindex1[eit][countin1[eit]-1]=i+2-seed_len;
+            
+            }
+            eit=eit<<leftnum;
+            eit=eit>>leftnum;
+            
+        }
+        
+    }
+    
+}
+
 
 
 static void reference_mapping(int threadint)
@@ -369,8 +531,8 @@ static void reference_mapping(int threadint)
                 if(BC>20)BC=20;
                 if(ii==1) {
 					onedata=onedata1;
-					index_list = fwd_index_list;
-					index_score = fwd_index_score;
+					index_list = fwd_index_list;// int repeat_loc = 0,*index_list,*index_spr;
+					index_score = fwd_index_score;//short int *index_score,*index_ss;
 					database = fwd_database;
 					pnblk = &fnblk;
 				} else if(ii==2){
@@ -412,7 +574,7 @@ static void reference_mapping(int threadint)
                             break;
                         }
                         }
-                    }
+                    }//将字符串掉个
                 }
                 endnum=0;
                 read_len=strlen(onedata);
@@ -425,32 +587,32 @@ static void reference_mapping(int threadint)
                     {
                         count1=countin[mvalue[k]];
                         //if(count1>20)continue;
-                        leadarray=databaseindex[mvalue[k]];
+                        leadarray=databaseindex[mvalue[k]];//leadarry存的位置
                         for(i=0; i<count1; i++,leadarray++)
                         {
-                            templong=(*leadarray)/ZV;
-                            u_k=(*leadarray)%ZV;//zv为1000
+                            templong=(*leadarray)/ZV;//位置信息，第几个block
+                            u_k=(*leadarray)%ZV;//zv为1000，U_K是偏移量
                             if(templong>=0)
                             {
-                                temp_spr=database+templong;//temp_spr的类型是back_list
+                                temp_spr=database+templong;//temp_spr的类型是back_list。   struct Back_List *database
                                 if(temp_spr->score==0||temp_spr->seednum<k+1)
                                 {
                                     loc=++(temp_spr->score);
                                     if(loc<=SM)
                                     {
-                                        temp_spr->loczhi[loc-1]=u_k;//位置
+                                        temp_spr->loczhi[loc-1]=u_k;//位置，block位置。
                                         temp_spr->seedno[loc-1]=k+1;
                                     }
-                                    else insert_loc(temp_spr,u_k,k+1,BC);
+                                    else insert_loc(temp_spr,u_k,k+1,BC);//删除分数最小的。保持在20个左右//(struct Back_List *spr,int loc,int seedn,float len)
                                     if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
                                     else s_k=temp_spr->score;
                                     if(endnum<s_k)endnum=s_k;
                                     if(temp_spr->index==-1)
                                     {
-                                        *(index_spr++)=templong;//int repeat_loc = 0,*index_list,*index_spr;
+                                        *(index_spr++)=templong;//int *index_list,*index_spr;
                                         *(index_ss++)=s_k;
                                         temp_spr->index=j;
-                                        j++;
+                                        j++;//
                                     } else index_score[temp_spr->index]=s_k;
 									temp_spr->score2 = temp_spr->score;
                                 }
@@ -957,11 +1119,12 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     gettimeofday(&tpstart, NULL);
     seed_len=13;
     creat_ref_index(fastafile);
+    build_read_index(fastqfile);
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
     fp = fopen("config.txt", "a");
-    fprintf(fp, "The Building Reference Index Time: %f sec\n", timeuse);
+    fprintf(fp, "The Building Reference and read  Index Time: %f sec\n", timeuse);
     fclose(fp);
 
     gettimeofday(&tpstart, NULL);

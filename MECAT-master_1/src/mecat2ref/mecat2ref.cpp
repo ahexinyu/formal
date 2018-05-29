@@ -257,121 +257,9 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
     return (kk);
 
 }
-//自己加的
-int chang_refer_fastqfile(const char *fastaq, const char *fenfolder)
-{
-    FILE *fp, *ot;
-    int kk = 0,read_len;
-    char read_name[1000], onedata[1000000], buff1[1000], buff2[1000000], *fq, tempstr[200], *oq,ch;
-    sprintf(tempstr, "%s/refer.fq", fenfolder);
-    fp = fopen(fastaq, "r");
-    ot = fopen(tempstr, "w");
-    fq = (char *)malloc(1000000000);
-    setvbuf(fp, fq, _IOFBF, 1000000000);
-    oq = (char *)malloc(1000000000);
-    setvbuf(ot, oq, _IOFBF, 1000000000);
-    int num_read_items;
-    ch=getc(fp);
-    if(ch=='>')
-    {
-        kk=0;
-        for (; ch!=EOF; ch=getc(fp))
-        {
-            if(ch=='>')
-            {
-                num_read_items = fscanf(fp,"%[^\n]s",read_name);
-                assert(num_read_items = 1);
-                if(kk>0)
-                {
-                    onedata[read_len]='\0';
-                    fprintf(ot, "%d\t\%d\t%s\n", kk-1,read_len,onedata);
-                    read_len=0;
-                    kk++;
-                }
-                else
-                {
-                    kk++;
-                    read_len=0;
-                }
-            }
-            else if(ch!='\n'&&ch!='\r')onedata[read_len++]=ch;
-        }
-        onedata[read_len]='\0';
-        fprintf(ot, "%d\t\%d\t%s\n", kk-1,read_len,onedata);
-    }
-    else
-    {
-        fseek(fp, 0L, SEEK_SET);
-        while (fscanf(fp, "%[^\n]s", read_name) != EOF && fscanf(fp, "%s\n", onedata) != EOF && fscanf(fp, "%[^\n]s", buff1) != EOF && fscanf(fp, "%s\n", buff2) != EOF)
-        {
-            read_len=strlen(onedata);
-            fprintf(ot, "%d\t%d\t%s\n", ++kk,read_len,onedata);
-        }
-    }
-    fclose(fp);
-    fclose(ot);
-    free(fq);
-    free(oq);
-    return (kk);
-    
-}
-int * getNextArray(char *ms)
-{
-    int *next = (int*)malloc(sizeof(int)*(strlen(ms)+1));
-    if(strlen(ms) == 1)
-    {
-        *next = -1;
-        return next;
-    }
-    next[0] = -1;
-    next[1] = 0;
-    int pos = 2;
-    int cn  = 0;
-    while(pos <= strlen(ms))
-    {
-        if(ms[pos-1] == ms[cn])
-            next[pos++] = ++cn;  //1
-        else if(cn>0)
-            cn = next[cn];       //2
-        else
-            next[pos++] = 0;     //3
-    }
-    //for(int i=0; i!=strlen(ms)+1; i++)
-    //  printf("next[%d] = %d\n", i, next[i]);
-    return next;
-}
-int KMPmatch(char *ms, char *str)
-{
-    int *next = getNextArray(ms);
-    int count = 0;
-    int msl  = strlen(ms);
-    int strl = strlen(str);
-    if(msl>strl)
-        return 0;
-    int mspos = 0;
-    int strpos = 0;
-    while(strpos < strl)
-    {
-        if(ms[mspos] == str[strpos])
-        {
-            mspos++,strpos++;           //4
-            if(mspos == msl)
-                count++;
-            if(strpos == strl)
-                return count;
-        }
-        else{
-            if(mspos == 0){
-                strpos++;           //5
-                if((strl-strpos) < msl)
-                    return count;
-            }
-            else
-                mspos = next[mspos];   //6
-        }
-    }
-    return count;
-}
+
+
+
 static long get_file_size(char *path)
 {
     long filesize = -1;
@@ -386,99 +274,7 @@ static long get_file_size(char *path)
     }
     return filesize;
 }
-static void filename(char *name,char *path1,int read_number){//path1是long read 文件
-    long length;
-    length=get_file_size(name);
-    printf("%ld\n",length);
-    FILE* file_path=fopen(name,"r");
-    if(file_path!=NULL){
-        printf("sucess\n");
-    }
-    FRE_Kmer *Kmer_index;
-    int BC=20;int K_mer_length=12;
-    long K_mer_numbe=length/12;
-    Kmer_index=(FRE_Kmer *)malloc(sizeof(FRE_Kmer)*K_mer_numbe);//给K_mer分配内存空间
-    for(int QQ=0;QQ<=K_mer_numbe;QQ++){
-        Kmer_index[QQ].frequency=0;
-        Kmer_index[QQ].readID=0;
-        Kmer_index[QQ].string[0]='\0';
-        Kmer_index[QQ].start=0;
-        
-    }// 初始化
-    
-    if(Kmer_index!=NULL)printf(" K_MER success\n");
-    long number=K_mer_numbe;
-    
-    for(int h=0;h<number;h++){
-        char line[10000000];
-        char str[10000000];
-        int *l;//l表示read 的长度
-        int ii=0;int jj=0;
-       /* while(fgets(line,sizeof(line),file_path)){
-            sscanf(line,"%*d %*d %s",str);
-            printf("%s\n",str);
-            
-            for(int KK=0;KK<=strlen(str);KK++){
-                if(ii<12){
-                    Kmer_index[jj].string[ii]=str[KK];
-                    ii++;}
-                else{
-                    jj++;ii=0;
-                    KK=KK-11;
-                    Kmer_index[jj].string[ii]=str[KK];
-                    ii++;
-                }
-        
-            }
-            
-        } */
-    }
-    FILE *fp2;
-    fp2=fopen(path1,"r");
-    if(fp2==NULL) printf("fp2sucess\n");
-    int count2=read_number;//这个可以从源文件中找；readcountnumber是已知的
-    printf("%d\n",count2);
-    longreadinfo *info;
-    char line1[RM];
-    int h=0;
-    info=(longreadinfo *)malloc(sizeof(longreadinfo)*count2);
-    if(info!=NULL)printf("success  info\n");
-    if(fp2!=NULL)printf("success22\n");
-   /* while(fgets(line1,sizeof(line1),fp2)){
-        
-        char str1[RM];
-        sscanf(line1,"%*d %*d %s",str1);
-        
-        for(int y=0;y<strlen(str1);y++){
-            info[h].onedata[y]=str1[y];
-        }
-        
-        info[h].readid=h;
-        
-        h++;
-        
-    }*/
-    
-    int count=0;int ff=0;//出现次数
-    
-    printf("test%s\n",info[1].onedata);
-    printf("test%d\n",info[0].readid);
-  /*  for(int o=0;o<K_mer_numbe;o++){
-        for(int oo=0;oo<count2;oo++){
-            count=KMPmatch(Kmer_index[o].string,info[oo].onedata);
-            printf("%s\n",Kmer_index[o].string);
-            printf("%s\n",info[oo].onedata);
-            
-        }
-        ff=ff+count;
-        Kmer_index[o].frequency=ff;
-        printf("count is%d\n",ff);
-        
-        
-    }*/
-    
-    
-}
+
 
 int firsttask(int argc, char *argv[])
 {
@@ -487,14 +283,7 @@ int firsttask(int argc, char *argv[])
 	if (flag == -1) { print_usage(); exit(1); }
 	
     int readcount = chang_fastqfile(options->reads, options->wrk_dir);
-    int refer_readcount=chang_refer_fastqfile(options->reference,options->wrk_dir);
-    char path_[100];char path2_[100];
-    sprintf(path_, "%s/0.fq",options->wrk_dir);
-    printf("%s",path_);
-    sprintf(path2_, "%s/refer.fq",options->wrk_dir);
-    printf("%s",path2_);
-    filename(path2_,path_,readcount);
-	char kkkkk[1024];
+    char kkkkk[1024];
     sprintf(kkkkk, "config.txt");
     FILE* fileout = fopen(kkkkk, "w");
     fprintf(fileout, "%s\n%s\n%s\n%s\n%d\t%d\n", options->wrk_dir, options->reference, options->reads, options->output, options->num_cores, readcount);
@@ -626,7 +415,7 @@ int result_combine(int readcount, int filecount, char *workpath, char *outfile, 
 		print_sam_references(chr_idx, num_chr, out);
 		print_sam_program(main_argc, main_argv, out);
 	}
-	
+    
 	const int trsize = num_candidates + 6;
 	TempResult* pptr[trsize];
 	for (i = 0; i < trsize; ++i) pptr[i] = create_temp_result();
