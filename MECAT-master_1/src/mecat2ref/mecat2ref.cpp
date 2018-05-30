@@ -287,7 +287,7 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
     return (kk);
 
 }
-static void build_read_index(char *path){
+static void build_read_index(const char *path){
     unsigned int eit,temp;long start;
     char tempstr[200];
     sprintf(tempstr, "%s/0.fq",path);
@@ -617,20 +617,7 @@ int result_combine(int readcount, int filecount, char *workpath, char *outfile, 
 	return 0;
 }
 
-long get_file_size(const char *path)
-{
-    long filesize = -1;
-    struct stat statbuff;
-    if(stat(path, &statbuff) < 0)
-    {
-        return filesize;
-    }
-    else
-    {
-        filesize = statbuff.st_size;
-    }
-    return filesize;
-}
+
 
 extern int meap_ref_impl_large(int, int, int);
 
