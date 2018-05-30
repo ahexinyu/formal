@@ -194,6 +194,42 @@ int str2num(char *str)
     }
     return (sum);
 }
+static long get_file_size(const char *path)
+{
+    long filesize = -1;
+    struct stat statbuff;
+    if(stat(path, &statbuff) < 0)
+    {
+        return filesize;
+    }
+    else
+    {
+        filesize = statbuff.st_size;
+    }
+    return filesize;
+}
+
+
+static unsigned short atcttrans(char c)
+{
+    if(c=='A')return 0;
+    else if(c=='T')return 1;
+    else if(c=='C')return 2;
+    else if(c=='G')return 3;
+    else return 4;
+}
+static long sumvalue_x(int *intarry,int count)
+{//countin countindex
+    long i,sumval=0;
+    for(i=0; i<count; i++)
+    {
+        
+        if(intarry[i]>0&&intarry[i]<129)sumval=sumval+intarry[i];
+        else if(intarry[i]>128)intarry[i]=0;
+    }
+    //printf("intarry is %d\n",intarry[149]);
+    return(sumval);
+}
 int chang_fastqfile(const char *fastaq, const char *fenfolder)
 {
     FILE *fp, *ot;
@@ -256,7 +292,7 @@ static void build_read_index(char *path){
     char tempstr[200];
     sprintf(tempstr, "%s/0.fq",path);
     int leftnum;
-    leftnum=34-2*seedlen;
+    leftnum=34-2*seed_len;
     FILE  *fp;
     fp=fopen(tempstr,"r");
     char *seq;
@@ -381,26 +417,13 @@ static void build_read_index(char *path){
 }
 
 
-static long get_file_size(char *path)
-{
-    long filesize = -1;
-    struct stat statbuff;
-    if(stat(path, &statbuff) < 0)
-    {
-        return filesize;
-    }
-    else
-    {
-        filesize = statbuff.st_size;
-    }
-    return filesize;
-}
 
 
 int firsttask(int argc, char *argv[])
 {
     struct timeval tpstart, tpend;
     float timeuse;
+    FILE *fp;
 	meap_ref_options* options = (meap_ref_options*)malloc(sizeof(meap_ref_options));
 	int flag = param_read_t(argc, argv, options);
 	if (flag == -1) { print_usage(); exit(1); }
