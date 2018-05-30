@@ -1021,10 +1021,10 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     free(databaseindex);
     free(allloc);
     free(REFSEQ);
-    free(countin1);
+    /*free(countin1);
     free(databaseindex1);
     free(allloc1);
-    free(REFSEQ1);
+    free();*/
 
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
