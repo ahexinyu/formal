@@ -23,17 +23,11 @@ static int output_format = FMT_REF;
 static const int kDefaultOutputFormat = FMT_REF;
 static int tech;
 static const int kDefaultTech = TECH_PACBIO;
-typedef struct{
-    long start;//k-mer在参考基因组出现的开始位置
-    int readID;
-    int frequency;//出现次数
-    char string[13];
-    int next[13];//next数组。K_mer做比对的时候，
-}FRE_Kmer;
-typedef struct {
-    int readid;
-    char onedata[RM];
-}longreadinfo;
+static char *read_REFESQ;
+static int *countin1;
+static long **databaseindex1,*allloc1,seqcount1,sumcount1;
+static int seed_len=13;
+static int indexcount=67108864;
 
 typedef struct
 {
@@ -257,7 +251,134 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
     return (kk);
 
 }
-
+static void build_read_index(char *path){
+    unsigned int eit,temp;long start;
+    char tempstr[200];
+    sprintf(tempstr, "%s/0.fq",path);
+    int leftnum;
+    leftnum=34-2*seedlen;
+    FILE  *fp;
+    fp=fopen(tempstr,"r");
+    char *seq;
+    int length=get_file_size(path);
+    printf("%d",length);
+    read_REFESQ=(char *)malloc((length+1000)*sizeof(char));
+    seq=read_REFESQ;
+    char line[30000];
+    char str[30000];
+    while(fgets(line,sizeof(line),fp))
+    {
+        sscanf(line,"%*d %*d %s",str);
+        strcat(seq,str);
+    }
+    printf("%s",seq);
+    int actual_len=strlen(seq);
+    seqcount1=actual_len;
+    seq[actual_len+1]='\0';
+    //printf("Constructing look-up table...\n");
+    countin1=(int *)malloc((indexcount)*sizeof(int));
+    for(int i=0; i<indexcount; i++)countin1[i]=0;
+    
+    // Count the number
+    eit=0;
+    start=0;
+    for(int i=0; i<seqcount1; i++)
+    {
+        //printf("%c",seq[i]);
+        if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
+        {
+            eit=0;
+            start=0;
+            continue;
+        }
+        temp=atcttrans(seq[i]);
+        if(start<seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+            //printf("countin is %d\n",eit);
+            
+        }
+        else if(start>=seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+            countin1[eit]=countin1[eit]+1;
+            //printf("countin is %d\n",eit);//存的是countin
+            eit=eit<<leftnum;
+            eit=eit>>leftnum;
+            // printf("eit is %d\n",eit);
+        }
+        
+    }
+    
+    
+    //Max_index
+    sumcount1=sumvalue_x(countin1,indexcount);
+    allloc1=(long *)malloc(sumcount1*sizeof(long));
+    databaseindex1=(long **)malloc((indexcount)*sizeof(long*));
+    //allocate memory
+    sumcount1=0;
+    for( int i=0; i<indexcount; i++)
+    {
+        if(countin1[i]>0)
+        {
+            databaseindex1[i]=allloc1+sumcount1;
+            sumcount1=sumcount1+countin1[i];
+            countin1[i]=0;
+        }
+        else databaseindex1[i]=NULL;
+        
+    }
+    
+    // printf("xiao");//10834098
+    
+    //constructing the look-up table
+    eit=0;
+    start=0;
+    for(int i=0; i<seqcount1; i++)
+    {
+        //printf("%c\n",seq[i]);
+        if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
+        {
+            eit=0;
+            start=0;
+            continue;
+        }
+        temp=atcttrans(seq[i]);
+        if(start<seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+            // printf("eit2%d\n",eit);
+        }
+        else if(start>=seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+            
+            if(databaseindex1[eit]!=NULL)
+            {
+                countin1[eit]=countin1[eit]+1;
+                databaseindex1[eit][countin1[eit]-1]=i+2-seed_len;
+                
+            }
+            eit=eit<<leftnum;
+            eit=eit>>leftnum;
+            printf("%d\n",eit);
+            
+        }
+        
+    }
+    
+    
+    
+    
+}
 
 
 static long get_file_size(char *path)
@@ -278,11 +399,22 @@ static long get_file_size(char *path)
 
 int firsttask(int argc, char *argv[])
 {
+    struct timeval tpstart, tpend;
+    float timeuse;
 	meap_ref_options* options = (meap_ref_options*)malloc(sizeof(meap_ref_options));
 	int flag = param_read_t(argc, argv, options);
 	if (flag == -1) { print_usage(); exit(1); }
 	
     int readcount = chang_fastqfile(options->reads, options->wrk_dir);
+    gettimeofday(&tpstart, NULL);
+    build_read_index(options->wrk_dir);
+    gettimeofday(&tpend, NULL);
+    timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
+    timeuse /= 1000000;
+    fp = fopen("config.txt", "a");
+    fprintf(fp, "The Building  read  Index Time: %f sec\n", timeuse);
+    fclose(fp);
+    
     char kkkkk[1024];
     sprintf(kkkkk, "config.txt");
     FILE* fileout = fopen(kkkkk, "w");

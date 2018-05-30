@@ -279,164 +279,7 @@ static void creat_ref_index(char *fastafile)
         
     }
 }
-static void build_read_index(char *fastafile){
-    
-    unsigned int eit,temp;
-    int  indexcount=0,leftnum=0;
-    long length,count,i,start, rsize = 0;
-    FILE *fasta,*fastaindex;
-    char *seq,ch,nameall[200];
-    if(seed_len==14)indexcount=268435456;
-    else if(seed_len==13)indexcount=67108864;//4的13次方
-    else if(seed_len==12)indexcount=16777216;
-    else if(seed_len==11)indexcount=4194304;
-    else if(seed_len==10)indexcount=1048576;
-    else if(seed_len==9)indexcount=262144;
-    else if(seed_len==8)indexcount=65536;
-    else if(seed_len==7)indexcount=16384;
-    else if(seed_len==6)indexcount=4096;
-    leftnum=34-2*seed_len;
-    //read reference seq
-    length=get_file_size(fastafile);
-    fasta=fopen(fastafile, "r");
-    sprintf(nameall,"%s/readindex.txt",workpath);
-    fastaindex=fopen(nameall,"w");
-    read_REFSEQ=(char *)malloc((length+1000)*sizeof(char));
-    seq=read_REFSEQ;int kk=1;
-    for (ch=getc(fasta),count=0; ch!=EOF; ch=getc(fasta))
-    {
-        
-        if(ch=='>')
-            
-        {
-            
-            //assert(fscanf(fasta,"%[^\n]s",nameall) == 1);
-            if (rsize) fprintf(fastaindex, "%ld\n", rsize);
-            rsize = 0;
-            
-            fprintf(fastaindex,"%ld\t%d\t",count,kk);
-            kk++;
-        }
-        
-        else if(ch!='\n'&&ch!='\r')
-        {
-            if(ch>'Z')ch=toupper(ch);
-            seq[count]=ch;
-            count=count+1;
-            ++rsize;
-        }
-        
-    }
-    fclose(fasta);
-    fprintf(fastaindex, "%ld\n", rsize);
-    fprintf(fastaindex,"%ld\t%s\n",count,"FileEnd");
-    seq[count]='\0';
-    fclose(fastaindex);
-    seqcount1=count;
-    printf("read count is%ld\n",seqcount1);
-    
-    
-    //printf("Constructing look-up table...\n");
-    countin1=(int *)malloc((indexcount)*sizeof(int));
-    for(i=0; i<indexcount; i++)countin1[i]=0;
-    
-    // Count the number
-    eit=0;
-    start=0;
-    for(i=0; i<seqcount1; i++)
-    {
-        //printf("%c",seq[i]);
-        if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
-        {
-            eit=0;
-            start=0;
-            continue;
-        }
-        temp=atcttrans(seq[i]);
-        if(start<seed_len-1)
-        {
-            eit=eit<<2;
-            eit=eit+temp;
-            start=start+1;
-            //printf("countin is %d\n",eit);
-            
-        }
-        else if(start>=seed_len-1)
-        {
-            eit=eit<<2;
-            eit=eit+temp;
-            start=start+1;
-            countin1[eit]=countin1[eit]+1;
-           // printf("countin is %d\n",eit);//存的是countin
-            eit=eit<<leftnum;
-            eit=eit>>leftnum;
-            
-        //printf("eit is %d\n",eit);
-        }
-        
-    }
-    
-    
-    //Max_index
-    sumcount1=sumvalue_x(countin1,indexcount);
-    allloc1=(long *)malloc(sumcount1*sizeof(long));
-    databaseindex1=(long **)malloc((indexcount)*sizeof(long*));
-    //allocate memory
-    sumcount1=0;
-    for(i=0; i<indexcount; i++)
-    {
-        if(countin1[i]>0)
-        {
-            databaseindex1[i]=allloc1+sumcount1;
-            sumcount1=sumcount1+countin1[i];
-            countin1[i]=0;
-        }
-        else databaseindex1[i]=NULL;
-        
-    }
-    
-    // printf("xiao");//10834098
-    
-    //constructing the look-up table
-    eit=0;
-    start=0;
-    for(i=0; i<seqcount; i++)
-    {
-        //printf("%c\n",seq[i]);
-        if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
-        {
-            eit=0;
-            start=0;
-            continue;
-        }
-        temp=atcttrans(seq[i]);
-        if(start<seed_len-1)
-        {
-            eit=eit<<2;
-            eit=eit+temp;
-            start=start+1;
-            // printf("eit2%d\n",eit);
-        }
-        else if(start>=seed_len-1)
-        {
-            eit=eit<<2;
-            eit=eit+temp;
-            start=start+1;
-            
-            if(databaseindex1[eit]!=NULL)
-            {
-                countin1[eit]=countin1[eit]+1;
-                databaseindex1[eit][countin1[eit]-1]=i+2-seed_len;
-            
-            }
-            eit=eit<<leftnum;
-            eit=eit>>leftnum;
-            
-        }
-        
-    }
-    
-}
+
 
 
 
@@ -1088,6 +931,7 @@ static int load_fastq(FILE *fq)
         readcount++;
     }
     if(flag!=EOF)
+        
     {
         readinfo[readcount].seqloc=pre;
         readinfo[readcount].readno=readno;
@@ -1119,7 +963,6 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     gettimeofday(&tpstart, NULL);
     seed_len=13;
     creat_ref_index(fastafile);
-    build_read_index(fastqfile);
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
@@ -1178,6 +1021,10 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     free(databaseindex);
     free(allloc);
     free(REFSEQ);
+    free(countin1);
+    free(databaseindex1);
+    free(allloc1);
+    free(REFSEQ1);
 
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
