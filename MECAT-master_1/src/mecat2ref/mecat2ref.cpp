@@ -311,21 +311,21 @@ static void build_read_index(const char *path){
     while((flag=fscanf(fp,"%d\t%d\t%s\n",&readno,&readlen,pre))!=EOF&&read_count<100000&&lenl<1000000000)
     {
         
-        strcat(seq,pre);
+        //strcat(seq,pre);
         lenl=strlen(pre);
         readlen=readlen+lenl+1;
         pre=pre+readlen+1;
         read_count++;
     }
     if(flag!=EOF){
-        strcat(seq,pre);
+        //strcat(seq,pre);
         lenl=strlen(pre);
         readlen=readlen+lenl+1;
         pre=pre+readlen+1;
         read_count++;
     }
-    printf("%s",seq);
-   int actual_len=strlen(seq);
+    /*printf("%s",seq);
+    int actual_len=strlen(seq);
     seqcount1=actual_len;
     seq[actual_len+1]='\0';
     //printf("Constructing look-up table...\n");
@@ -426,7 +426,7 @@ static void build_read_index(const char *path){
             
         }
         
-    }
+    }*/
     
     
     

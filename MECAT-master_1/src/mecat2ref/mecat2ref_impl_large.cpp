@@ -1001,7 +1001,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         {
             for(threadno=0; threadno<threadnum; threadno++)
             {
-                threadflag= pthread_create(&thread[threadno], NULL, multithread, NULL);
+                threadflag= pthread_create(&thread[threadno], NULL, multithread, NULL);//(multithread)
                 if(threadflag)
                 {
                     printf("ERROR; return code is %d\n", threadflag);
