@@ -312,13 +312,15 @@ static void build_read_index(const char *path){
     {
         
         strcat(seq,pre);
-        lenl=readlen+lenl+1;
+        lenl=strlen(pre);
+        readlen=readlen+lenl+1;
         pre=pre+readlen+1;
         read_count++;
     }
     if(flag!=EOF){
         strcat(seq,pre);
-        lenl=readlen+lenl+1;
+        lenl=strlen(pre);
+        readlen=readlen+lenl+1;
         pre=pre+readlen+1;
         read_count++;
     }
