@@ -305,7 +305,6 @@ static void build_read_index(const char *path){
     int templen;
     char *pre;int lenl=0;
     int flag;int readno,readlen;int read_count;
-    
     pre=save_work;
     while((flag=fscanf(fp,"%d\t%d\t%s\n",&readno,&readlen,pre))!=EOF&&read_count<100000&&lenl<1000000000)
     {
@@ -320,7 +319,7 @@ static void build_read_index(const char *path){
         read_count++;
     }
     printf("%s",seq);
-    int actual_len=strlen(seq);
+   /* int actual_len=strlen(seq);
     seqcount1=actual_len;
     seq[actual_len+1]='\0';
     //printf("Constructing look-up table...\n");
@@ -421,7 +420,7 @@ static void build_read_index(const char *path){
             
         }
         
-    }
+    }*/
     
     
     
