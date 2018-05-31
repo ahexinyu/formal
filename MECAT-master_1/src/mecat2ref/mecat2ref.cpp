@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <dirent.h>
 #define RM 1000000
+#define MAXSTR 1000000000
 
 #include "output.h"
 #include "../common/defs.h"
@@ -307,16 +308,18 @@ static void build_read_index(const char *path){
     char *pre;int lenl=0;
     int flag;int readno,readlen;int read_count;
     pre=save_work;
-    /*while((flag=fscanf(fp,"%d\t%d\t%s\n",&readno,&readlen,pre))!=EOF&&read_count<100000&&lenl<1000000000)
+    while((flag=fscanf(fp,"%d\t%d\t%s\n",&readno,&readlen,pre))!=EOF&&read_count<100000&&lenl<1000000000)
     {
         
         strcat(seq,pre);
-        lenl=readlen+lenl;
+        lenl=readlen+lenl+1;
+        pre=pre+readlen+1;
         read_count++;
     }
     if(flag!=EOF){
         strcat(seq,pre);
-        lenl=readlen+lenl;
+        lenl=readlen+lenl+1;
+        pre=pre+readlen+1;
         read_count++;
     }
     printf("%s",seq);
@@ -421,7 +424,7 @@ static void build_read_index(const char *path){
             
         }
         
-    }*/
+    }
     
     
     
@@ -437,10 +440,10 @@ int firsttask(int argc, char *argv[])
     float timeuse;
     FILE *fp;
 	meap_ref_options* options = (meap_ref_options*)malloc(sizeof(meap_ref_options));
-    save_work=(char *)malloc((1000000000+RM)*sizeof(char));
+    save_work=(char *)malloc((MAXSTR+RM)*sizeof(char));
 	int flag = param_read_t(argc, argv, options);
 	if (flag == -1) { print_usage(); exit(1); }
-	
+	 
     int readcount = chang_fastqfile(options->reads, options->wrk_dir);
     gettimeofday(&tpstart, NULL);
     build_read_index(options->wrk_dir);
