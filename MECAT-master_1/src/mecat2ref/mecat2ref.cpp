@@ -300,14 +300,18 @@ static void build_read_index(const char *path){
     printf("%d",length);
     read_REFESQ=(char *)malloc((length+1000)*sizeof(char));
     seq=read_REFESQ;
-    char line[300000];
-    char str[300000];
-    while(fgets(line,sizeof(line),fp))
+    char line[30000]='\0';
+    char str[30000]='\0';
+    int readcount=0;int templen;
+    while(fgets(line,sizeof(line),fp)&&readcount<100000&&templen<1000000000)
     {
         sscanf(line,"%*d %*d %s",str);
         strcat(seq,str);
-        char line[300000]={0};
-        char str[300000]={0};
+        readcount++;
+        char line[30000]={0};
+        char str[30000]={0};
+        templen=strlen(seq);
+        
     }
     printf("%s",seq);
     int actual_len=strlen(seq);
