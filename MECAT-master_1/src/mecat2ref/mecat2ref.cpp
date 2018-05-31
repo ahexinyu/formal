@@ -305,7 +305,7 @@ static void build_read_index(const char *path){
     int templen;
     char *pre;int lenl=0;
     int flag;int readno,readlen;int read_count;
-    save_work=(char *)malloc((1000000000+RM)*sizeof(char));
+    
     pre=save_work;
     while((flag=fscanf(fp,"%d\t%d\t%s\n",&readno,&readlen,pre))!=EOF&&read_count<100000&&lenl<1000000000)
     {
@@ -425,7 +425,7 @@ static void build_read_index(const char *path){
     
     
     
-    free(save_work);
+  
 }
 
 
@@ -437,6 +437,7 @@ int firsttask(int argc, char *argv[])
     float timeuse;
     FILE *fp;
 	meap_ref_options* options = (meap_ref_options*)malloc(sizeof(meap_ref_options));
+    save_work=(char *)malloc((1000000000+RM)*sizeof(char));
 	int flag = param_read_t(argc, argv, options);
 	if (flag == -1) { print_usage(); exit(1); }
 	
@@ -461,6 +462,7 @@ int firsttask(int argc, char *argv[])
 	output_format = options->output_format;
 	tech = options->tech;
 	free(options);
+    free(save_work);
     return (corenum);
 }
 
