@@ -319,7 +319,8 @@ static void build_read_index(const char *path){
             p++;
             lenth_count++;
         }
-        readlen=readlen
+        readlen=readlen+lenl+1;
+        read_count++;
     }
     seq[lenth_count+1]='\0';
     printf("%s",seq);
