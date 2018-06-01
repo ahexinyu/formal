@@ -312,8 +312,8 @@ static void build_read_index(const char *path){
     while((flag=fscanf(fp,"%d\t%d\t%s\n",&readno,&readlen,pre))!=EOF&&read_count<100000&&lenl<1000000000)
     {
         
-      /*  lenl=strlen(pre);
-        for(int i=0;i<lenl;i++){
+        lenl=strlen(pre);
+        /*for(int i=0;i<lenl;i++){
             seq[lenth_count]=pre[i];
             lenth_count++;
         }
