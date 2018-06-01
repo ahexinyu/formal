@@ -324,7 +324,7 @@ static void build_read_index(const char *path){
     }
     seq[lenth_count+1]='\0';
     printf("%s",seq);
-    int actual_len=strlen(seq);
+   /* int actual_len=strlen(seq);
     seqcount1=actual_len;
     seq[actual_len+1]='\0';
     //printf("Constructing look-up table...\n");
@@ -425,7 +425,7 @@ static void build_read_index(const char *path){
             
         }
         
-    }
+    }*/
     
     
     
