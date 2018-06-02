@@ -22,7 +22,6 @@ static int runnumber=0,runthreadnum=0, readcount,terminalnum;
 static int *countin;
 static long **databaseindex,*allloc,seqcount,sumcount;
 static long **databaseindex1,*allloc1,seqcount1,sumcount1;
-static int seed_len;
 static char *REFSEQ;
 static char *savework,workpath[300],fastqfile[300];
 static int *countin1;
