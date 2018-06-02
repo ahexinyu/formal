@@ -30,6 +30,9 @@ static long **databaseindex1,*allloc1,seqcount1,sumcount1;
 static int seed_len=13;
 static int indexcount=67108864;
 static char *save_work;
+typedef struct {
+    char *read_string;
+}read_info;
 static read_info *info;
 
 typedef struct

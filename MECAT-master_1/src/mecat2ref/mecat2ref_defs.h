@@ -78,9 +78,7 @@ typedef struct
     int readno,readlen;
     char *seqloc;
 } ReadFasta;
-typedef struct {
-    char *read_string;
-}read_info;
+
 struct Back_List
 {
     short int score, score2, loczhi[SM],seedno[SM],seednum;
