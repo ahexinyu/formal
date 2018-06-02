@@ -26,7 +26,17 @@ static int seed_len;
 static char *REFSEQ;
 static char *read_REFSEQ;
 static char *savework,workpath[300],fastqfile[300];
+static int *countin1;
+static long **databaseindex1,*allloc1,seqcount1,sumcount1;
+static int seed_len=13;
+static int indexcount=67108864;
+static char *read_REFESQ;
+static char *save_work;
 static ReadFasta *readinfo;
+typedef struct {
+    char *read_string;
+}read_info;
+static read_info *info;
 
 static long get_file_size(const char *path)
 {
@@ -280,7 +290,155 @@ static void creat_ref_index(char *fastafile)
     }
 }
 
-
+static void build_read_index(const char *path){
+    unsigned int eit,temp;long start;
+    char tempstr[200];
+    sprintf(tempstr, "%s/0.fq",path);
+    int leftnum;
+    leftnum=34-2*seed_len;
+    FILE  *fp;
+    fp=fopen(tempstr,"r");
+    char *seq;
+    int length=get_file_size(path);
+    printf(" read length is %d",length);
+    
+    read_REFESQ=(char *)malloc((1000000000+200000)*sizeof(char));
+    seq=read_REFESQ;
+    
+    int templen;
+    char *pre;int lenl=0;
+    int flag;int readno,readlen;int read_count;
+    pre=save_work;
+    info=(read_info *)malloc((100000+2)*sizeof(read_info));
+    int lenth_count=0;int read_len; int temp_len;int lenth2_count=0;
+    while((flag=fscanf(fp,"%d\t%d\t%s\n",&readno,&readlen,pre))!=EOF&&read_count<100000&&lenl<1000000000)
+    {
+        
+        info[read_count].read_string=pre;
+        read_len=strlen(pre);
+        lenth_count=lenth_count+read_len+1;
+        pre=pre+read_len+1;
+        read_count++;
+        
+        
+    }
+    for(int i=0;i<read_count;i++){
+        temp_len=strlen(info[i].read_string);
+        for(int j=0;j<temp_len;j++){
+            seq[lenth2_count]=info[i].read_string[j];
+            lenth2_count++;
+        }
+        
+    }
+    seq[lenth2_count+1]='\0';
+    printf("%s",seq);
+    int actual_len=strlen(seq);
+    seqcount1=actual_len;
+    seq[actual_len+1]='\0';
+    //printf("Constructing look-up table...\n");
+    countin1=(int *)malloc((indexcount)*sizeof(int));
+    for(int i=0; i<indexcount; i++)countin1[i]=0;
+    
+    // Count the number
+    eit=0;
+    start=0;
+    for(int i=0; i<seqcount1; i++)
+    {
+        //printf("%c",seq[i]);
+        if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
+        {
+            eit=0;
+            start=0;
+            continue;
+        }
+        temp=atcttrans(seq[i]);
+        if(start<seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+            //printf("countin is %d\n",eit);
+            
+        }
+        else if(start>=seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+            countin1[eit]=countin1[eit]+1;
+            //printf("countin is %d\n",eit);//存的是countin
+            eit=eit<<leftnum;
+            eit=eit>>leftnum;
+            // printf("eit is %d\n",eit);
+        }
+        
+    }
+    
+    
+    //Max_index
+    sumcount1=sumvalue_x(countin1,indexcount);
+    allloc1=(long *)malloc(sumcount1*sizeof(long));
+    databaseindex1=(long **)malloc((indexcount)*sizeof(long*));
+    //allocate memory
+    sumcount1=0;
+    for( int i=0; i<indexcount; i++)
+    {
+        if(countin1[i]>0)
+        {
+            databaseindex1[i]=allloc1+sumcount1;
+            sumcount1=sumcount1+countin1[i];
+            countin1[i]=0;
+        }
+        else databaseindex1[i]=NULL;
+        
+    }
+    
+    // printf("xiao");//10834098
+    
+    //constructing the look-up table
+    eit=0;
+    start=0;
+    for(int i=0; i<seqcount1; i++)
+    {
+        //printf("%c\n",seq[i]);
+        if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
+        {
+            eit=0;
+            start=0;
+            continue;
+        }
+        temp=atcttrans(seq[i]);
+        if(start<seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+            // printf("eit2%d\n",eit);
+        }
+        else if(start>=seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+            
+            if(databaseindex1[eit]!=NULL)
+            {
+                countin1[eit]=countin1[eit]+1;
+                databaseindex1[eit][countin1[eit]-1]=i+2-seed_len;
+                
+            }
+            eit=eit<<leftnum;
+            eit=eit>>leftnum;
+            printf("%d\n",eit);
+            
+        }
+        
+    }
+    
+    
+    
+    
+}
 
 
 static void reference_mapping(int threadint)
@@ -955,6 +1113,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     FILE *fp,*fastq;
     struct timeval tpstart, tpend;
     float timeuse;
+    save_work=(char *)malloc((MAXSTR+RM)*sizeof(char));
     fp=fopen("config.txt","r");
     assert(fscanf(fp,"%s\n%s\n%s\n%s\n%d %d\n",workpath,fastafile,fastqfile,tempstr,&corenum,&readall) == 6);
     fclose(fp);
@@ -969,7 +1128,16 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     fp = fopen("config.txt", "a");
     fprintf(fp, "The Building Reference and read  Index Time: %f sec\n", timeuse);
     fclose(fp);
-
+    //build read_long index
+    gettimeofday(&tpstart, NULL);
+    build_read_index(workpath);
+    gettimeofday(&tpend, NULL);
+    timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
+    timeuse /= 1000000;
+    fp = fopen("config.txt", "a");
+    fprintf(fp, "The Building  read  Index Time: %f sec\n", timeuse);
+    fclose(fp);
+    
     gettimeofday(&tpstart, NULL);
 
     savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
