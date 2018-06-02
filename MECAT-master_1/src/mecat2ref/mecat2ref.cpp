@@ -305,7 +305,7 @@ static void build_read_index(const char *path){
     int length=get_file_size(path);
     printf(" read length is %d",length);
     
-    read_REFESQ=(char *)malloc((length+1000)*sizeof(char));
+    read_REFESQ=(char *)malloc((1000000000+200000)*sizeof(char));
     seq=read_REFESQ;
     
     int templen;
