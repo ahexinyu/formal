@@ -30,6 +30,7 @@ static long **databaseindex1,*allloc1,seqcount1,sumcount1;
 static int seed_len=13;
 static int indexcount=67108864;
 static char *save_work;
+static read_info *info;
 
 typedef struct
 {
@@ -308,17 +309,21 @@ static void build_read_index(const char *path){
     char *pre;int lenl=0;
     int flag;int readno,readlen;int read_count;
     pre=save_work;
-    char *p;int lenth_count=0;
+    info=(read_info*)malloc((100000+2)*sizeof(read_info));
+    char *p;int lenth_count=0;int read_len;
     while((flag=fscanf(fp,"%d\t%d\t%s\n",&readno,&readlen,pre))!=EOF&&read_count<100000&&lenl<1000000000)
     {
         
-        lenl=strlen(pre);
-        //strcat(seq,pre);
-        readlen=readlen+lenl+1;
-        pre=pre+lenl+1;
+        info[read_count].read_string=pre;
+        read_len=strlen(pre);
+        lenth_count=lenth_count+read_len+1;
+        pre=pre+read_len+1;
         read_count++;
         
     
+    }
+    for(int i=0;i<read_count;i++){
+        strcat(seq, info[i].read_string);
     }
    /* seq[lenth_count+1]='\0';
     printf("%s",seq);
