@@ -313,7 +313,7 @@ static void build_read_index(const char *path){
     {
         
         lenl=strlen(pre);
-        strcat(seq,pre);
+        //strcat(seq,pre);
         readlen=readlen+lenl+1;
         pre=pre+lenl+1;
         read_count++;
