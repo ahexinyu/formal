@@ -309,7 +309,7 @@ static void build_read_index(const char *path){
     char *pre;int lenl=0;
     int flag;int readno,readlen;int read_count;
     pre=save_work;
-    info=(read_info*)malloc((100000+2)*sizeof(read_info));
+    info=(read_info *)malloc((100000+2)*sizeof(read_info));
     char *p;int lenth_count=0;int read_len;
     while((flag=fscanf(fp,"%d\t%d\t%s\n",&readno,&readlen,pre))!=EOF&&read_count<100000&&lenl<1000000000)
     {
