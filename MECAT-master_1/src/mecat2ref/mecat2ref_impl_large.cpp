@@ -29,7 +29,7 @@ static char *savework,workpath[300],fastqfile[300];
 static int *countin1;
 static long **databaseindex1,*allloc1,seqcount1,sumcount1;
 static int seed_len=13;
-static int indexcount=67108864;
+static int index_count=67108864;
 static char *read_REFESQ;
 static char *save_work;
 static ReadFasta *readinfo;
@@ -337,7 +337,7 @@ static void build_read_index(const char *path){
     seq[actual_len+1]='\0';
     //printf("Constructing look-up table...\n");
     countin1=(int *)malloc((indexcount)*sizeof(int));
-    for(int i=0; i<indexcount; i++)countin1[i]=0;
+    for(int i=0; i<index_count; i++)countin1[i]=0;
     
     // Count the number
     eit=0;
@@ -376,12 +376,12 @@ static void build_read_index(const char *path){
     
     
     //Max_index
-    sumcount1=sumvalue_x(countin1,indexcount);
+    sumcount1=sumvalue_x(countin1,index_count);
     allloc1=(long *)malloc(sumcount1*sizeof(long));
-    databaseindex1=(long **)malloc((indexcount)*sizeof(long*));
+    databaseindex1=(long **)malloc((index_count)*sizeof(long*));
     //allocate memory
     sumcount1=0;
-    for( int i=0; i<indexcount; i++)
+    for( int i=0; i<index_count; i++)
     {
         if(countin1[i]>0)
         {
