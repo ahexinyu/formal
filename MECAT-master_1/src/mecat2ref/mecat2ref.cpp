@@ -314,8 +314,9 @@ static void build_read_index(const char *path){
         
         lenl=strlen(pre);
         for(int i=0;i<lenl;i++){
-            seq[lenth_count]=pre[i];
+            seq[lenth_count]=*pre;
             lenth_count++;
+            pre++;
         }
        /* readlen=readlen+lenl+1;
         read_count++;*/
