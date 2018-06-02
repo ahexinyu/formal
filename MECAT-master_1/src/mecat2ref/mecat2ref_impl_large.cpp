@@ -19,15 +19,13 @@ static int threadnum=2;
 static FILE **outfile;
 static pthread_mutex_t mutilock; 
 static int runnumber=0,runthreadnum=0, readcount,terminalnum;
-static int *countin;static int *countin1;
+static int *countin;
 static long **databaseindex,*allloc,seqcount,sumcount;
 static long **databaseindex1,*allloc1,seqcount1,sumcount1;
 static int seed_len;
 static char *REFSEQ;
-static char *read_REFSEQ;
 static char *savework,workpath[300],fastqfile[300];
 static int *countin1;
-static long **databaseindex1,*allloc1,seqcount1,sumcount1;
 static int seed_len=13;
 static int index_count=67108864;
 static char *read_REFESQ;
@@ -336,7 +334,7 @@ static void build_read_index(const char *path){
     seqcount1=actual_len;
     seq[actual_len+1]='\0';
     //printf("Constructing look-up table...\n");
-    countin1=(int *)malloc((indexcount)*sizeof(int));
+    countin1=(int *)malloc((index_count)*sizeof(int));
     for(int i=0; i<index_count; i++)countin1[i]=0;
     
     // Count the number
