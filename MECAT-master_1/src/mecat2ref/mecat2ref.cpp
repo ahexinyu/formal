@@ -302,7 +302,6 @@ int firsttask(int argc, char *argv[])
 	if (flag == -1) { print_usage(); exit(1); }
 	 
     int readcount = chang_fastqfile(options->reads, options->wrk_dir);
-    
     char kkkkk[1024];
     sprintf(kkkkk, "config.txt");
     FILE* fileout = fopen(kkkkk, "w");

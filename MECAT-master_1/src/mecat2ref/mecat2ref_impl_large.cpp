@@ -320,11 +320,12 @@ static void build_read_index(const char *path){
         
     }
     for(int i=0;i<read_count;i++){
-        temp_len=strlen(info[i].read_string);
+        stract(seq,info[i].read_string);
+        /*temp_len=strlen(info[i].read_string);
         for(int j=0;j<temp_len;j++){
             seq[lenth2_count]=info[i].read_string[j];
             lenth2_count++;
-        }
+        }*/
         
     }
     seq[lenth2_count+1]='\0';
