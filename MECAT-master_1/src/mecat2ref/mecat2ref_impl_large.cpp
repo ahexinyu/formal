@@ -307,20 +307,21 @@ static void build_read_index(const char *path){
     int flag;int readno,readlen;int read_count;
     pre=save_work;
     info=(read_info *)malloc((100000+2)*sizeof(read_info));
-    int lenth_count=0;int read_len; int temp_len;int lenth2_count=0;
+    int lenth_count=0;int read_len; int temp_len;
+    //int lenth2_count=0;
     while((flag=fscanf(fp,"%d\t%d\t%s\n",&readno,&readlen,pre))!=EOF&&read_count<100000&&lenl<1000000000)
     {
         
         info[read_count].read_string=pre;
         read_len=strlen(pre);
-        lenth_count=lenth_count+read_len+1;
+        lenl=lenl+read_len+1;
         pre=pre+read_len+1;
         read_count++;
         
         
     }
     for(int i=0;i<read_count;i++){
-        stract(seq,info[i].read_string);
+        strcat(seq, info[i].read_string);
         /*temp_len=strlen(info[i].read_string);
         for(int j=0;j<temp_len;j++){
             seq[lenth2_count]=info[i].read_string[j];
@@ -328,7 +329,7 @@ static void build_read_index(const char *path){
         }*/
         
     }
-    seq[lenth2_count+1]='\0';
+    seq[lenl+1]='\0';
     printf("%s",seq);
     int actual_len=strlen(seq);
     seqcount1=actual_len;
