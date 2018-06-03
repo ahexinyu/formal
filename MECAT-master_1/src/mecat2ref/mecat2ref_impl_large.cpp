@@ -321,7 +321,6 @@ static void build_read_index(const char *path){
         
     }
     for(int i=0;i<read_count;i++){
-       // strcat(seq, info[i].read_string);
         temp_len=strlen(info[i].read_string);
         for(int j=0;j<temp_len;j++){
             seq[lenth2_count]=info[i].read_string[j];
@@ -329,7 +328,7 @@ static void build_read_index(const char *path){
         }
         
     }
-    seq[lenl+1]='\0';
+    seq[lenth2_count+1]='\0';
     printf("%s",seq);
     int actual_len=strlen(seq);
     seqcount1=actual_len;
