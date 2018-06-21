@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <dirent.h>
 #define RM 1000000
-#define FM 2000000
+#define FM 1000000000
 #define MAXSTR 1000000000
 
 #include "output.h"
@@ -295,6 +295,10 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
     char refname[200];
     sprintf(tempstr,"%s/ref.fq",outpath);
     ot=fopen(tempstr,"w");
+     fq = (char *)malloc(1000000000);
+     setvbuf(fp, fq, _IOFBF, 1000000000);
+     oq = (char *)malloc(1000000000);
+     setvbuf(ot, oq, _IOFBF, 1000000000);
     int num_read_items;
     ch=getc(fp);int kk=0;
     if(ch=='>')
