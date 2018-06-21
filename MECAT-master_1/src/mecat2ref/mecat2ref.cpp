@@ -295,10 +295,6 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
     char refname[200];
     sprintf(tempstr,"%s/ref.fq",outpath);
     ot=fopen(tempstr,"w");
-    fq= (char *)malloc(100000000);
-    setvbuf(fp, fq, _IOFBF, 100000000);
-    oq=(char *)malloc(100000000);
-    setvbuf(ot, oq, _IOFBF, 100000000);
     int num_read_items;
     ch=getc(fp);int kk=0;
     if(ch=='>')
