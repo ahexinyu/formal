@@ -288,8 +288,7 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
 
 }
 
-
-static int change_ref_fq(char *filepath,const char *outpath){
+ int change_ref_fq(char *filepath,const char *outpath){
     FILE *fp;FILE *ot;int ref_len;long i;
     char tempstr[200];char onedata[FM];char ch;char *fq,*oq;char buff1[1000], buff2[RM];
     fp=fopen(filepath,"r");int cou=0;;
@@ -300,7 +299,7 @@ static int change_ref_fq(char *filepath,const char *outpath){
     setvbuf(fp, fq, _IOFBF, 100000000);
     oq=(char *)malloc(100000000);
     setvbuf(ot, oq, _IOFBF, 100000000);
-    int num_read_items;int rise=0;
+    int num_read_items;
     ch=getc(fp);int kk=0;
     if(ch=='>')
     {
@@ -358,7 +357,7 @@ int firsttask(int argc, char *argv[])
 	if (flag == -1) { print_usage(); exit(1); }
 	 
     int readcount = chang_fastqfile(options->reads, options->wrk_dir);
-    int refcount =change_ref_fq(options->reference,options->wrk_dir);
+    int refcount = change_ref_fq(options->reference,options->wrk_dir);
     char kkkkk[1024];
     sprintf(kkkkk, "config.txt");
     FILE* fileout = fopen(kkkkk, "w");
