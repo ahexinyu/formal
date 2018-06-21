@@ -578,7 +578,7 @@ static void reference_mapping(int threadint)
                 endnum=0;
                 read_len=strlen(onedata);
                 cleave_num=transnum_buchang(onedata,mvalue,&endnum,read_len,seed_len,BC);
-                j=0;
+                j=0;//j=0
                 index_spr=index_list;
                 index_ss=index_score;
                 endnum=0;
@@ -620,7 +620,7 @@ static void reference_mapping(int threadint)
                         }
                     }
 				*pnblk = j;
-                cc1=j;
+                cc1=j;//index 数
                 for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>6)//short int *index_score,*index_ss;
                     {
                         temp_spr=database+*index_spr;
@@ -632,7 +632,7 @@ static void reference_mapping(int threadint)
                         if(*index_spr>0)
                         {
                             loc=(temp_spr-1)->score;
-                            if(loc>0)start_loc=(*index_spr-1)*ZVL;
+                            if(loc>0)start_loc=(*index_spr-1)*ZVL;//记录位置的。
                         }
                         else loc=0;
                         if(loc==0)for(j=0,u_k=0; j<s_k&&j<SM; j++)
@@ -648,7 +648,7 @@ static void reference_mapping(int threadint)
                             temp_spr1=temp_spr-1;
                             for(j=0; j<k&&j<SM; j++)
                             {
-                                temp_list[u_k]=temp_spr1->loczhi[j];
+                                temp_list[u_k]=temp_spr1->loczhi[j];//int temp_list,temp_seedn类型
                                 temp_seedn[u_k]=temp_spr1->seedno[j];
                                 u_k++;
                             }

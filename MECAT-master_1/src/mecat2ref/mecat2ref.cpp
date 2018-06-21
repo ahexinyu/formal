@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <dirent.h>
 #define RM 1000000
+#define FM 2000000
 #define MAXSTR 1000000000
 
 #include "output.h"
@@ -288,7 +289,62 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
 }
 
 
-
+static int change_ref_fq(char *filepath,const char *outpath){
+    FILE *fp;FILE *ot;int ref_len;long i;
+    char tempstr[200];char onedata[FM];char ch;char *fq,*oq;char buff1[1000], buff2[RM];
+    fp=fopen(filepath,"r");int cou=0;;
+    char refname[200];
+    sprintf(tempstr,"%s/ref.fq",outpath);
+    ot=fopen(tempstr,"w");
+    fq= (char *)malloc(100000000);
+    setvbuf(fp, fq, _IOFBF, 100000000);
+    oq=(char *)malloc(100000000);
+    setvbuf(ot, oq, _IOFBF, 100000000);
+    int num_read_items;int rise=0;
+    ch=getc(fp);int kk=0;
+    if(ch=='>')
+    {
+        kk=0;
+        for (; ch!=EOF; ch=getc(fp))
+        {
+            if(ch=='>')
+            {
+                num_read_items = fscanf(fp,"%[^\n]s",refname);
+                assert(num_read_items = 1);
+                if(kk>0)
+                {
+                    onedata[ref_len]='\0';
+                    fprintf(ot, "%d\t\%d\t%s\n", kk-1,ref_len,onedata);
+                    ref_len=0;
+                    kk++;
+                }
+                else
+                {
+                    kk++;
+                    ref_len=0;
+                }
+            }
+            else if(ch!='\n'&&ch!='\r')onedata[ref_len++]=ch;
+        }
+        onedata[ref_len]='\0';
+        fprintf(ot, "%d\t\%d\t%s\n", kk-1,ref_len,onedata);
+    }
+    else
+    {
+        fseek(fp, 0L, SEEK_SET);
+        while (fscanf(fp, "%[^\n]s", refname) != EOF && fscanf(fp, "%s\n", onedata) != EOF && fscanf(fp, "%[^\n]s", buff1) != EOF && fscanf(fp, "%s\n", buff2) != EOF)
+        {
+            ref_len=strlen(onedata);
+            fprintf(ot, "%d\t%d\t%s\n", ++kk,ref_len,onedata);
+        }
+    }
+    
+    fclose(fp);
+    fclose(ot);
+    free(fq);
+    free(oq);
+    return (kk);
+}
 
 
 int firsttask(int argc, char *argv[])
@@ -302,6 +358,7 @@ int firsttask(int argc, char *argv[])
 	if (flag == -1) { print_usage(); exit(1); }
 	 
     int readcount = chang_fastqfile(options->reads, options->wrk_dir);
+    int refcount =change_ref_fq(options->reference,options->wrk_dir);
     char kkkkk[1024];
     sprintf(kkkkk, "config.txt");
     FILE* fileout = fopen(kkkkk, "w");
