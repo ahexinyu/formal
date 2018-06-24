@@ -506,6 +506,7 @@ static void get_vote(){
             start=start+1;
             nn=(i-12)/200+1;
             if(countin[eit]>0){
+                printf("count in is %d\n",countin[eit]);
                 sc1[nn].r_count=sc1[nn].r_count+countin[eit];
                 
             }//在参考基因里出现的次数
