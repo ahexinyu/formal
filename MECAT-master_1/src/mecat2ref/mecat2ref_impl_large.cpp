@@ -479,8 +479,9 @@ static void get_vote(){
     for(int j=0;j<similarity_count;j++){
         
         if(sc1[j].k_count>0){
-            sc1[j].LDF=log((read_kmer)/sc1[j].k_count);}
-    }//在Longread里面出现的饿次数
+            sc1[j].LDF=log((read_kmer)/sc1[j].k_count);
+            printf("LDF is %f\n",sc1[j].LDF);}
+    }//在Longread里面出现的次数
     
     for(i=0; i<seqcount; i++)
     {
@@ -516,7 +517,8 @@ static void get_vote(){
     }
     for(int j=0;j<similarity_count;j++){
         if(count_value>0){
-            sc1[j].TF=sc1[j].r_count/count_value;}
+            sc1[j].TF=sc1[j].r_count/count_value;
+            printf("TF is %f\n",sc1[j].TF);}
         sc1[j].vote=sc1[j].TF*sc1[j].LDF;
         printf("vote is %f\n",sc1[j].vote);
         
