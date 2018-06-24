@@ -32,6 +32,7 @@ static char *save_work;
 static ReadFasta *readinfo;
 int mavalue[2000];
 int similarity_count;
+int read_kmer;
 float count_value;
 typedef struct {
     char *read_string;
@@ -237,6 +238,7 @@ static void build_read_index(const char *path){
     
     //Max_index
     sumcount1=sumvalue_x(countin1,index_count);
+    read_kmer=sumcount1;
     allloc1=(long *)malloc(sumcount1*sizeof(long));
     databaseindex1=(long **)malloc((index_count)*sizeof(long*));
     //allocate memory
@@ -463,18 +465,21 @@ static void creat_ref_index(char *fastafile)
         
     }
 }
-static void get_vote(int read_num){
+static void get_vote(){
     int eit=0;
     int temp=0;
-    int i=0;char *seq;sim *sc1;
+    int i=0;char *seq;sim *sc1;char *readseq;
+    readseq=read_REFESQ;
     seq=REFSEQ;
     sc1=sc;
     int start=0;//num 有关
     int leftnum=8;int nn=0;
+    
+    
     for(int j=0;j<similarity_count;j++){
         
         if(sc1[j].k_count>0){
-            sc1[j].LDF=log((read_num)/sc1[j].k_count);}
+            sc1[j].LDF=log((read_kmer)/sc1[j].k_count);}
     }//在Longread里面出现的饿次数
     
     for(i=0; i<seqcount; i++)
@@ -1216,7 +1221,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     fp = fopen("config.txt", "a");
     fprintf(fp, "The Building  Reference  Index Time: %f sec\n", timeuse);
     fclose(fp);
-    get_vote(readall);
+    get_vote();
     gettimeofday(&tpstart, NULL);
 
     savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
