@@ -30,9 +30,21 @@ static int index_count=67108864;
 static char *read_REFESQ;
 static char *save_work;
 static ReadFasta *readinfo;
+int mavalue[2000];
+int similarity_count;
+float count_value
 typedef struct {
     char *read_string;
 }read_info;
+typedef struct{
+    double simm;//相似度
+    int k_count;//long_read出现的次数
+    float LDF;//词频
+    float TF;
+    float vote;
+    int r_count;//参考基因里出现的次数
+} sim;
+static sim *sc;
 static read_info *info;
 
 static long get_file_size(const char *path)
@@ -137,156 +149,6 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len)
         spr->score--;//删掉最低一个
     }
 }
-
-
-static void creat_ref_index(char *fastafile)
-{
-    unsigned int eit,temp;
-    int  indexcount=0,leftnum=0;
-    long length,count,i,start, rsize = 0;
-    FILE *fasta,*fastaindex;
-    char *seq,ch,nameall[200];
-    if(seed_len==14)indexcount=268435456;
-    else if(seed_len==13)indexcount=67108864;//2的26次方
-    else if(seed_len==12)indexcount=16777216;
-    else if(seed_len==11)indexcount=4194304;
-    else if(seed_len==10)indexcount=1048576;
-    else if(seed_len==9)indexcount=262144;
-    else if(seed_len==8)indexcount=65536;
-    else if(seed_len==7)indexcount=16384;
-    else if(seed_len==6)indexcount=4096;
-    leftnum=34-2*seed_len;
-    //read reference seq
-    length=get_file_size(fastafile);
-    fasta=fopen(fastafile, "r");
-    sprintf(nameall,"%s/chrindex.txt",workpath);
-    fastaindex=fopen(nameall,"w");
-
-    REFSEQ=(char *)malloc((length+1000)*sizeof(char));
-    seq=REFSEQ;
-    for (ch=getc(fasta),count=0; ch!=EOF; ch=getc(fasta))
-    {
-        if(ch=='>')
-        {
-            assert(fscanf(fasta,"%[^\n]s",nameall) == 1);
-			if (rsize) fprintf(fastaindex, "%ld\n", rsize);
-			rsize = 0;
-			for(i=0;i<strlen(nameall);i++)if(nameall[i]==' '||nameall[i]=='\t')break;
-			nameall[i]='\0';
-            fprintf(fastaindex,"%ld\t%s\t",count,nameall);
-        }
-        else if(ch!='\n'&&ch!='\r')
-        {
-            if(ch>'Z')ch=toupper(ch);
-            seq[count]=ch;
-            count=count+1;
-			++rsize;
-        }
-    }
-    fclose(fasta);
-	fprintf(fastaindex, "%ld\n", rsize);
-    fprintf(fastaindex,"%ld\t%s\n",count,"FileEnd");
-    seq[count]='\0';
-    fclose(fastaindex);
-    seqcount=count;
-    printf("%ld\n",seqcount);
-//printf("Constructing look-up table...\n");
-    countin=(int *)malloc((indexcount)*sizeof(int));
-    for(i=0; i<indexcount; i++)countin[i]=0;
-
-// Count the number
-    eit=0;
-    start=0;
-    for(i=0; i<seqcount; i++)
-    {
-        if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
-        {
-            eit=0;
-            start=0;
-            continue;
-        }
-        temp=atcttrans(seq[i]);
-        if(start<seed_len-1)
-        {
-            eit=eit<<2;
-            eit=eit+temp;
-            start=start+1;
-            //printf("%d\n",eit);
-        }
-        else if(start>=seed_len-1)
-        {
-            eit=eit<<2;
-            eit=eit+temp;
-            start=start+1;
-            countin[eit]=countin[eit]+1;
-            eit=eit<<leftnum;
-            eit=eit>>leftnum;
-            // printf("this is eit%d\n",eit);
-        }
-       
-        //printf("%c",seq[i]);
-    }
-
-
-//Max_index
-    sumcount=sumvalue_x(countin,indexcount);//有效Index K_mer的数量
-    allloc=(long *)malloc(sumcount*sizeof(long));
-    databaseindex=(long **)malloc((indexcount)*sizeof(long*));
-//allocate memory
-    sumcount=0;
-    for(i=0; i<indexcount; i++)
-    {
-        if(countin[i]>0)
-        {
-            databaseindex[i]=allloc+sumcount;
-            sumcount=sumcount+countin[i];
-            countin[i]=0;
-        }
-        else databaseindex[i]=NULL;
-       
-    }
-
-    // printf("xiao");//10834098
-
-//constructing the look-up table
-    eit=0;
-    start=0;
-    for(i=0; i<seqcount; i++)
-    {
-        //printf("%c",seq[i]);
-        if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
-        {
-            eit=0;
-            start=0;
-            continue;
-        }
-        temp=atcttrans(seq[i]);
-        if(start<seed_len-1)
-        {
-            eit=eit<<2;
-            eit=eit+temp;
-            start=start+1;
-            //printf("eit2%d\n",eit);
-        }
-        else if(start>=seed_len-1)
-        {
-            eit=eit<<2;
-            eit=eit+temp;
-            start=start+1;
-
-            if(databaseindex[eit]!=NULL)
-            {
-                countin[eit]=countin[eit]+1;
-                databaseindex[eit][countin[eit]-1]=i+2-seed_len;//存的位置
-            }
-            eit=eit<<leftnum;
-            eit=eit>>leftnum;
-            //printf(" thiS IS eit2%d\n",eit);
-        }
-        
-    }
-}
-
 static void build_read_index(const char *path){
     unsigned int eit,temp;long start;
     char tempstr[200];
@@ -437,6 +299,225 @@ static void build_read_index(const char *path){
     
     
 }
+
+static void creat_ref_index(char *fastafile)
+{
+    unsigned int eit,temp;
+    int  indexcount=0,leftnum=0;
+    long length,count,i,start, rsize = 0;
+    FILE *fasta,*fastaindex;
+    char *seq,ch,nameall[200];
+    if(seed_len==14)indexcount=268435456;
+    else if(seed_len==13)indexcount=67108864;//2的26次方
+    else if(seed_len==12)indexcount=16777216;
+    else if(seed_len==11)indexcount=4194304;
+    else if(seed_len==10)indexcount=1048576;
+    else if(seed_len==9)indexcount=262144;
+    else if(seed_len==8)indexcount=65536;
+    else if(seed_len==7)indexcount=16384;
+    else if(seed_len==6)indexcount=4096;
+    leftnum=34-2*seed_len;
+    //read reference seq
+    length=get_file_size(fastafile);
+    fasta=fopen(fastafile, "r");
+    sprintf(nameall,"%s/chrindex.txt",workpath);
+    fastaindex=fopen(nameall,"w");
+
+    REFSEQ=(char *)malloc((length+1000)*sizeof(char));
+    seq=REFSEQ;
+    for (ch=getc(fasta),count=0; ch!=EOF; ch=getc(fasta))
+    {
+        if(ch=='>')
+        {
+            assert(fscanf(fasta,"%[^\n]s",nameall) == 1);
+			if (rsize) fprintf(fastaindex, "%ld\n", rsize);
+			rsize = 0;
+			for(i=0;i<strlen(nameall);i++)if(nameall[i]==' '||nameall[i]=='\t')break;
+			nameall[i]='\0';
+            fprintf(fastaindex,"%ld\t%s\t",count,nameall);
+        }
+        else if(ch!='\n'&&ch!='\r')
+        {
+            if(ch>'Z')ch=toupper(ch);
+            seq[count]=ch;
+            count=count+1;
+			++rsize;
+        }
+    }
+    fclose(fasta);
+	fprintf(fastaindex, "%ld\n", rsize);
+    fprintf(fastaindex,"%ld\t%s\n",count,"FileEnd");
+    seq[count]='\0';
+    fclose(fastaindex);
+    seqcount=count;
+    similarity_count=(seqcount-12)/200+1;
+    sc=(sim *)malloc(similarity_count*sizeof(sim));
+    for(int k=0;k<similarity_count;k++){
+        sc[k].k_count=0;
+        sc[k].simm=0;
+        sc[k].TF=0;
+        sc[k].LDF=0;//词频
+        sc[k].r_count=0;
+        sc[k].vote=0;
+    }//初始化
+    printf("%ld\n",seqcount);
+//printf("Constructing look-up table...\n");
+    countin=(int *)malloc((indexcount)*sizeof(int));
+    for(i=0; i<indexcount; i++)countin[i]=0;
+
+// Count the number
+    eit=0;
+    start=0;
+    for(i=0; i<seqcount; i++)
+    {
+        if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
+        {
+            eit=0;
+            start=0;
+            continue;
+        }
+        temp=atcttrans(seq[i]);
+        if(start<seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+            //printf("%d\n",eit);
+        }
+        else if(start>=seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+            countin[eit]=countin[eit]+1;
+            eit=eit<<leftnum;
+            eit=eit>>leftnum;
+            // printf("this is eit%d\n",eit);
+        }
+       
+        //printf("%c",seq[i]);
+    }
+
+  int nn;//表示区域
+//Max_index
+    sumcount=sumvalue_x(countin,indexcount);//有效Index K_mer的数量
+    count_value=sumcount;
+    allloc=(long *)malloc(sumcount*sizeof(long));
+    databaseindex=(long **)malloc((indexcount)*sizeof(long*));
+//allocate memory
+    sumcount=0;
+    for(i=0; i<indexcount; i++)
+    {
+        if(countin[i]>0)
+        {
+            databaseindex[i]=allloc+sumcount;
+            sumcount=sumcount+countin[i];
+            countin[i]=0;
+        }
+        else databaseindex[i]=NULL;
+       
+    }
+
+    // printf("xiao");//10834098
+
+//constructing the look-up table
+    eit=0;
+    start=0;
+    for(i=0; i<seqcount; i++)
+    {
+        //printf("%c",seq[i]);
+        if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
+        {
+            eit=0;
+            start=0;
+            continue;
+        }
+        temp=atcttrans(seq[i]);
+        if(start<seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+            //printf("eit2%d\n",eit);
+        }
+        else if(start>=seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+
+            if(databaseindex[eit]!=NULL)
+            {
+                countin[eit]=countin[eit]+1;
+                databaseindex[eit][countin[eit]-1]=i+2-seed_len;//存的位置
+            }
+            nn=(i-12)/200+1;//按照200划分，
+            if(countin1[eit]>0){
+                sc[nn].k_count=sc[nn].k_count+countin1[eit];//在long_read里面出现的次数
+            };
+            
+            eit=eit<<leftnum;
+            eit=eit>>leftnum;
+            //printf(" thiS IS eit2%d\n",eit);
+        }
+        
+    }
+}
+static void get_vote(int read_num){
+    int eit=0;
+    int temp=0;
+    int i=0;char *seq;sim *sc1;
+    seq=REFSEQ;
+    sc1=sc;
+    int start=0;//num 有关
+    int leftnum=8;int nn=0;
+    for(int j=0;j<similarity_count;j++){
+        
+        if(sc1[j].k_count>0){
+            sc1[j].LDF=log((read_num)/sc1[j].k_count);}
+    }//在Longread里面出现的饿次数
+    
+    for(i=0; i<seqcount; i++)
+    {
+        
+        if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
+        {
+            eit=0;
+            start=0;
+            continue;
+        }
+        temp=atcttrans(seq[i]);
+        if(start<seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+        }
+        else if(start>=seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+            nn=(i-12)/200+1;
+            if(countin[eit]>0){
+                sc1[nn].r_count=sc1[nn].r_count+countin[eit];
+                
+            }//在参考基因里出现的次数
+            
+            eit=eit<<leftnum;
+            eit=eit>>leftnum;
+        }
+        
+    }
+    for(int j=0;j<similarity_count;j++){
+        if(count_value>0){
+            sc1[j].TF=sc1[j].r_count/count_value;}
+        sc1[j].vote=sc1[j].TF*sc1[j].LDF;
+        printf("vote is %f\n",sc1[j].vote);
+        
+    }
+}
+
 
 
 static void reference_mapping(int threadint)
@@ -1106,7 +1187,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
 	TECH = tech;
 	num_output = noutput;
     char tempstr[300],fastafile[300];
-    int corenum,readall;
+    int corenum,readall;//readall是readcount 的条数
     int fileflag,threadno,threadflag;
     FILE *fp,*fastq;
     struct timeval tpstart, tpend;
@@ -1119,23 +1200,23 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     //building reference index
     gettimeofday(&tpstart, NULL);
     seed_len=13;
-    creat_ref_index(fastafile);
-    gettimeofday(&tpend, NULL);
-    timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
-    timeuse /= 1000000;
-    fp = fopen("config.txt", "a");
-    fprintf(fp, "The Building Reference and read  Index Time: %f sec\n", timeuse);
-    fclose(fp);
-    //build read_long index
-    gettimeofday(&tpstart, NULL);
     build_read_index(workpath);
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
     fp = fopen("config.txt", "a");
-    fprintf(fp, "The Building  read  Index Time: %f sec\n", timeuse);
+    fprintf(fp, "The Building read Index Time: %f sec\n", timeuse);
     fclose(fp);
-    
+    //build read_long index
+    gettimeofday(&tpstart, NULL);
+    creat_ref_index(fastafile);
+    gettimeofday(&tpend, NULL);
+    timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
+    timeuse /= 1000000;
+    fp = fopen("config.txt", "a");
+    fprintf(fp, "The Building  Reference  Index Time: %f sec\n", timeuse);
+    fclose(fp);
+    get_vote(readall);
     gettimeofday(&tpstart, NULL);
 
     savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
@@ -1187,10 +1268,10 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     free(databaseindex);
     free(allloc);
     free(REFSEQ);
-    /*free(countin1);
+    free(countin1);
     free(databaseindex1);
     free(allloc1);
-    free();*/
+    free(read_REFESQ);
 
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;

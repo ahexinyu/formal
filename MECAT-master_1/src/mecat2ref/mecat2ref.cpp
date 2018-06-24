@@ -290,7 +290,7 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
 
  int change_ref_fq(const char *filepath,const char *outpath){
     FILE *fp;FILE *ot;int ref_len;long i;
-    char tempstr[200];char onedata[FM];char ch;char *fq,*oq;char buff1[1000], buff2[RM];
+    char tempstr[200];char onedata[FM];char ch;char *fq,*oq;char buff1[1000], buff2[FM];
     fp=fopen(filepath,"r");
     char refname[200];
     sprintf(tempstr,"%s/ref.fq",outpath);
