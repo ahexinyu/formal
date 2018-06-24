@@ -180,9 +180,7 @@ static void build_read_index(const char *path){
         lenl=lenl+read_len+1;
         pre=pre+read_len+1;
         read_count++;
-        
-        
-    }
+        }
     for(int i=0;i<read_count;i++){
         temp_len=strlen(info[i].read_string);
         for(int j=0;j<temp_len;j++){
@@ -454,7 +452,7 @@ static void creat_ref_index(char *fastafile)
                 countin[eit]=countin[eit]+1;
                 databaseindex[eit][countin[eit]-1]=i+2-seed_len;//存的位置
             }
-            printf("countin is %d\n",countin[eit]);
+           
             nn=(i-12)/200+1;//按照200划分，
             if(countin1[eit]>0){
                 sc[nn].k_count=sc[nn].k_count+countin1[eit];//在long_read里面出现的次数
@@ -507,13 +505,10 @@ static void get_vote(){
             eit=eit+temp;
             start=start+1;
             nn=(i-12)/200+1;
-            if(countin[eit]>0){
-                
-                
+            if(countin[eit]>0&&coutin[eit]<129){
                 sc1[nn].r_count=sc1[nn].r_count+countin[eit];
-                
+                printf("countin is %d\n",countin[eit]);
             }//在参考基因里出现的次数
-            
             eit=eit<<leftnum;
             eit=eit>>leftnum;
         }
