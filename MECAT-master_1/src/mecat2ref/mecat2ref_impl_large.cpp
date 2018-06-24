@@ -505,7 +505,7 @@ static void get_vote(){
             eit=eit+temp;
             start=start+1;
             nn=(i-12)/200+1;
-            if(countin[eit]>0&&coutin[eit]<129){
+            if(countin[eit]>0&&countin[eit]<129){
                 sc1[nn].r_count=sc1[nn].r_count+countin[eit];
                 printf("countin is %d\n",countin[eit]);
             }//在参考基因里出现的次数
