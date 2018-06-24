@@ -32,7 +32,7 @@ static char *save_work;
 static ReadFasta *readinfo;
 int mavalue[2000];
 int similarity_count;
-float count_value
+float count_value;
 typedef struct {
     char *read_string;
 }read_info;
