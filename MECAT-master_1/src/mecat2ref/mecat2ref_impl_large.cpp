@@ -230,7 +230,7 @@ static void build_read_index(const char *path){
             //printf("countin is %d\n",eit);//存的是countin
             eit=eit<<leftnum;
             eit=eit>>leftnum;
-            // printf("eit is %d\n",eit);
+            
         }
         
     }
@@ -275,7 +275,7 @@ static void build_read_index(const char *path){
             eit=eit<<2;
             eit=eit+temp;
             start=start+1;
-            // printf("eit2%d\n",eit);
+            
         }
         else if(start>=seed_len-1)
         {
@@ -291,7 +291,7 @@ static void build_read_index(const char *path){
             }
             eit=eit<<leftnum;
             eit=eit>>leftnum;
-            printf("%d\n",eit);
+            
             
         }
         
@@ -392,6 +392,7 @@ static void creat_ref_index(char *fastafile)
             eit=eit+temp;
             start=start+1;
             countin[eit]=countin[eit]+1;
+            
             eit=eit<<leftnum;
             eit=eit>>leftnum;
             // printf("this is eit%d\n",eit);
@@ -453,6 +454,7 @@ static void creat_ref_index(char *fastafile)
                 countin[eit]=countin[eit]+1;
                 databaseindex[eit][countin[eit]-1]=i+2-seed_len;//存的位置
             }
+            printf("countin is %d\n",countin[eit]);
             nn=(i-12)/200+1;//按照200划分，
             if(countin1[eit]>0){
                 sc[nn].k_count=sc[nn].k_count+countin1[eit];//在long_read里面出现的次数
@@ -506,7 +508,8 @@ static void get_vote(){
             start=start+1;
             nn=(i-12)/200+1;
             if(countin[eit]>0){
-                printf("count in is %d\n",countin[eit]);
+                
+                
                 sc1[nn].r_count=sc1[nn].r_count+countin[eit];
                 
             }//在参考基因里出现的次数
