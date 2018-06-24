@@ -517,6 +517,7 @@ static void get_vote(){
     }
     for(int j=0;j<similarity_count;j++){
         if(count_value>0){
+            printf("r_count is %d\n",sc1[j].r_count);
             sc1[j].TF=sc1[j].r_count/count_value;
             printf("TF is %f\n",sc1[j].TF);}
         sc1[j].vote=sc1[j].TF*sc1[j].LDF;
