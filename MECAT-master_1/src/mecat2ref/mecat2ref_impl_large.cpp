@@ -474,7 +474,7 @@ static void get_vote(){
     sc1=sc;
     int *cpycount;
     cpycount=(int *)malloc((indexcount)*sizeof(int));
-    memcpy(cpycount, countin, sizeof(int)*indexcount);
+    memcpy(cpycount, countin, sizeof(int)*index_count);
     int start=0;//num 有关
     int leftnum=8;int nn=0;
     
