@@ -473,7 +473,7 @@ static void get_vote(){
     seq=REFSEQ;
     sc1=sc;
     int *cpycount;
-    cpycount=(int *)malloc((indexcount)*sizeof(int));
+    cpycount=(int *)malloc((index_count)*sizeof(int));
     memcpy(cpycount, countin, sizeof(int)*index_count);
     int start=0;//num 有关
     int leftnum=8;int nn=0;
