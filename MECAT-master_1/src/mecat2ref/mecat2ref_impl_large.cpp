@@ -473,7 +473,7 @@ static void get_vote(){
     seq=REFSEQ;
     sc1=sc;
     int *cpycount;
-    cpycount=(int *)malloc((indexcount)*sizeof(int));
+    cpycount=(int *)malloc((index_count)*sizeof(int));
     memcpy(cpycount, countin, sizeof(int)*index_count);
     int start=0;//num 有关
     int leftnum=8;int nn=0;
@@ -511,7 +511,6 @@ static void get_vote(){
             if(cpycount[eit]>0){
                 printf("%d\n",cpycount[eit]);
                 sc1[nn].r_count=sc1[nn].r_count+cpycount[eit];
-                cpycount[eit]=0;
             } //在参考基因里出现的次数
             eit=eit<<leftnum;
             eit=eit>>leftnum;
