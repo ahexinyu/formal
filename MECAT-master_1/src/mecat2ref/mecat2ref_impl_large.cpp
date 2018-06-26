@@ -519,19 +519,21 @@ static void get_vote(){
     }
     for(int j=0;j<similarity_count;j++){
         if(count_value>0){
-            printf("r_count is %d\n",sc1[j].r_count);
+           // printf("r_count is %d\n",sc1[j].r_count);
             sc1[j].TF=sc1[j].r_count/count_value;
-            printf("TF is %f\n",sc1[j].TF);}
+            //printf("TF is %f\n",sc1[j].TF);}
         if((sc1[j].TF*sc1[j].LDF)>0){
             sc1[j].vote=fabs(log(sc1[j].TF*sc1[j].LDF));}
         else{
             sc1[j].vote=1;
         
-        };
+            };
         printf("vote is %f\n",sc1[j].vote);
         
     }
+    }
         free(cpycount);
+        
 }
 
 
