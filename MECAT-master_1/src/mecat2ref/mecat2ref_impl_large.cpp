@@ -7,7 +7,7 @@
 #include <algorithm>
 using namespace std;
 
-static int MAXC = 0;
+static int MAXC = 0;//MAXC 等于10
 static int TECH = TECH_PACBIO;
 static int num_output = MAXC;
 static const double ddfs_cutoff_pacbio = 0.25;
@@ -473,7 +473,7 @@ static void get_vote(){
     seq=REFSEQ;
     sc1=sc;
     int *cpycount;
-    cpycount=(int *)malloc((index_count)*sizeof(int));
+    cpycount=(int *)malloc((indexcount)*sizeof(int));
     memcpy(cpycount, countin, sizeof(int)*index_count);
     int start=0;//num 有关
     int leftnum=8;int nn=0;
@@ -523,7 +523,7 @@ static void get_vote(){
             printf("r_count is %d\n",sc1[j].r_count);
             sc1[j].TF=sc1[j].r_count/count_value;
             printf("TF is %f\n",sc1[j].TF);}
-        sc1[j].vote=sc1[j].TF*sc1[j].LDF;
+        sc1[j].vote=fabs(log(sc1[j].TF*sc1[j].LDF));
         printf("vote is %f\n",sc1[j].vote);
         
     }
@@ -607,7 +607,7 @@ static void reference_mapping(int threadint)
             fileid=0;
             break;
         }
-        if(localnum==terminalnum-1)read_end=readcount;
+        if(localnum==terminalnum-1)read_end=readcount;//小于1000条的样子。
         else read_end=(localnum+1)*PLL;
         for(read_i=localnum*PLL; read_i<read_end; read_i++)
         {
@@ -800,7 +800,7 @@ static void reference_mapping(int threadint)
                                         seedcount++;
                                         s_k++;
                                     }
-                                if(s_k*1.0/scnt>0.4)temp_spr1->score=0;
+                                if(s_k*1.0/scnt>0.4)temp_spr1->score=0;//有效K_MER
                             }
                         canidate_temp.score=canidate_temp.score+seedcount;
                         if(ii==1)canidate_temp.chain='F';
@@ -828,7 +828,7 @@ static void reference_mapping(int threadint)
             {
 				extend_candidate(canidate_loc[i], 
 								 aligner, 
-								 seq, 
+								 seq,
 								 seqcount,
 								 onedata1, 
 								 onedata2, 
@@ -1195,7 +1195,7 @@ static int load_fastq(FILE *fq)
 
 int meap_ref_impl_large(int maxc, int noutput, int tech)
 {
-	MAXC = maxc;
+	MAXC = maxc;//num_candidate
 	TECH = tech;
 	num_output = noutput;
     char tempstr[300],fastafile[300];
