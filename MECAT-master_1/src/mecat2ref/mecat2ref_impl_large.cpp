@@ -253,7 +253,7 @@ static void build_read_index(const char *path,const char *path1){
     char *seq;
     int length=get_file_size(path1);
     printf(" read length is %d",length);
-    read_REFESQ=(char *)malloc((1000000000+200000)*sizeof(char));
+    read_REFESQ=(char *)malloc((length+200000)*sizeof(char));
     seq=read_REFESQ;
     
     int templen;
@@ -1933,12 +1933,12 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     save_work=(char *)malloc((MAXSTR+RM)*sizeof(char));
     fp=fopen("config.txt","r");
     assert(fscanf(fp,"%s\n%s\n%s\n%s\n%s\n%d %d\n%d\n",workpath,fastafile,fastqfile,tempstr,tempstr2,&corenum,&readall,&refall) == 8);//********
-    fclose(fp);
+    fclose(fp);//FASTA是参考基因组文件
     threadnum=corenum;
     //building reference index
     gettimeofday(&tpstart, NULL);
     seed_len=13;
-    build_read_index(workpath,fastafile);
+    build_read_index(workpath,fastqfile);
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
@@ -1947,7 +1947,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     fclose(fp);
     //build read_long index
     gettimeofday(&tpstart, NULL);
-    creat_ref_index(fastqfile);
+    creat_ref_index(fastafile);
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
