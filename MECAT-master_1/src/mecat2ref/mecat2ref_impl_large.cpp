@@ -17,8 +17,10 @@ static double ddfs_cutoff = ddfs_cutoff_pacbio;
 static pthread_t *thread;
 static int threadnum=2;
 static FILE **outfile;
+static FILE **refoutfile;
 static pthread_mutex_t mutilock; 
 static int runnumber=0,runthreadnum=0, readcount,terminalnum;
+static int runnumber2=0,runthreadnum2=0,terminalnum2;//*********
 static int *countin;
 static long **databaseindex,*allloc,seqcount,sumcount;
 static long **databaseindex1,*allloc1,seqcount1,sumcount1;
@@ -30,6 +32,17 @@ static int index_count=67108864;
 static char *read_REFESQ;
 static char *save_work;
 static ReadFasta *readinfo;
+static int REFcount;//***********
+#define FM  200000
+float similarity=0;
+typedef struct REF_info{
+    int refno;
+    int reflen;
+    char *ref_sequ;
+    
+}REF_info;//*************
+REF_info *refinfo;//************
+char *ref_savework;//************
 int mavalue[2000];
 int similarity_count;
 int read_kmer;
@@ -47,7 +60,36 @@ typedef struct{
 } sim;
 static sim *sc;
 static read_info *info;
-
+static int load_ref_f(char *path){
+    int readlen,readno,sum=0,flag;
+    char *pre;
+    REFcount=0;
+    pre=ref_savework;char tempstr[200];
+    sprintf(tempstr,"/ref.txt", path);
+    FILE *fp;
+    fp=fopen(path,"r");
+    while((flag=fscanf(fp,"%d\t%d\t%s\n",&readno,&readlen,pre))!=EOF&&REFcount<SVM&&sum<MAXSTR)
+    {
+        refinfo[REFcount].ref_sequ=pre;
+        refinfo[REFcount].refno=readno;
+        readlen=strlen(pre);
+        refinfo[readcount].reflen=readlen;
+        sum=sum+readlen+1;
+        pre=pre+readlen+1;
+        REFcount++;
+    }
+    if(flag!=EOF)
+        
+    {
+        refinfo[REFcount].ref_sequ=pre;
+        refinfo[REFcount].refno=readno;
+        readlen=strlen(pre);
+        refinfo[REFcount].reflen=readlen;
+        REFcount++;
+        return(1);
+    }
+    else return(0);
+}//*
 static long get_file_size(const char *path)
 {
     long filesize = -1;
@@ -1156,16 +1198,642 @@ static void reference_mapping(int threadint)
     free(rev_index_score);
 	delete[] aln_seqs;
 }
-
+static void reference_map_reference(int threadint)
+{
+    int  seedlenth=13;int rindexcount=67108864;//***********
+    int *table;static long **tableindex1,*tableallloc1,tablesumcount1;//***********
+    int leftnum=8;//***********
+    
+    
+    int cleave_num,read_len;
+    int mvalue[100000],flag_end;
+    long *leadarray,u_k,s_k,loc;
+    int count1=0,i,j,k,templong,read_name;
+    struct Back_List *database,*temp_spr,*temp_spr1;//
+    int repeat_loc = 0,*index_list,*index_spr;
+    long location_loc[4],left_length1,right_length1,left_length2,right_length2,loc_list,start_loc;
+    short int *index_score,*index_ss;
+    int temp_list[200],temp_seedn[200],temp_score[200];
+    int localnum,ref_i,read_end,fileid;
+    int endnum,ii;
+    char *seq,*onedata,onedata1[FM],onedata2[FM],FR;//************
+    int cc1,canidatenum,loc_seed;
+    int num1,num2,BC;
+    int low,high,mid,seedcount;
+    candidate_save canidate_loc[MAXC],canidate_temp;
+    seq=REFSEQ;
+    j=seqcount/ZV+5;
+    int* fwd_index_list = (int*)malloc(sizeof(int) * j);
+    short* fwd_index_score = (short*)malloc(sizeof(short) * j);
+    Back_List* fwd_database = (Back_List*)malloc(sizeof(Back_List) * j);
+    int* rev_index_list = (int*)malloc(sizeof(int) * j);
+    short* rev_index_score = (short*)malloc(sizeof(short) * j);
+    Back_List* rev_database = (Back_List*)malloc(sizeof(Back_List) * j);
+    for (i = 0; i < j; ++i) {
+        fwd_database[i].score = 0;
+        fwd_database[i].score2 = 0;
+        fwd_database[i].index = -1;
+        rev_database[i].score = 0;
+        rev_database[i].score2 = 0;
+        rev_database[i].index = -1;
+    }
+    int fnblk, rnblk;
+    int* pnblk;
+    AlignInfo alns[MAXC + 6];
+    int naln;
+    TempResult results[MAXC + 6];
+    int nresults;
+    long aln_bytes = 1;
+    aln_bytes = aln_bytes * 2 * (MAXC + 6) * MAX_SEQ_SIZE;
+    char* aln_seqs = new char[aln_bytes];
+    u_k = 0;//u_k的数字
+    for (int i = 0; i < MAXC + 6; ++i) {
+        results[i].qmap = aln_seqs + u_k;
+        u_k += MAX_SEQ_SIZE;
+        results[i].smap = aln_seqs + u_k;
+        u_k += MAX_SEQ_SIZE;
+    }
+    
+    vector<char> qstr;
+    vector<char> tstr;
+    GapAligner* aligner = NULL;
+    if (TECH == TECH_PACBIO) {
+        aligner = new DiffAligner(0);
+    } else if (TECH == TECH_NANOPORE) {
+        aligner = new XdropAligner(0);
+    } else {
+        ERROR("TECH must be either %d or %d", TECH_PACBIO, TECH_NANOPORE);
+    }
+    
+    fileid=1;
+    while(fileid)
+    {
+        pthread_mutex_lock(&mutilock);
+        localnum=runnumber2;
+        runnumber2++;//runnumber是
+        pthread_mutex_unlock(&mutilock);
+        if(localnum>=terminalnum2)
+        {
+            fileid=0;
+            break;
+        }
+        if(localnum==terminalnum2-1)read_end=REFcount;//read 条数***********  read_end=readcount
+        else read_end=(localnum+1)*PLL;
+        for(ref_i=localnum*PLL; ref_i<read_end; ref_i++)
+        {
+            
+            read_name=refinfo[ref_i].refno;
+            read_len=refinfo[ref_i].reflen;
+            strcpy(onedata1,refinfo[ref_i].ref_sequ);
+            
+            canidatenum=0;
+            for(ii=1; ii<=2; ii++)
+            {
+                read_len=strlen(onedata1);
+                BC=5+(read_len/1000);//BC 是数量
+                if(BC>20)BC=20;
+                if(ii==1) {
+                    onedata=onedata1;
+                    index_list = fwd_index_list;
+                    index_score = fwd_index_score;
+                    database = fwd_database;
+                    pnblk = &fnblk;
+                }
+                /*else if(ii==2){
+                 index_list = rev_index_list;
+                 index_score = rev_index_score;
+                 database = rev_database;
+                 pnblk = &rnblk;
+                 strcpy(onedata2,onedata1);
+                 onedata=onedata2;
+                 for(j=read_len-1,i=0; j>i; j--,i++)
+                 {
+                 FR=onedata[i];
+                 onedata[i]=onedata[j];
+                 onedata[j]=FR;
+                 }//将序列掉个?
+                 /* for(i=0; i<read_len; i++)
+                 {
+                 FR=onedata[i];
+                 switch(FR)
+                 {
+                 case 'A':
+                 {
+                 onedata[i]='T';
+                 break;
+                 }
+                 case 'T':
+                 {
+                 onedata[i]='A';
+                 break;
+                 }
+                 case 'C':
+                 {
+                 onedata[i]='G';
+                 break;
+                 }
+                 case 'G':
+                 {
+                 onedata[i]='C';
+                 break;
+                 }
+                 }
+                 }
+                 }*/
+                endnum=0;
+                read_len=strlen(onedata);
+                cleave_num=transnum_buchang(onedata,mvalue,&endnum,read_len,seed_len,BC);//切割
+                j=0;
+                index_spr=index_list;
+                index_ss=index_score;
+                endnum=0;
+                for(k=0; k<cleave_num; k++)if(mvalue[k]>=0)
+                {
+                    count1=countin[mvalue[k]];
+                    //if(count1>20)continue;
+                    leadarray=databaseindex[mvalue[k]];
+                    for(i=0; i<count1; i++,leadarray++)
+                    {
+                        templong=(*leadarray)/ZV;
+                        u_k=(*leadarray)%ZV;
+                        if(templong>=0)
+                        {
+                            temp_spr=database+templong;
+                            if(temp_spr->score==0||temp_spr->seednum<k+1)
+                            {
+                                loc=++(temp_spr->score);
+                                if(loc<=SM)
+                                {
+                                    temp_spr->loczhi[loc-1]=u_k;
+                                    temp_spr->seedno[loc-1]=k+1;
+                                }
+                                else insert_loc(temp_spr,u_k,k+1,BC);//insert
+                                if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
+                                else s_k=temp_spr->score;
+                                if(endnum<s_k)endnum=s_k;
+                                if(temp_spr->index==-1)
+                                {
+                                    *(index_spr++)=templong;
+                                    *(index_ss++)=s_k;
+                                    temp_spr->index=j;
+                                    j++;
+                                } else index_score[temp_spr->index]=s_k;
+                                temp_spr->score2 = temp_spr->score;
+                            }
+                            temp_spr->seednum=k+1;
+                        }
+                    }
+                }
+                *pnblk = j;
+                cc1=j;
+                for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>6)
+                {
+                    temp_spr=database+*index_spr;
+                    if(temp_spr->score==0)continue;
+                    s_k=temp_spr->score;
+                    if(*index_spr>0)loc=(temp_spr-1)->score;
+                    else loc=0;
+                    start_loc=(*index_spr)*ZVL;
+                    if(*index_spr>0)
+                    {
+                        loc=(temp_spr-1)->score;
+                        if(loc>0)start_loc=(*index_spr-1)*ZVL;
+                    }
+                    else loc=0;
+                    if(loc==0)for(j=0,u_k=0; j<s_k&&j<SM; j++)
+                    {
+                        temp_list[u_k]=temp_spr->loczhi[j];
+                        temp_seedn[u_k]=temp_spr->seedno[j];
+                        u_k++;
+                    }
+                    else
+                    {
+                        k=loc;
+                        u_k=0;
+                        temp_spr1=temp_spr-1;
+                        for(j=0; j<k&&j<SM; j++)
+                        {
+                            temp_list[u_k]=temp_spr1->loczhi[j];
+                            temp_seedn[u_k]=temp_spr1->seedno[j];
+                            u_k++;
+                        }
+                        for(j=0; j<s_k&&j<SM; j++)
+                        {
+                            temp_list[u_k]=temp_spr->loczhi[j]+ZV;
+                            temp_seedn[u_k]=temp_spr->seedno[j];
+                            u_k++;
+                        }
+                    }
+                    flag_end=find_location(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
+                    if(flag_end==0)continue;
+                    if(temp_score[repeat_loc]<6)continue;
+                    canidate_temp.score=temp_score[repeat_loc];
+                    loc_seed=temp_seedn[repeat_loc];
+                    //loc_list=temp_list[repeat_loc];
+                    location_loc[0]=start_loc+location_loc[0];
+                    location_loc[1]=(location_loc[1]-1)*BC;
+                    loc_list=location_loc[0];
+                    left_length1=location_loc[0]+seed_len-1;
+                    right_length1=seqcount-location_loc[0];
+                    left_length2=location_loc[1]+seed_len-1;
+                    right_length2=read_len-location_loc[1];
+                    if(left_length1>=left_length2)num1=left_length2;
+                    else num1=left_length1;
+                    if(right_length1>=right_length2)num2=right_length2;
+                    else num2=right_length1;
+                    seedcount=0;
+                    canidate_temp.loc1=location_loc[0];
+                    canidate_temp.num1=num1;
+                    canidate_temp.loc2=location_loc[1];
+                    canidate_temp.num2=num2;
+                    canidate_temp.left1=left_length1;
+                    canidate_temp.left2=left_length2;
+                    canidate_temp.right1=right_length1;
+                    canidate_temp.right2=right_length2;
+                    //find all left seed
+                    for(u_k=*index_spr-2,k=num1/ZV,temp_spr1=temp_spr-2; u_k>=0&&k>=0; temp_spr1--,k--,u_k--)if(temp_spr1->score>0)
+                    {
+                        start_loc=u_k*ZVL;
+                        int scnt = min((int)temp_spr1->score, SM);
+                        for(j=0,s_k=0; j < scnt; j++)if(fabs((loc_list-start_loc-temp_spr1->loczhi[j])/((loc_seed-temp_spr1->seedno[j])*BC*1.0)-1.0)<ddfs_cutoff)
+                        {
+                            seedcount++;
+                            s_k++;
+                        }
+                        if(s_k*1.0/scnt>0.4)temp_spr1->score=0;
+                    }
+                    //find all right seed
+                    for(u_k=*index_spr+1,k=num2/ZV,temp_spr1=temp_spr+1; k>0; temp_spr1++,k--,u_k++)if(temp_spr1->score>0)
+                    {
+                        start_loc=u_k*ZVL;
+                        int scnt = min((int)temp_spr1->score, SM);
+                        for(j=0,s_k=0; j < scnt; j++)if(fabs((start_loc+temp_spr1->loczhi[j]-loc_list)/((temp_spr1->seedno[j]-loc_seed)*BC*1.0)-1.0)<ddfs_cutoff)
+                        {
+                            seedcount++;
+                            s_k++;
+                        }
+                        if(s_k*1.0/scnt>0.4)temp_spr1->score=0;
+                    }
+                    canidate_temp.score=canidate_temp.score+seedcount;
+                    if(ii==1)canidate_temp.chain='F';
+                    else canidate_temp.chain='R';
+                    //insert canidate position or delete this position
+                    low=0;
+                    high=canidatenum-1;
+                    while(low<=high)
+                    {
+                        mid=(low+high)/2;
+                        if(mid>=canidatenum||canidate_loc[mid].score<canidate_temp.score)high=mid-1;
+                        else low=mid+1;
+                    }
+                    if(canidatenum<MAXC)for(u_k=canidatenum-1; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
+                    else for(u_k=canidatenum-2; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
+                    if(high+1<MAXC)canidate_loc[high+1]=canidate_temp;
+                    if(canidatenum<MAXC)canidatenum++;
+                    else canidatenum=MAXC;
+                }
+            }
+            
+            naln = 0;
+            nresults = 0;
+            for(i=0; i<canidatenum; i++)
+            {
+                extend_candidate(canidate_loc[i],
+                                 aligner,
+                                 seq,
+                                 seqcount,
+                                 onedata1,
+                                 onedata2,
+                                 qstr,
+                                 tstr,
+                                 read_name,
+                                 read_len,
+                                 alns,
+                                 &naln,
+                                 results,
+                                 nresults);
+            }
+            
+            rescue_clipped_align(alns,
+                                 naln,
+                                 results,
+                                 nresults,
+                                 aligner,
+                                 seq,
+                                 seqcount,
+                                 onedata1,
+                                 onedata2,
+                                 qstr,
+                                 tstr,
+                                 read_name,
+                                 read_len,
+                                 ZV,
+                                 BC,
+                                 fwd_database,
+                                 rev_database,
+                                 ddfs_cutoff);
+            
+            output_results(alns, naln, results, nresults, num_output, refoutfile[threadint]);
+            
+            for (int t = 0; t < fnblk; ++t) {
+                int bid = fwd_index_list[t];
+                fwd_database[bid].score = 0;
+                fwd_database[bid].score2 = 0;
+                fwd_database[bid].index = -1;
+            }
+            for (int t = 0; t < rnblk; ++t) {
+                int bid = rev_index_list[t];
+                rev_database[bid].score = 0;
+                rev_database[bid].score2 = 0;
+                rev_database[bid].index = -1;
+            }
+            
+            if (naln == 0)
+            {
+                canidatenum=0;
+                for(ii=1; ii<=2; ii++)
+                {
+                    read_len=strlen(onedata1);
+                    BC=5;
+                    if(ii==1) {
+                        onedata=onedata1;
+                        index_list = fwd_index_list;
+                        index_score = fwd_index_score;
+                        database = fwd_database;
+                        pnblk = &fnblk;
+                    } /*else if(ii==2) {
+                       index_list = rev_index_list;
+                       index_score = rev_index_score;
+                       database = rev_database;
+                       pnblk = &rnblk;
+                       strcpy(onedata2,onedata1);
+                       onedata=onedata2;
+                       for(j=read_len-1,i=0; j>i; j--,i++)
+                       {
+                       FR=onedata[i];
+                       onedata[i]=onedata[j];
+                       onedata[j]=FR;
+                       }
+                       for(i=0; i<read_len; i++)
+                       {
+                       FR=onedata[i];
+                       switch(FR)
+                       {
+                       case 'A':
+                       {
+                       onedata[i]='T';
+                       break;
+                       }
+                       case 'T':
+                       {
+                       onedata[i]='A';
+                       break;
+                       }
+                       case 'C':
+                       {
+                       onedata[i]='G';
+                       break;
+                       }
+                       case 'G':
+                       {
+                       onedata[i]='C';
+                       break;
+                       }
+                       }
+                       }
+                       }*/
+                    
+                    endnum=0;
+                    read_len=strlen(onedata);
+                    cleave_num=transnum_buchang(onedata,mvalue,&endnum,read_len,seed_len,BC);
+                    j=0;
+                    index_spr=index_list;
+                    index_ss=index_score;
+                    endnum=0;
+                    for(k=0; k<cleave_num; k++)if(mvalue[k]>=0)
+                    {
+                        count1=countin[mvalue[k]];
+                        //if(count1>20)continue;
+                        leadarray=databaseindex[mvalue[k]];
+                        for(i=0; i<count1; i++,leadarray++)
+                        {
+                            templong=(*leadarray)/ZVS;
+                            u_k=(*leadarray)%ZVS;
+                            if(templong>=0)
+                            {
+                                temp_spr=database+templong;
+                                if(temp_spr->score==0||temp_spr->seednum<k+1)
+                                {
+                                    loc=++(temp_spr->score);
+                                    if(loc<=SM)
+                                    {
+                                        temp_spr->loczhi[loc-1]=u_k;
+                                        temp_spr->seedno[loc-1]=k+1;
+                                    }
+                                    else insert_loc(temp_spr,u_k,k+1,BC);
+                                    if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
+                                    else s_k=temp_spr->score;
+                                    if(endnum<s_k)endnum=s_k;
+                                    if(temp_spr->index==-1)
+                                    {
+                                        *(index_spr++)=templong;
+                                        *(index_ss++)=s_k;
+                                        temp_spr->index=j;
+                                        j++;
+                                    } else index_score[temp_spr->index]=s_k;
+                                    temp_spr->score2 = temp_spr->score;
+                                }
+                                temp_spr->seednum=k+1;
+                            }
+                        }
+                    }
+                    *pnblk = j;
+                    cc1=j;
+                    for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>4)
+                    {
+                        temp_spr=database+*index_spr;
+                        if(temp_spr->score==0)continue;
+                        s_k=temp_spr->score;
+                        if(*index_spr>0)loc=(temp_spr-1)->score;
+                        else loc=0;
+                        start_loc=(*index_spr)*ZVSL;
+                        if(*index_spr>0)
+                        {
+                            loc=(temp_spr-1)->score;
+                            if(loc>0)start_loc=(*index_spr-1)*ZVSL;
+                        }
+                        else loc=0;
+                        if(loc==0)for(j=0,u_k=0; j<s_k&&j<SM; j++)
+                        {
+                            temp_list[u_k]=temp_spr->loczhi[j];
+                            temp_seedn[u_k]=temp_spr->seedno[j];
+                            u_k++;
+                        }
+                        else
+                        {
+                            k=loc;
+                            u_k=0;
+                            temp_spr1=temp_spr-1;
+                            for(j=0; j<k&&j<SM; j++)
+                            {
+                                temp_list[u_k]=temp_spr1->loczhi[j];
+                                temp_seedn[u_k]=temp_spr1->seedno[j];
+                                u_k++;
+                            }
+                            for(j=0; j<s_k&&j<SM; j++)
+                            {
+                                temp_list[u_k]=temp_spr->loczhi[j]+ZVS;
+                                temp_seedn[u_k]=temp_spr->seedno[j];
+                                u_k++;
+                            }
+                        }
+                        flag_end=find_location(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
+                        if(flag_end==0)continue;
+                        if(temp_score[repeat_loc]<6)continue;
+                        canidate_temp.score=temp_score[repeat_loc];
+                        loc_seed=temp_seedn[repeat_loc];
+                        //loc_list=temp_list[repeat_loc];
+                        location_loc[0]=start_loc+location_loc[0];
+                        location_loc[1]=(location_loc[1]-1)*BC;
+                        loc_list=location_loc[0];
+                        left_length1=location_loc[0]+seed_len-1;
+                        right_length1=seqcount-location_loc[0];
+                        left_length2=location_loc[1]+seed_len-1;
+                        right_length2=read_len-location_loc[1];
+                        if(left_length1>=left_length2)num1=left_length2;
+                        else num1=left_length1;
+                        if(right_length1>=right_length2)num2=right_length2;
+                        else num2=right_length1;
+                        seedcount=0;
+                        canidate_temp.loc1=location_loc[0];
+                        canidate_temp.num1=num1;
+                        canidate_temp.loc2=location_loc[1];
+                        canidate_temp.num2=num2;
+                        canidate_temp.left1=left_length1;
+                        canidate_temp.left2=left_length2;
+                        canidate_temp.right1=right_length1;
+                        canidate_temp.right2=right_length2;
+                        //find all left seed
+                        for(u_k=*index_spr-2,k=num1/ZVS,temp_spr1=temp_spr-2; u_k>=0&&k>=0; temp_spr1--,k--,u_k--)if(temp_spr1->score>0)
+                        {
+                            start_loc=u_k*ZVSL;
+                            int scnt = min((int)temp_spr1->score, SM);
+                            for(j=0,s_k=0; j < scnt; j++)if(fabs((loc_list-start_loc-temp_spr1->loczhi[j])/((loc_seed-temp_spr1->seedno[j])*BC*1.0)-1.0)<ddfs_cutoff)
+                            {
+                                seedcount++;
+                                s_k++;
+                            }
+                            if(s_k*1.0/scnt>0.4)temp_spr1->score=0;
+                        }
+                        //find all right seed
+                        for(u_k=*index_spr+1,k=num2/ZVS,temp_spr1=temp_spr+1; k>0; temp_spr1++,k--,u_k++)if(temp_spr1->score>0)
+                        {
+                            start_loc=u_k*ZVSL;
+                            int scnt = min((int)temp_spr1->score, SM);
+                            for(j=0,s_k=0; j < scnt; j++)if(fabs((start_loc+temp_spr1->loczhi[j]-loc_list)/((temp_spr1->seedno[j]-loc_seed)*BC*1.0)-1.0)<ddfs_cutoff)
+                            {
+                                seedcount++;
+                                s_k++;
+                            }
+                            if(s_k*1.0/scnt>0.4)temp_spr1->score=0;
+                        }
+                        canidate_temp.score=canidate_temp.score+seedcount;
+                        if(ii==1)canidate_temp.chain='F';
+                        else canidate_temp.chain='R';
+                        //insert canidate position or delete this position
+                        low=0;
+                        high=canidatenum-1;
+                        while(low<=high)
+                        {
+                            mid=(low+high)/2;
+                            if(mid>=canidatenum||canidate_loc[mid].score<canidate_temp.score)high=mid-1;
+                            else low=mid+1;
+                        }
+                        if(canidatenum<MAXC)for(u_k=canidatenum-1; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
+                        else for(u_k=canidatenum-2; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
+                        if(high+1<MAXC)canidate_loc[high+1]=canidate_temp;
+                        if(canidatenum<MAXC)canidatenum++;
+                        else canidatenum=MAXC;
+                    }
+                }
+                
+                naln = 0;
+                nresults = 0;
+                for(i=0; i<canidatenum; i++)
+                {
+                    extend_candidate(canidate_loc[i],
+                                     aligner,
+                                     seq,
+                                     seqcount,
+                                     onedata1,
+                                     onedata2,
+                                     qstr,
+                                     tstr,
+                                     read_name,
+                                     read_len,
+                                     alns,
+                                     &naln,
+                                     results,
+                                     nresults);
+                }
+                
+                rescue_clipped_align(alns,
+                                     naln,
+                                     results,
+                                     nresults,
+                                     aligner,
+                                     seq,
+                                     seqcount,
+                                     onedata1,
+                                     onedata2,
+                                     qstr,
+                                     tstr,
+                                     read_name,
+                                     read_len,
+                                     ZVS,
+                                     BC,
+                                     fwd_database,
+                                     rev_database,
+                                     ddfs_cutoff);
+                
+                output_results(alns, naln, results, nresults, num_output, refoutfile[threadint]);
+                
+                for (int t = 0; t < fnblk; ++t) {
+                    int bid = fwd_index_list[t];
+                    fwd_database[bid].score = 0;
+                    fwd_database[bid].score2 = 0;
+                    fwd_database[bid].index = -1;
+                }
+                for (int t = 0; t < rnblk; ++t) {
+                    int bid = rev_index_list[t];
+                    rev_database[bid].score = 0;
+                    rev_database[bid].score2 = 0;
+                    rev_database[bid].index = -1;
+                }
+            }
+        }
+    }
+    delete aligner;
+    free(fwd_database);
+    free(fwd_index_list);
+    free(fwd_index_score);
+    free(rev_database);
+    free(rev_index_list);
+    free(rev_index_score);
+    delete[] aln_seqs;
+}
 
 static void* multithread(void* arg)
 {
-    int localthreadno;
+    int localthreadno;int localthreadno2;
     pthread_mutex_lock(&mutilock);
     localthreadno=runthreadnum;
+    localthreadno2=runthreadnum2;
     runthreadnum++;
+    runthreadnum2++;
     pthread_mutex_unlock(&mutilock);
     reference_mapping(localthreadno);
+    reference_map_reference(localthreadno2);
 	return NULL;
 }
 
@@ -1205,14 +1873,16 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
 	TECH = tech;
 	num_output = noutput;
     char tempstr[300],fastafile[300];
-    int corenum,readall;//readall是readcount 的条数
+    char tempstr2[300];//******
+    int corenum,readall,refall;//readall是readcount 的条数
     int fileflag,threadno,threadflag;
     FILE *fp,*fastq;
+     FILE  *ref_fastq;//*********
     struct timeval tpstart, tpend;
     float timeuse;
     save_work=(char *)malloc((MAXSTR+RM)*sizeof(char));
     fp=fopen("config.txt","r");
-    assert(fscanf(fp,"%s\n%s\n%s\n%s\n%d %d\n",workpath,fastafile,fastqfile,tempstr,&corenum,&readall) == 6);
+    assert(fscanf(fp,"%s\n%s\n%s\n%s\n%d %d\n%d\n",workpath,fastafile,fastqfile,tempstr,tempstr2,&corenum,&readall,&refall) == 8);//********
     fclose(fp);
     threadnum=corenum;
     //building reference index
@@ -1238,27 +1908,40 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     gettimeofday(&tpstart, NULL);
 
     savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
+    ref_savework=(char *)malloc((MAXSTR+RM)*sizeof(char));//********
     readinfo=(ReadFasta*)malloc((SVM+2)*sizeof(ReadFasta));
+    refinfo=(REF_info*)malloc((SVM+2)*sizeof(REF_info));//*********
     thread=(pthread_t*)malloc(threadnum*sizeof(pthread_t));
     outfile=(FILE **)malloc(threadnum*sizeof(FILE *));
+    refoutfile=(FILE **)malloc(threadnum*sizeof(FILE *));//*********
     for(threadno=0; threadno<threadnum; threadno++)
     {
         sprintf(tempstr,"%s/%d.r",workpath,threadno+1);
+        sprintf(tempstr2,"%s/ref%d.r",workpath,threadno+1);//**********
+        
         outfile[threadno]=fopen(tempstr,"w");
+        refoutfile[threadno]=fopen(tempstr2,"w");
     }
     sprintf(tempstr,"%s/0.fq",workpath);
+    sprintf(tempstr2,"%s/ref.fq",workpath);//******
     fastq=fopen(tempstr,"r");
+    ref_fastq=fopen(tempstr2,"r");//***********
     //multi process thread
     fileflag=1;
     while(fileflag)
     {
         fileflag=load_fastq(fastq);
+        load_ref_f(ref_fastq);//************8
         if(readcount%PLL==0)terminalnum=readcount/PLL;
         else terminalnum=readcount/PLL+1;
+        if(REFcount%PLL==0)terminalnum2=REFcount/PLL;
+        else terminalnum2=REFcount/PLL+1;//***********
         if(readcount<=0)break;
+        if(REFcount<=0)break;
         runnumber=0;
         runthreadnum=0;
-
+        runnumber2=0;
+        runthreadnum2=0;
 
         pthread_mutex_init(&mutilock,NULL);
         //creat thread
@@ -1298,10 +1981,15 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     fprintf(fp, "The Mapping Time: %f sec\n", timeuse);
     fclose(fp);
 
-    for(threadno=0; threadno<threadnum; threadno++)fclose(outfile[threadno]);
+    for(threadno=0; threadno<threadnum; threadno++)
+    {
+        fclose(outfile[threadno]);
+        fclose(refoutfile[threadno]);
+    }
     free(outfile);
     free(savework);
     free(readinfo);
+    free(refinfo);
     free(thread);
     return 0;
 }

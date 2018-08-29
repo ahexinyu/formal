@@ -35,6 +35,7 @@ typedef struct
 	const char* reference;
 	const char* wrk_dir;
 	const char* output;
+    const char* refoutput;
 	int         num_cores;
 	int			num_candidates;
 	int			num_output;
@@ -48,6 +49,7 @@ void init_meap_ref_options(meap_ref_options* options)
 	options->reference = NULL;
 	options->wrk_dir = NULL;
 	options->output = NULL;
+    options->refoutput=NULL;
 	options->num_cores = 1;
 	options->num_candidates = kDefaultNumCandidates;
 	options->num_output = kDefaultNumOutput;
@@ -59,12 +61,13 @@ void print_usage()
 {
 	fprintf(stderr, "\n\n");
 	fprintf(stderr, "usage:\n");
-	fprintf(stderr, "%s [-d reads] [-r reference] [-o output] [-w working dir] [-t threads]", prog_name);
+	fprintf(stderr, "%s [-d reads] [-r reference] [-o output][-p refoutput] [-w working dir] [-t threads]", prog_name);
 	fprintf(stderr, "\n\n");
 	fprintf(stderr, "options:\n");
 	fprintf(stderr, "-d <string>\treads file name\n");
 	fprintf(stderr, "-r <string>\treference file name\n");
 	fprintf(stderr, "-o <string>\toutput file name\n");
+    fprintf(stderr, "-p <string>\trefoutput file name\n");
 	fprintf(stderr, "-w <string>\tworking folder name, will be created if not exist\n");
 	fprintf(stderr, "-t <integer>\tnumber of cput threads\n\t\tdefault: 1\n");
 	fprintf(stderr, "-n <integer>\tnumber of of candidates for gap extension\n\t\tdefault: %d\n", kDefaultNumCandidates);
@@ -82,7 +85,7 @@ param_read_t(int argc, char* argv[], meap_ref_options* options)
 	int ret = 1;
 	
 	init_meap_ref_options(options);
-	while((opt_char = getopt(argc, argv, "d:r:w:o:t:n:b:m:x:")) != -1)
+	while((opt_char = getopt(argc, argv, "d:r:w:o:p:t:n:b:m:x:")) != -1)
 	{
 		switch(opt_char)
 		{
@@ -98,6 +101,9 @@ param_read_t(int argc, char* argv[], meap_ref_options* options)
 			case 'o':
 				options->output = optarg;
 				break;
+            case 'p':
+                options->refoutput = optarg;
+                break;
 			case 't':
 				options->num_cores = atoi(optarg);
 				break;
@@ -139,6 +145,8 @@ param_read_t(int argc, char* argv[], meap_ref_options* options)
 		options_err_msg = "reference must be specified";
 	else if (!options->output)
 		options_err_msg = "output must be specified";
+    else if (!options->refoutput)
+        options_err_msg = "refoutput must be specified";
 	else if (!options->wrk_dir)
 		options_err_msg = "working directory must be specified";
 	else if (options->num_cores < 1)
@@ -361,7 +369,7 @@ int firsttask(int argc, char *argv[])
     char kkkkk[1024];
     sprintf(kkkkk, "config.txt");
     FILE* fileout = fopen(kkkkk, "w");
-    fprintf(fileout, "%s\n%s\n%s\n%s\n%d\t%d\n", options->wrk_dir, options->reference, options->reads, options->output, options->num_cores, readcount);
+    fprintf(fileout, "%s\n%s\n%s\n%s\n%s\n%d\t%d\n%d\n", options->wrk_dir, options->reference, options->reads, options->output,options->refoutput,options->num_cores, readcount,ref_count);
     fclose(fileout);
 	int corenum = options->num_cores;
 	num_candidates = options->num_candidates;
@@ -537,7 +545,83 @@ int result_combine(int readcount, int filecount, char *workpath, char *outfile, 
 	return 0;
 }
 
-
+int result_combine2(int readcount, int filecount, char *workpath, char *outfile, char *fastaq, int main_argc, char* main_argv[])
+{
+    char path[1024], buffer[1024];
+    sprintf(path, "%s/chrindex.txt", workpath);
+    FILE* chr_idx_file = fopen(path, "r");
+    if (!chr_idx_file) { fprintf(stderr, "failed to open file %s for reading.\n", path); abort(); }
+    int num_chr = 0;
+    while(fgets(buffer, 1024, chr_idx_file)) ++num_chr;
+    --num_chr;
+    fastaindexinfo* chr_idx = (fastaindexinfo*)malloc(sizeof(fastaindexinfo) * num_chr);
+    fseek(chr_idx_file, 0L, SEEK_SET);
+    int i, flag;
+    for (i = 0; i < num_chr; ++i)
+    {
+        flag = fscanf(chr_idx_file, "%ld\t%s\t%ld\n", &chr_idx[i].chrstart, chr_idx[i].chrname, &chr_idx[i].chrsize);
+        assert(flag == 3);
+    }
+    fclose(chr_idx_file);
+    chr_idx_file = NULL;
+    
+    fprintf(stderr, "output file name: %s\n", outfile);
+    FILE* out = fopen(outfile, "w");
+    char* out_buffer = (char*)malloc(8192);
+    setvbuf(out, out_buffer, _IOFBF, 8192);
+    
+    if (output_format == FMT_SAM)
+    {
+        print_sam_header(out);
+        print_sam_references(chr_idx, num_chr, out);
+        print_sam_program(main_argc, main_argv, out);
+    }
+    
+    const int trsize = num_candidates + 6;
+    TempResult* pptr[trsize];
+    for (i = 0; i < trsize; ++i) pptr[i] = create_temp_result();
+    int num_results = 0;
+    TempResult* trslt = create_temp_result();
+    char* trf_buffer = (char*)malloc(8192);
+    for (i = 1; i <= filecount; ++i)
+    {
+        sprintf(path, "%s/ref%d.r", workpath, i);
+        FILE* thread_results_file = fopen(path, "r");
+        if (!thread_results_file) { fprintf(stderr, "failed to open reffile %s for reading.\n", path); abort(); }
+        setvbuf(thread_results_file, trf_buffer, _IOFBF, 8192);
+        num_results = 0;
+        int rok = load_temp_result(trslt, thread_results_file);
+        if (rok) { copy_temp_result(trslt, pptr[num_results]); ++num_results; }
+        int last_qid = pptr[0]->read_id;
+        while (rok)
+        {
+            rok = load_temp_result(trslt, thread_results_file);
+            if (!rok) break;
+            
+            if (trslt->read_id != last_qid)
+            {
+                output_query_results(chr_idx, num_chr, pptr, num_results, out);
+                num_results = 0;
+            }
+            
+            last_qid = trslt->read_id;
+            copy_temp_result(trslt, pptr[num_results]);
+            ++num_results;
+        }
+        if (num_results) output_query_results(chr_idx, num_chr, pptr, num_results, out);
+        
+        fclose(thread_results_file);
+    }
+    
+    for (i = 0; i < trsize; ++i) pptr[i] = destroy_temp_result(pptr[i]);
+    destroy_temp_result(trslt);
+    fclose(out);
+    free(out_buffer);
+    free(trf_buffer);
+    free(chr_idx);
+    
+    return 0;
+}
 
 extern int meap_ref_impl_large(int, int, int);
 
@@ -551,14 +635,15 @@ int main(int argc, char *argv[])
 {
 	prog_name = argv[0];
 	
-    char cmd[300], outfile[200];
+    char cmd[300], outfile[200],refoutfile[200];
     int corenum;
     long filelength;
     struct timeval tpstart, tpend;
     struct timeval mapstart, mapend;
     float timeuse;
-    char saved[150], fastqfile[150], fastafile[150], tempstr[150];
+    char saved[150], fastqfile[150], fastafile[150], tempstr[150],tempstr1[150];
     int  readcount;
+    int   refcount;
     FILE *fid1, *fid2;
 
     gettimeofday(&tpstart, NULL);
@@ -580,8 +665,11 @@ int main(int argc, char *argv[])
     read_results = fgets(outfile, 150, fid1);
 	assert(read_results);
     outfile[strlen(outfile) - 1] = '\0';
-    int num_read_items = fscanf(fid1, "%d %d\n", &corenum,&readcount);
-	assert(num_read_items == 2);
+    read_results = fgets(refoutfile, 150, fid1);
+    assert(read_results);
+    refoutfile[strlen(refoutfile) - 1] = '\0';
+    int num_read_items = fscanf(fid1, "%d %d %d\n", &corenum,&readcount,&refcount);
+	assert(num_read_items == 3);
     fclose(fid1);
     filelength=get_file_size(fastafile);
     gettimeofday(&mapstart, NULL);
@@ -589,9 +677,11 @@ int main(int argc, char *argv[])
     gettimeofday(&mapend, NULL);
     timeuse = 1000000 * (mapend.tv_sec - mapstart.tv_sec) + mapend.tv_usec - mapstart.tv_usec;
     timeuse /= 1000000;
-
+    
     sprintf(tempstr,"%s/0.fq",saved);
+    sprintf(tempstr1,"%s/ref.fq",saved);
     result_combine(readcount, corenum, saved, outfile,tempstr, argc, argv);
+    result_combine2(refcount, corenum, saved, refoutfile,tempstr1, argc, argv);
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
@@ -599,6 +689,7 @@ int main(int argc, char *argv[])
     fprintf(fid2, "The total Time : %f sec\n", timeuse);
     fclose(fid2);
     sprintf(cmd, "cp -r config.txt \"%s.config\"", outfile);
+    sprintf(cmd, "cp -r config.txt \"%s.config\"", refoutfile);
     __run_system(cmd);
 	
 	return EXIT_SUCCESS;
