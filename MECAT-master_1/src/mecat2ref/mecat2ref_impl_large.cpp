@@ -60,14 +60,11 @@ typedef struct{
 } sim;
 static sim *sc;
 static read_info *info;
-static int load_ref_f(char *path){
+static int load_ref_f(FILE *fp){
     int readlen,readno,sum=0,flag;
     char *pre;
     REFcount=0;
-    pre=ref_savework;char tempstr[200];
-    sprintf(tempstr,"/ref.txt", path);
-    FILE *fp;
-    fp=fopen(path,"r");
+    pre=ref_savework;
     while((flag=fscanf(fp,"%d\t%d\t%s\n",&readno,&readlen,pre))!=EOF&&REFcount<SVM&&sum<MAXSTR)
     {
         refinfo[REFcount].ref_sequ=pre;
