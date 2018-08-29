@@ -1879,7 +1879,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     float timeuse;
     save_work=(char *)malloc((MAXSTR+RM)*sizeof(char));
     fp=fopen("config.txt","r");
-    assert(fscanf(fp,"%s\n%s\n%s\n%s\n%d %d\n%d\n",workpath,fastafile,fastqfile,tempstr,tempstr2,&corenum,&readall,&refall) == 8);//********
+    assert(fscanf(fp,"%s\n%s\n%s\n%s\n%s\n%d %d\n%d\n",workpath,fastafile,fastqfile,tempstr,tempstr2,&corenum,&readall,&refall) == 8);//********
     fclose(fp);
     threadnum=corenum;
     //building reference index
