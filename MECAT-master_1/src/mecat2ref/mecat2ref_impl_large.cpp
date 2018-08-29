@@ -203,8 +203,8 @@ static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
     list_score[SM]=0;
     mini=-1;
     maxi=-1;
-    maxval=17;//SM 和SI
-    minval=17;
+    maxval=10;//SM 和SI
+    minval=10;
     for(i=0; i<SM; i++)for(j=i+1;j<SI; j++)if(list_seed[j]-list_seed[i]>0&&list_loc[j]-list_loc[i]>0&&fabs((list_loc[j]-list_loc[i])/((list_seed[j]-list_seed[i])*len)-1.0)<ddfs_cutoff)//计算DDF公式
     {
         list_score[i]++;
