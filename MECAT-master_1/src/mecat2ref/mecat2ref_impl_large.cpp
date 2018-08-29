@@ -189,6 +189,59 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len)
         spr->score--;//删掉最低一个
     }
 }
+static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
+{
+    int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini,maxi;int maxval;
+    for(i=0; i<SM; i++)
+    {
+        list_loc[i]=spr->loczhi[i];
+        list_seed[i]=spr->seedno[i];
+        list_score[i]=0;
+    }
+    list_loc[SM]=lozc;
+    list_seed[SM]=seedn;
+    list_score[SM]=0;
+    mini=-1;
+    maxi=-1;
+    maxval=17;//SM 和SI
+    minval=17;
+    for(i=0; i<SM; i++)for(j=i+1;j<SI; j++)if(list_seed[j]-list_seed[i]>0&&list_loc[j]-list_loc[i]>0&&fabs((list_loc[j]-list_loc[i])/((list_seed[j]-list_seed[i])*len)-1.0)<ddfs_cutoff)//计算DDF公式
+    {
+        list_score[i]++;
+        list_score[j]++;
+    }
+    for(i=0; i<SI; i++)
+    {
+        if(maxval<=list_score[i])
+        {
+            maxval=list_score[i];
+            maxi=i;//选出最大的。
+        }else if(minval>list_score[i])
+        {
+            minval=list_score[i];
+            mini=i;//选出16里面最小的
+        }
+    }
+    if(maxi==-1)
+    {
+        for(i=mini; i<SM; i++)
+        {
+            spr->loczhi[i]=list_loc[i+1];
+            spr->seedno[i]=list_seed[i+1];
+        }
+        spr->score--;
+        
+    }
+    else
+    {
+        for(i=maxi; i<SM; i++)
+        {
+            spr->loczhi[i]=list_loc[i+1];
+            spr->seedno[i]=list_seed[i+1];
+        }
+        spr->score--;
+    }
+}
 static void build_read_index(const char *path){
     unsigned int eit,temp;long start;
     char tempstr[200];
@@ -229,7 +282,6 @@ static void build_read_index(const char *path){
         
     }
     seq[lenth2_count+1]='\0';
-    printf("%s",seq);
     int actual_len=strlen(seq);
     seqcount1=actual_len;
     seq[actual_len+1]='\0';
@@ -522,7 +574,9 @@ static void get_vote(){
         
         if(sc1[j].k_count>0){
             sc1[j].LDF=log((read_kmer)/sc1[j].k_count);
-            printf("LDF is %f\n",sc1[j].LDF);}
+           
+           // printf("LDF is %f\n",sc1[j].LDF);
+        }
     }//在Longread里面出现的次数
     
     for(i=0; i<seqcount; i++)
@@ -548,7 +602,7 @@ static void get_vote(){
             start=start+1;
             nn=(i-12)/200+1;
             if(cpycount[eit]>0){
-                printf("%d\n",cpycount[eit]);
+                //printf("%d\n",cpycount[eit]);
                 sc1[nn].r_count=sc1[nn].r_count+cpycount[eit];
             } //在参考基因里出现的次数
             eit=eit<<leftnum;
@@ -568,7 +622,7 @@ static void get_vote(){
             sc1[j].vote=1;
         
         };
-        printf("vote is %f\n",sc1[j].vote);
+        //printf("vote is %f\n",sc1[j].vote);
         
     }
     }
@@ -1364,7 +1418,7 @@ static void reference_map_reference(int threadint)
                                     temp_spr->loczhi[loc-1]=u_k;
                                     temp_spr->seedno[loc-1]=k+1;
                                 }
-                                else insert_loc(temp_spr,u_k,k+1,BC);//insert
+                                else insert_loc2(temp_spr,u_k,k+1,BC);//insert
                                 if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
                                 else s_k=temp_spr->score;
                                 if(endnum<s_k)endnum=s_k;
@@ -1627,7 +1681,7 @@ static void reference_map_reference(int threadint)
                                         temp_spr->loczhi[loc-1]=u_k;
                                         temp_spr->seedno[loc-1]=k+1;
                                     }
-                                    else insert_loc(temp_spr,u_k,k+1,BC);
+                                    else insert_loc2(temp_spr,u_k,k+1,BC);
                                     if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
                                     else s_k=temp_spr->score;
                                     if(endnum<s_k)endnum=s_k;
