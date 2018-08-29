@@ -242,7 +242,7 @@ static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
         spr->score--;
     }
 }
-static void build_read_index(const char *path){
+static void build_read_index(const char *path,const char *path1){
     unsigned int eit,temp;long start;
     char tempstr[200];
     sprintf(tempstr, "%s/0.fq",path);
@@ -251,9 +251,8 @@ static void build_read_index(const char *path){
     FILE  *fp;
     fp=fopen(tempstr,"r");
     char *seq;
-    int length=get_file_size(path);
+    int length=get_file_size(path1);
     printf(" read length is %d",length);
-    
     read_REFESQ=(char *)malloc((1000000000+200000)*sizeof(char));
     seq=read_REFESQ;
     
@@ -1939,7 +1938,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     //building reference index
     gettimeofday(&tpstart, NULL);
     seed_len=13;
-    build_read_index(workpath);
+    build_read_index(workpath,fastafile);
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
@@ -1948,7 +1947,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     fclose(fp);
     //build read_long index
     gettimeofday(&tpstart, NULL);
-    creat_ref_index(fastafile);
+    creat_ref_index(fastqfile);
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
