@@ -198,7 +198,7 @@ static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
         list_seed[i]=spr->seedno[i];
         list_score[i]=0;
     }
-    list_loc[SM]=loz;
+    list_loc[SM]=loc;
     list_seed[SM]=seedn;
     list_score[SM]=0;
     mini=-1;
