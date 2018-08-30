@@ -409,6 +409,7 @@ static void creat_ref_index(char *fastafile)
     leftnum=34-2*seed_len;
     //read reference seq
     length=get_file_size(fastafile);
+    printf("refernece length is %d",length);
     fasta=fopen(fastafile, "r");
     sprintf(nameall,"%s/chrindex.txt",workpath);
     fastaindex=fopen(nameall,"w");
