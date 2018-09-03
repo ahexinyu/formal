@@ -242,7 +242,7 @@ static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
         spr->score--;
     }
 }
-static void build_read_index(const char *path,const char *path1){
+static void build_read_index(const char *path, char *path1){
     unsigned int eit,temp;long start;
     char tempstr[200];
     sprintf(tempstr, "%s/0.fq",path);
@@ -384,9 +384,6 @@ static void build_read_index(const char *path,const char *path1){
         }
         
     }
-    
-    
-    
     
 }
 
@@ -1956,12 +1953,13 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     fprintf(fp, "The Building  Reference  Index Time: %f sec\n", timeuse);
     fclose(fp);
     get_vote();
+    printf("get vote sucess");
     gettimeofday(&tpstart, NULL);
 
     savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
     ref_savework=(char *)malloc((MAXSTR+RM)*sizeof(char));//********
     readinfo=(ReadFasta*)malloc((SVM+2)*sizeof(ReadFasta));
-    refinfo=(REF_info*)malloc((SVM+2)*sizeof(REF_info));//*********
+    refinfo=(REF_info*)malloc((RVM)*sizeof(REF_info));//*********
     thread=(pthread_t*)malloc(threadnum*sizeof(pthread_t));
     outfile=(FILE **)malloc(threadnum*sizeof(FILE *));
     refoutfile=(FILE **)malloc(threadnum*sizeof(FILE *));//*********
