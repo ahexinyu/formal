@@ -657,8 +657,8 @@ static void get_vote(){
            // printf("r_count is %d\n",sc1[j].r_count);
             sc[j].TF=sc[j].r_count/count_value;
         
-           // printf("TF is %f\n",sc1[j].TF);
-        }
+           // printf("TF is %f\n",sc1[j].TF);}
+        
         if((sc[j].TF*sc[j].LDF)>0){
             sc[j].vote=fabs(log(sc[j].TF*sc[j].LDF));}
         else{
