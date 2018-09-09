@@ -92,5 +92,12 @@ typedef struct
     int score, num1,num2;
     char chain;
 } candidate_save;
-
+typedef struct{
+    double simm;//相似度
+    int k_count;//long_read出现的次数
+    float LDF;//词频
+    float TF;
+    float vote;
+    int r_count;//参考基因里出现的次数
+} sim;
 #endif // MEAP_REF_DEFS_H

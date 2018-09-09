@@ -50,14 +50,6 @@ float count_value;
 typedef struct {
     char *read_string;
 }read_info;
-typedef struct{
-    double simm;//相似度
-    int k_count;//long_read出现的次数
-    float LDF;//词频
-    float TF;
-    float vote;
-    int r_count;//参考基因里出现的次数
-} sim;
 static sim *sc;
 static read_info *info;
 static int load_ref_f(FILE *fp){
@@ -150,9 +142,10 @@ static int transnum_buchang(char *seqm,int *value,int *endn,int len_str,int read
     return(num);//extract_number
 }
 
-static void insert_loc(struct Back_List *spr,int loc,int seedn,float len)
-{//insert_loc(temp_spr,u_k,k+1,BC)
-    int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;
+static void insert_loc(struct Back_List *spr,int loc,int seedn,float len，struct sim *sc,int templong)
+{//insert_loc(temp_spr,u_k,k+1,BC,sc,templong)
+    int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;int nn=0;int _loc;//在参考基因的位置
+    float list_sim[SI];
     for(i=0; i<SM; i++)
     {
         list_loc[i]=spr->loczhi[i];
@@ -169,17 +162,22 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len)
                 list_score[i]++;
                 list_score[j]++;
             }
+    for(i=0;i<SI;i++){
+        _loc=(templong*ZV)+list_loc[i];
+        nn=(_loc-12)/200;
+        list_sim[i]=(sc[nn-1].vote);
+        list_score[i]=list_score[i]*list_sim[i];}//考虑相似度
     for(i=0; i<SI; i++)if(minval>list_score[i])
         {
             minval=list_score[i];
             mini=i;
         }//找出最低的分数
-    if(minval==SM)
+    if(mini==SM)
     {
         spr->loczhi[SM-1]=loc;
         spr->seedno[SM-1]=seedn;
     }
-    else if(minval<SM&&mini<SM)
+    else if(mini<SM)
     {
         for(i=mini; i<SM; i++)
         {
@@ -207,6 +205,7 @@ static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
     minval=10;
     for(i=0; i<SM; i++)for(j=i+1;j<SI; j++)if(list_seed[j]-list_seed[i]>0&&list_loc[j]-list_loc[i]>0&&fabs((list_loc[j]-list_loc[i])/((list_seed[j]-list_seed[i])*len)-1.0)<ddfs_cutoff)//计算DDF公式
     {
+        
         list_score[i]++;
         list_score[j]++;
     }
@@ -541,9 +540,9 @@ static void creat_ref_index(char *fastafile)
                 databaseindex[eit][countin[eit]-1]=i+2-seed_len;//存的位置
             }
            
-            nn=(i-12)/200+1;//按照200划分，
+            nn=(i-12)/200;//按照200划分，
             if(countin1[eit]>0){
-                sc[nn].k_count=sc[nn].k_count+countin1[eit];//在long_read里面出现的次数
+                sc[nn-1].k_count=sc[nn-1].k_count+countin1[eit];//在long_read里面出现的次数
             };
             
             eit=eit<<leftnum;
@@ -574,7 +573,7 @@ static void get_vote(){
            
            // printf("LDF is %f\n",sc1[j].LDF);
         }
-    }//在Longread里面出现的次数
+    }//在Longread里面出现的词频
     
     for(i=0; i<seqcount; i++)
     {
@@ -597,10 +596,10 @@ static void get_vote(){
             eit=eit<<2;
             eit=eit+temp;
             start=start+1;
-            nn=(i-12)/200+1;
+            nn=(i-12)/200;
             if(cpycount[eit]>0){
                 //printf("%d\n",cpycount[eit]);
-                sc1[nn].r_count=sc1[nn].r_count+cpycount[eit];
+                sc1[nn-1].r_count=sc1[nn-1].r_count+cpycount[eit];
             } //在参考基因里出现的次数
             eit=eit<<leftnum;
             eit=eit>>leftnum;
@@ -791,7 +790,7 @@ static void reference_mapping(int threadint)
                                         temp_spr->loczhi[loc-1]=u_k;//位置，block位置。
                                         temp_spr->seedno[loc-1]=k+1;
                                     }
-                                    else insert_loc(temp_spr,u_k,k+1,BC);//删除分数最小的。保持在20个左右//(struct Back_List *spr,int loc,int seedn,float len)
+                                    else insert_loc(temp_spr,u_k,k+1,BC,sc,templong);//删除分数最小的。保持在20个左右//(struct Back_List *spr,int loc,int seedn,float len)
                                     if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
                                     else s_k=temp_spr->score;
                                     if(endnum<s_k)endnum=s_k;
@@ -810,6 +809,7 @@ static void reference_mapping(int threadint)
                     }
 				*pnblk = j;
                 cc1=j;//index 数
+                
                 for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>6)//short int *index_score,*index_ss;
                     {
                         temp_spr=database+*index_spr;
@@ -848,7 +848,7 @@ static void reference_mapping(int threadint)
                                 u_k++;
                             }
                         }
-                        flag_end=find_location(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
+                        flag_end=find_location(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,sc,start_loc);
                         if(flag_end==0)continue;
                         if(temp_score[repeat_loc]<6)continue;
                         canidate_temp.score=temp_score[repeat_loc];
