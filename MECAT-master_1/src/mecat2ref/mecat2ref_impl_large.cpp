@@ -600,10 +600,9 @@ static void creat_ref_index(char *fastafile)
 static void get_vote(){
     int eit=0;
     int temp=0;
-    int i=0;char *seq;sim *sc1;char *readseq;
+    int i=0;char *seq;char *readseq;
     readseq=read_REFESQ;
     seq=REFSEQ;
-    sc1=sc;
     int *cpycount;
     cpycount=(int *)malloc((index_count)*sizeof(int));
     memcpy(cpycount, countin, sizeof(int)*index_count);
@@ -613,8 +612,8 @@ static void get_vote(){
     
     for(int j=0;j<similarity_count;j++){
         
-        if(sc1[j].k_count>0){
-            sc1[j].LDF=log((read_kmer)/sc1[j].k_count);
+        if(sc[j].k_count>0){
+            sc[j].LDF=log((read_kmer)/sc[j].k_count);
            
            // printf("LDF is %f\n",sc1[j].LDF);
         }
@@ -644,7 +643,7 @@ static void get_vote(){
             nn=(i-12)/200;
             if(cpycount[eit]>0){
                 //printf("%d\n",cpycount[eit]);
-                sc1[nn-1].r_count=sc1[nn-1].r_count+cpycount[eit];
+                sc[nn-1].r_count=sc[nn-1].r_count+cpycount[eit];
             } //在参考基因里出现的次数
             eit=eit<<leftnum;
             eit=eit>>leftnum;
@@ -654,13 +653,13 @@ static void get_vote(){
     for(int j=0;j<similarity_count;j++){
         if(count_value>0){
            // printf("r_count is %d\n",sc1[j].r_count);
-            sc1[j].TF=sc1[j].r_count/count_value;
+            sc[j].TF=sc[j].r_count/count_value;
         
            // printf("TF is %f\n",sc1[j].TF);}
-        if((sc1[j].TF*sc1[j].LDF)>0){
-            sc1[j].vote=fabs(log(sc1[j].TF*sc1[j].LDF));}
+        if((sc[j].TF*sc[j].LDF)>0){
+            sc[j].vote=fabs(log(sc[j].TF*sc[j].LDF));}
         else{
-            sc1[j].vote=1;
+            sc[j].vote=1;
         
         };
         //printf("vote is %f\n",sc1[j].vote);
