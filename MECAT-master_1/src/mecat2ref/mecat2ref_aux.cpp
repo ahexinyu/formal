@@ -285,7 +285,7 @@ fill_clipped_candidate(Back_List* block,
 		boff[i] = block->loczhi[i];
 		score[i] = 0;
 	}
-	int r = find_location(boff, seedn, score, locations, n, &rep_loc, BC, read_size, ddfs_cutoff);
+	int r = find_location2(boff, seedn, score, locations, n, &rep_loc, BC, read_size, ddfs_cutoff);
 	if (r) {
 		can.score = score[rep_loc];
 		can.chain = chain;
