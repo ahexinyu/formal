@@ -484,6 +484,7 @@ static void creat_ref_index(char *fastafile)
     seqcount=count;
     similarity_count=(seqcount-12)/200+1;
     sc=(sim *)malloc(similarity_count*sizeof(sim));
+    printf("sim si sucess\n");
     for(int k=0;k<similarity_count;k++){
         sc[k].k_count=0;
         sc[k].simm=0;
