@@ -497,7 +497,7 @@ static void creat_ref_index(char *fastafile)
 //printf("Constructing look-up table...\n");
     countin=(int *)malloc((indexcount)*sizeof(int));
     for(i=0; i<indexcount; i++)countin[i]=0;
-
+ printf("2222 is suceess\n");
 // Count the number
     eit=0;
     start=0;
@@ -531,7 +531,7 @@ static void creat_ref_index(char *fastafile)
        
         //printf("%c",seq[i]);
     }
-
+    printf("333 is suceess\n");
   int nn;//表示区域
 //Max_index
     sumcount=sumvalue_x(countin,indexcount);//有效Index K_mer的数量
@@ -553,7 +553,7 @@ static void creat_ref_index(char *fastafile)
     }
 
     // printf("xiao");//10834098
-
+ printf("444 is suceess\n");
 //constructing the look-up table
     eit=0;
     start=0;
