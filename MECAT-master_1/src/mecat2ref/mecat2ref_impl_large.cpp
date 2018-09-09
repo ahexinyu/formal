@@ -1517,7 +1517,7 @@ static void reference_map_reference(int threadint)
                             u_k++;
                         }
                     }
-                    flag_end=find_location(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
+                    flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
                     if(flag_end==0)continue;
                     if(temp_score[repeat_loc]<6)continue;
                     canidate_temp.score=temp_score[repeat_loc];
@@ -1780,7 +1780,7 @@ static void reference_map_reference(int threadint)
                                 u_k++;
                             }
                         }
-                        flag_end=find_location(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
+                        flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
                         if(flag_end==0)continue;
                         if(temp_score[repeat_loc]<6)continue;
                         canidate_temp.score=temp_score[repeat_loc];

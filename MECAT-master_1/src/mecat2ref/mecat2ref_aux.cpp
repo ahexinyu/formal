@@ -88,7 +88,85 @@ int find_location(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_
     }
     else return(0);
 }
-
+int find_location2(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff)
+{
+    
+    int i,j,maxval=0,maxi,rep=0,lasti=0;
+    for(i=0; i<k; i++)t_score[i]=0;
+    for(i=0; i<k-1; i++)for(j=i+1; j<k; j++)if(t_seedn[j]-t_seedn[i]>0&&t_loc[j]-t_loc[i]>0&&t_loc[j]-t_loc[i]<read_len1&&fabs((t_loc[j]-t_loc[i])/((t_seedn[j]-t_seedn[i])*len)-1)<ddfs_cutoff)
+    {
+        t_score[i]++;
+        t_score[j]++;
+    }
+    
+    for(i=0; i<k; i++)
+    {
+        if(maxval<t_score[i])
+        {
+            maxval=t_score[i];
+            maxi=i;//最大值的位置
+            rep=0;
+        }//找出分数最高的
+        else if(maxval==t_score[i])
+        {//分数一样高的
+            rep++;
+            lasti=i;//次高的分数
+        }
+    }
+    for(i=0; i<4; i++)loc[i]=0;
+    if(maxval>=5&&rep==maxval)
+    {
+        loc[0]=t_loc[maxi],loc[1]=t_seedn[maxi];
+        *rep_loc=maxi;
+        loc[2]=t_loc[lasti],loc[3]=t_seedn[lasti];
+        return(1);
+    }
+    else if(maxval>=5&&rep!=maxval)
+    {
+        for(j=0; j<maxi; j++)if(t_seedn[maxi]-t_seedn[j]>0&&t_loc[maxi]-t_loc[j]>0&&t_loc[maxi]-t_loc[j]<read_len1&&fabs((t_loc[maxi]-t_loc[j])/((t_seedn[maxi]-t_seedn[j])*len)-1)<ddfs_cutoff)
+        {
+            if(loc[0]==0)
+            {
+                loc[0]=t_loc[j];
+                loc[1]=t_seedn[j];
+                *rep_loc=j;
+            }
+            else
+            {
+                loc[2]=t_loc[j];
+                loc[3]=t_seedn[j];
+            }
+        }
+        j=maxi;
+        if(loc[0]==0)
+        {
+            loc[0]=t_loc[j];
+            loc[1]=t_seedn[j];
+            *rep_loc=j;
+        }
+        else
+        {
+            loc[2]=t_loc[j];
+            loc[3]=t_seedn[j];
+        }
+        for(j=maxi+1; j<k; j++)if(t_seedn[j]-t_seedn[maxi]>0&&t_loc[j]-t_loc[maxi]>0&&t_loc[j]-t_loc[maxi]<=read_len1&&fabs((t_loc[j]-t_loc[maxi])/((t_seedn[j]-t_seedn[maxi])*len)-1)<ddfs_cutoff)
+        {
+            if(loc[0]==0)
+            {
+                loc[0]=t_loc[j];
+                loc[1]=t_seedn[j];
+                *rep_loc=j;
+            }
+            else
+            {
+                loc[2]=t_loc[j];
+                loc[3]=t_seedn[j];
+            }
+        }
+        return(1);
+    }
+    else return(0);
+}
 void
 extract_sequences(const char* raw_ref,
 				  const char* raw_read,
