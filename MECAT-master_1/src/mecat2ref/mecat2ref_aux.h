@@ -42,7 +42,7 @@ AlignInfoContained(const AlignInfo& a, const AlignInfo& b)
 }
 
 int 
-find_location(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff);
+find_location(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,sim sc,long start_loc);
 
 bool extend_candidate(candidate_save& can,
 					  GapAligner* aligner,

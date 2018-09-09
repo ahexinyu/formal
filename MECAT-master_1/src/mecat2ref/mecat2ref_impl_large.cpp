@@ -142,7 +142,7 @@ static int transnum_buchang(char *seqm,int *value,int *endn,int len_str,int read
     return(num);//extract_number
 }
 
-static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,sim *sc,int templong)
+static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,sim *sc,long templong)
 {//insert_loc(temp_spr,u_k,k+1,BC,sc,templong)
     int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;int nn=0;int _loc;//在参考基因的位置
     float list_sim[SI];
@@ -241,7 +241,7 @@ static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
         spr->score--;
     }
 }
-static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len,sim *sc,int templong)
+static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len,sim *sc,long templong)
 {//insert_loc(temp_spr,u_k,k+1,BC,sc,templong)
     int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;int nn=0;int _loc;//在参考基因的位置
     float list_sim[SI];
