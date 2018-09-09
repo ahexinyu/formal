@@ -12,7 +12,7 @@ int find_location(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_
                 t_score[i]++;
                 t_score[j]++;
             }
-    for(i=0;i<k;i++){_loc[i]=(start_loc)*ZVL+t_loc[i];}
+    for(i=0;i<k;i++){_loc[i]=start_loc+t_loc[i];}
     int nn=0;
     for(i=0;i<SI;i++){
         nn=(_loc[i]-12)/200;

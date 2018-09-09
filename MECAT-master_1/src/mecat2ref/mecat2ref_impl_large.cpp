@@ -241,6 +241,51 @@ static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
         spr->score--;
     }
 }
+static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len，struct sim *sc,int templong)
+{//insert_loc(temp_spr,u_k,k+1,BC,sc,templong)
+    int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;int nn=0;int _loc;//在参考基因的位置
+    float list_sim[SI];
+    for(i=0; i<SM; i++)
+    {
+        list_loc[i]=spr->loczhi[i];
+        list_seed[i]=spr->seedno[i];
+        list_score[i]=0;
+    }
+    list_loc[SM]=loc;
+    list_seed[SM]=seedn;//seednumber
+    list_score[SM]=0;//SM 和SI 是20 和21
+    mini=-1;
+    minval=10000;
+    for(i=0; i<SM; i++)for(j=i+1; j<SI; j++)if(list_seed[j]-list_seed[i]>0&&list_loc[j]-list_loc[i]>0&&fabs((list_loc[j]-list_loc[i])/((list_seed[j]-list_seed[i])*len)-1.0)<ddfs_cutoff)
+    {
+        list_score[i]++;
+        list_score[j]++;
+    }
+    for(i=0;i<SI;i++){
+        _loc=(templong*ZVS)+list_loc[i];
+        nn=(_loc-12)/200;
+        list_sim[i]=(sc[nn-1].vote);
+        list_score[i]=list_score[i]*list_sim[i];}//考虑相似度
+    for(i=0; i<SI; i++)if(minval>list_score[i])
+    {
+        minval=list_score[i];
+        mini=i;
+    }//找出最低的分数
+    if(mini==SM)
+    {
+        spr->loczhi[SM-1]=loc;
+        spr->seedno[SM-1]=seedn;
+    }
+    else if(mini<SM)
+    {
+        for(i=mini; i<SM; i++)
+        {
+            spr->loczhi[i]=list_loc[i+1];
+            spr->seedno[i]=list_seed[i+1];
+        }
+        spr->score--;//删掉最低一个
+    }
+}
 static void build_read_index(const char *path, char *path1){
     unsigned int eit,temp;long start;
     char tempstr[200];
@@ -810,7 +855,7 @@ static void reference_mapping(int threadint)
 				*pnblk = j;
                 cc1=j;//index 数
                 
-                for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>6)//short int *index_score,*index_ss;
+                for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>10)//short int *index_score,*index_ss;
                     {
                         temp_spr=database+*index_spr;
                         if(temp_spr->score==0)continue;
@@ -1054,7 +1099,7 @@ static void reference_mapping(int threadint)
                                             temp_spr->loczhi[loc-1]=u_k;
                                             temp_spr->seedno[loc-1]=k+1;
                                         }
-                                        else insert_loc(temp_spr,u_k,k+1,BC);
+                                        else insert_loc3(temp_spr,u_k,k+1,BC,sc,templong);
                                         if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
                                         else s_k=temp_spr->score;
                                         if(endnum<s_k)endnum=s_k;
@@ -1073,7 +1118,7 @@ static void reference_mapping(int threadint)
                         }
 					*pnblk = j;
                     cc1=j;
-                    for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>4)
+                    for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>6)
                         {
                             temp_spr=database+*index_spr;
                             if(temp_spr->score==0)continue;
@@ -1111,7 +1156,7 @@ static void reference_mapping(int threadint)
                                     u_k++;
                                 }
                             }
-                            flag_end=find_location(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
+                            flag_end=find_location(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,sc,start_loc);
                             if(flag_end==0)continue;
                             if(temp_score[repeat_loc]<6)continue;
                             canidate_temp.score=temp_score[repeat_loc];
