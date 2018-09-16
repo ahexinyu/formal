@@ -517,7 +517,7 @@ static void creat_ref_index(char *fastafile)
     similarity_count=(seqcount-12)/200+1;
     sc=(sim *)malloc(similarity_count*sizeof(sim));
     printf("sim si sucess\n");
-    for(int k=0;k<similarity_count;k++){
+    for(int k=0;k<similarity_count-1;k++){
         sc[k].k_count=0;
         sc[k].simm=0;
         sc[k].TF=0;
@@ -618,7 +618,7 @@ static void creat_ref_index(char *fastafile)
                 databaseindex[eit][countin[eit]-1]=i+2-seed_len;//存的位置
             }
            
-            nn=(i-12)/200;//按照200划分，
+            nn=(i-12)/200+1;//按照200划分，
             if(countin1[eit]>0){
                 sc[nn-1].k_count=sc[nn-1].k_count+countin1[eit];//在long_read里面出现的次数
             }
@@ -674,7 +674,7 @@ static void get_vote(){
             eit=eit<<2;
             eit=eit+temp;
             start=start+1;
-            nn=(i-12)/200;
+            nn=(i-12)/200+1;
             if(cpycount[eit]>0){
                 //printf("%d\n",cpycount[eit]);
                 sc[nn-1].r_count=sc[nn-1].r_count+cpycount[eit];
