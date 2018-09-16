@@ -631,6 +631,7 @@ static void creat_ref_index(char *fastafile)
     }
     printf("555 is suceess\n");
 }
+printf(" test sucess\n");
 static void get_vote(){
     int eit=0;
     int temp=0;
@@ -2065,6 +2066,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     fclose(fp);
     //build read_long index
     gettimeofday(&tpstart, NULL);
+    printf("get time sis sucess\n");
     creat_ref_index(fastafile);
     printf("get ref_index sucess");
     gettimeofday(&tpend, NULL);
