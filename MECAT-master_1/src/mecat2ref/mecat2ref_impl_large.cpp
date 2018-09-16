@@ -631,7 +631,7 @@ static void creat_ref_index(char *fastafile)
     }
     printf("555 is suceess\n");
 }
-printf(" test sucess\n");
+
 static void get_vote(){
     int eit=0;
     int temp=0;
