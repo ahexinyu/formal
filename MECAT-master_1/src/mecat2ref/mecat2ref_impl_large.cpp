@@ -634,10 +634,10 @@ static void get_vote(){
     int eit=0;
     int temp=0;
     int i=0;char *seq;char *readseq;
-    readseq=read_REFESQ;
+    readseq=read_REFESQ;sim *sc1;
     seq=REFSEQ;
     sc1=sc;
-    int *cpycount;sim *sc1;
+    int *cpycount;
     cpycount=(int *)malloc((index_count)*sizeof(int));
     memcpy(cpycount, countin, sizeof(int)*index_count);
     int start=0;//num 有关
