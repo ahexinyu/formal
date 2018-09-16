@@ -194,7 +194,7 @@ extract_sequences(const char* raw_ref,
 		c = et[c];
 		if (c > 3) c = 0;
 		tstr.push_back((char)c);
-	}
+    }//tstr是参考基因组
 	
 	qstr.clear();
 	for (int i = 0; i < read_size; ++i) {
@@ -203,7 +203,7 @@ extract_sequences(const char* raw_ref,
 		if (c > 3) c = 0;
 		qstr.push_back((char)c);
 	}
-}
+}//qstr是read的
 
 bool extend_candidate(candidate_save& can,
 					  GapAligner* aligner,
@@ -235,7 +235,6 @@ bool extend_candidate(candidate_save& can,
 					  qstr, 
 					  tstr);
 	if (aligner->go(qstr.data(), read_start, read_len, tstr.data(), left_ref_size, tstr.size(), 1000)) {
-
 		TempResult& r = trv[ntr++];
 		r.read_id = read_name;
 		r.read_dir = can.chain;
@@ -424,7 +423,6 @@ rescue_clipped_align(AlignInfo* alnv,
 	}
 	naln = k;
 	if (is_full_align(alnv[0], read_len)) return;
-			
 	for (int i = 0; i < naln - 1; ++i) {
 		if (alnv[i].parent_id != -1) continue;
 		for (int j = i + 1; j < naln; ++j) {

@@ -35,7 +35,7 @@ inline T extract_char(const char* A, int i, bool forward)
 }
 
 bool
-retrieve_next_aln_block(const char* query,
+retrieve_next_aln_block(const char* query,//retrieve取回
 						int qidx, 
 						const int qsize, 
 						const char* target,

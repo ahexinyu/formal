@@ -145,7 +145,7 @@ static int transnum_buchang(char *seqm,int *value,int *endn,int len_str,int read
 static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,sim *sc,long templong)
 {//insert_loc(temp_spr,u_k,k+1,BC,sc,templong)
     int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;int nn=0;int _loc;//在参考基因的位置
-    float list_sim[SI];
+    float list_sim[SI];float score_sim[SI];//加了相似度之后的分数
     for(i=0; i<SM; i++)
     {
         list_loc[i]=spr->loczhi[i];
@@ -162,14 +162,15 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,sim *sc
                 list_score[i]++;
                 list_score[j]++;
             }
+    for(i=0;i<SI;i++){score_sim[i]=0;}
     for(i=0;i<SI;i++){
         _loc=(templong*ZV)+list_loc[i];
         nn=(_loc-12)/200;
         list_sim[i]=(sc[nn-1].vote);
-        list_score[i]=list_score[i]*list_sim[i];}//考虑相似度
-    for(i=0; i<SI; i++)if(minval>list_score[i])
+        score_sim[i]=list_score[i]*list_sim[i];}//考虑相似度
+    for(i=0; i<SI; i++)if(minval>score_sim[i])
         {
-            minval=list_score[i];
+            minval=score_sim[i];
             mini=i;
         }//找出最低的分数
     if(mini==SM)
@@ -244,7 +245,7 @@ static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
 static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len,sim *sc,long templong)
 {//insert_loc(temp_spr,u_k,k+1,BC,sc,templong)
     int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;int nn=0;int _loc;//在参考基因的位置
-    float list_sim[SI];
+    float list_sim[SI];float score_sim[SI];
     for(i=0; i<SM; i++)
     {
         list_loc[i]=spr->loczhi[i];
@@ -261,14 +262,15 @@ static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len,sim *s
         list_score[i]++;
         list_score[j]++;
     }
+    for(i=0;i<SI;i++){score_sim[i]=0;}
     for(i=0;i<SI;i++){
         _loc=(templong*ZVS)+list_loc[i];
         nn=(_loc-12)/200;
         list_sim[i]=(sc[nn-1].vote);
-        list_score[i]=list_score[i]*list_sim[i];}//考虑相似度
-    for(i=0; i<SI; i++)if(minval>list_score[i])
+        score_sim[i]=list_score[i]*list_sim[i];}//考虑相似度
+    for(i=0; i<SI; i++)if(minval>score_sim[i])
     {
-        minval=list_score[i];
+        minval=score_sim[i];
         mini=i;
     }//找出最低的分数
     if(mini==SM)
@@ -285,6 +287,31 @@ static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len,sim *s
         }
         spr->score--;//删掉最低一个
     }
+}
+void swapdata(candidate_save *a,candidate_save *b){
+    candidate_save temp;
+    temp=*a;
+    *a=*b;
+    *b=temp;
+}
+
+void sortdata(candidate_save *can,int num){
+    for (int i=0;i<num-1;i++)
+    {
+        int index=i;
+        for(int j=i+1;j<num;j++)
+        {
+            if(can[j].score>can[i].score)
+            {
+                index=j;
+            }
+            if(index!=i)
+            {
+                swapdata(&can[index], &can[i]);
+            }
+        }
+    }
+    
 }
 static void build_read_index(const char *path, char *path1){
     unsigned int eit,temp;long start;
@@ -431,6 +458,11 @@ static void build_read_index(const char *path, char *path1){
     
 }
 
+int filter_loc(candidate_save a,candidate_save b){
+    int i=0;
+    if(fabs((a.loc1-b.loc1)/(a.loc2-b.loc2))>0.7){i=1;return i;}
+    else {i=0;return i;}
+}
 static void creat_ref_index(char *fastafile)
 {
     unsigned int eit,temp;
@@ -704,9 +736,11 @@ static void reference_mapping(int threadint)
 	for (i = 0; i < j; ++i) {
 		fwd_database[i].score = 0;
 		fwd_database[i].score2 = 0;
+        
 		fwd_database[i].index = -1;
 		rev_database[i].score = 0;
 		rev_database[i].score2 = 0;
+        
 		rev_database[i].index = -1;
 	}
 	int fnblk, rnblk;
@@ -837,7 +871,7 @@ static void reference_mapping(int threadint)
                                         temp_spr->loczhi[loc-1]=u_k;//位置，block位置。
                                         temp_spr->seedno[loc-1]=k+1;
                                     }
-                                    else insert_loc(temp_spr,u_k,k+1,BC,sc,templong);//删除分数最小的。保持在20个左右//(struct Back_List *spr,int loc,int seedn,float len)
+                                    else insert_loc(temp_spr,u_k,k+1,BC,sc,templong);//删除分数最小的。保持在20个左右//
                                     if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
                                     else s_k=temp_spr->score;
                                     if(endnum<s_k)endnum=s_k;
@@ -853,11 +887,11 @@ static void reference_mapping(int threadint)
                                 temp_spr->seednum=k+1;
                             }
                         }
-                    }
+                    }//这个时候的score还没有变化
 				*pnblk = j;
                 cc1=j;//index 数
                 
-                for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>10)//short int *index_score,*index_ss;
+                for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>6)//short int *index_score,*index_ss;
                     {
                         temp_spr=database+*index_spr;
                         if(temp_spr->score==0)continue;
@@ -928,6 +962,7 @@ static void reference_mapping(int threadint)
 								int scnt = min((int)temp_spr1->score, SM);
                                 for(j=0,s_k=0; j < scnt; j++)if(fabs((loc_list-start_loc-temp_spr1->loczhi[j])/((loc_seed-temp_spr1->seedno[j])*BC*1.0)-1.0)<ddfs_cutoff)
                                     {
+                                        
                                         seedcount++;
                                         s_k++;
                                     }
@@ -1010,12 +1045,15 @@ static void reference_mapping(int threadint)
 				int bid = fwd_index_list[t];
 				fwd_database[bid].score = 0;
 				fwd_database[bid].score2 = 0;
+                
 				fwd_database[bid].index = -1;
 			}
 			for (int t = 0; t < rnblk; ++t) {
 				int bid = rev_index_list[t];
 				rev_database[bid].score = 0;
 				rev_database[bid].score2 = 0;
+                
+                
 				rev_database[bid].index = -1;
 			}
 
@@ -1120,7 +1158,7 @@ static void reference_mapping(int threadint)
                         }
 					*pnblk = j;
                     cc1=j;
-                    for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>6)
+                    for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>4)
                         {
                             temp_spr=database+*index_spr;
                             if(temp_spr->score==0)continue;
@@ -1220,6 +1258,7 @@ static void reference_mapping(int threadint)
                                 if(mid>=canidatenum||canidate_loc[mid].score<canidate_temp.score)high=mid-1;
                                 else low=mid+1;
                             }
+                            
                             if(canidatenum<MAXC)for(u_k=canidatenum-1; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
                             else for(u_k=canidatenum-2; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
                             if(high+1<MAXC)canidate_loc[high+1]=canidate_temp;
@@ -1227,7 +1266,7 @@ static void reference_mapping(int threadint)
                             else canidatenum=MAXC;
                         }
                 }
-
+                
 				naln = 0;
 				nresults = 0;
                 for(i=0; i<canidatenum; i++)
@@ -1298,8 +1337,7 @@ static void reference_map_reference(int threadint)
     int  seedlenth=13;int rindexcount=67108864;//***********
     int *table;static long **tableindex1,*tableallloc1,tablesumcount1;//***********
     int leftnum=8;//***********
-    
-    
+    int p=0;int pp=0;//**********
     int cleave_num,read_len;
     int mvalue[100000],flag_end;
     long *leadarray,u_k,s_k,loc;
@@ -1573,20 +1611,38 @@ static void reference_map_reference(int threadint)
                     if(ii==1)canidate_temp.chain='F';
                     else canidate_temp.chain='R';
                     //insert canidate position or delete this position
-                    low=0;
-                    high=canidatenum-1;
-                    while(low<=high)
-                    {
-                        mid=(low+high)/2;
-                        if(mid>=canidatenum||canidate_loc[mid].score<canidate_temp.score)high=mid-1;
-                        else low=mid+1;
+                    
+                    while(canidate_loc[p].score!=0){
+                        pp=filter_loc(canidate_loc[p],canidate_temp);
+                        if(pp){
+                                low=0;
+                                high=canidatenum-1;
+                                while(low<=high)
+                                {
+                                mid=(low+high)/2;
+                                if(mid>=canidatenum||canidate_loc[mid].score<canidate_temp.score)high=mid-1;
+                                else low=mid+1;
+                                }
+                                if(canidatenum<MAXC)for(u_k=canidatenum-1; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
+                                else for(u_k=canidatenum-2; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
+                                if(high+1<MAXC)canidate_loc[high+1]=canidate_temp;
+                                if(canidatenum<MAXC)canidatenum++;
+                                else canidatenum=MAXC;//从高往低排序
+                        
+                            }
+                        else{
+                                if(canidate_loc[p].score>=canidate_temp.score){break;}
+                                else{
+                                    canidate_loc[p]=canidate_temp;
+                                    sortdata(canidate_loc,canidatenum);
+                                }
+                            }
+                        p++;
                     }
-                    if(canidatenum<MAXC)for(u_k=canidatenum-1; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
-                    else for(u_k=canidatenum-2; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
-                    if(high+1<MAXC)canidate_loc[high+1]=canidate_temp;
-                    if(canidatenum<MAXC)canidatenum++;
-                    else canidatenum=MAXC;
+                    
+                    
                 }
+                
             }
             
             naln = 0;
@@ -1835,20 +1891,36 @@ static void reference_map_reference(int threadint)
                         canidate_temp.score=canidate_temp.score+seedcount;
                         if(ii==1)canidate_temp.chain='F';
                         else canidate_temp.chain='R';
-                        //insert canidate position or delete this position
-                        low=0;
-                        high=canidatenum-1;
-                        while(low<=high)
-                        {
-                            mid=(low+high)/2;
-                            if(mid>=canidatenum||canidate_loc[mid].score<canidate_temp.score)high=mid-1;
-                            else low=mid+1;
+                        p=0;
+                        pp=0;//insert canidate position or delete this position
+                        while(canidate_loc[p].score!=0){
+                            pp=filter_loc(canidate_loc[p],canidate_temp);
+                            if(pp){
+                                low=0;
+                                high=canidatenum-1;
+                                while(low<=high)
+                                {
+                                    mid=(low+high)/2;
+                                    if(mid>=canidatenum||canidate_loc[mid].score<canidate_temp.score)high=mid-1;
+                                    else low=mid+1;
+                                }
+                                if(canidatenum<MAXC)for(u_k=canidatenum-1; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
+                                else for(u_k=canidatenum-2; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
+                                if(high+1<MAXC)canidate_loc[high+1]=canidate_temp;
+                                if(canidatenum<MAXC)canidatenum++;
+                                else canidatenum=MAXC;//从高往低排序
+                                
+                            }
+                            else{
+                                if(canidate_loc[p].score>=canidate_temp.score){break;}
+                                else{
+                                    canidate_loc[p]=canidate_temp;
+                                    sortdata(canidate_loc,canidatenum);
+                                }
+                            }
+                            p++;
                         }
-                        if(canidatenum<MAXC)for(u_k=canidatenum-1; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
-                        else for(u_k=canidatenum-2; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
-                        if(high+1<MAXC)canidate_loc[high+1]=canidate_temp;
-                        if(canidatenum<MAXC)canidatenum++;
-                        else canidatenum=MAXC;
+
                     }
                 }
                 

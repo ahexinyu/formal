@@ -92,6 +92,7 @@ typedef struct
     int score, num1,num2;
     char chain;
 } candidate_save;
+
 typedef struct{
     double simm;//相似度
     int k_count;//long_read出现的次数
