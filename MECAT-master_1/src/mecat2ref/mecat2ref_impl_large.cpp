@@ -591,7 +591,6 @@ static void creat_ref_index(char *fastafile)
     start=0;
     for(i=0; i<seqcount; i++)
     {
-        //printf("%c",seq[i]);
         if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
         {
             eit=0;
@@ -620,13 +619,11 @@ static void creat_ref_index(char *fastafile)
            
             nn=(i-12)/200+1;//按照200划分，
             if(countin1[eit]>0){
-                sc[nn-1].k_count=sc[nn-1].k_count+countin1[eit];//在long_read里面出现的次数
+                sc[nn].k_count=sc[nn].k_count+countin1[eit];//在long_read里面出现的次数
             }
             eit=eit<<leftnum;
             eit=eit>>leftnum;
-            //printf(" thiS IS eit2%d\n",eit);
         }
-        
     }
     printf("555 is suceess\n");
 }
@@ -642,8 +639,6 @@ static void get_vote(){
     memcpy(cpycount, countin, sizeof(int)*index_count);
     int start=0;//num 有关
     int leftnum=8;int nn=0;
-    
-    
     for(int j=0;j<similarity_count;j++){
         
         if(sc[j].k_count>0){
@@ -677,7 +672,7 @@ static void get_vote(){
             nn=(i-12)/200+1;
             if(cpycount[eit]>0){
                 //printf("%d\n",cpycount[eit]);
-                sc[nn-1].r_count=sc[nn-1].r_count+cpycount[eit];
+                sc[nn].r_count=sc[nn].r_count+cpycount[eit];
             } //在参考基因里出现的次数
             eit=eit<<leftnum;
             eit=eit>>leftnum;
