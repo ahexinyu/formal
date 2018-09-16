@@ -621,8 +621,7 @@ static void creat_ref_index(char *fastafile)
             nn=(i-12)/200;//按照200划分，
             if(countin1[eit]>0){
                 sc[nn-1].k_count=sc[nn-1].k_count+countin1[eit];//在long_read里面出现的次数
-            };
-            
+            }
             eit=eit<<leftnum;
             eit=eit>>leftnum;
             //printf(" thiS IS eit2%d\n",eit);
