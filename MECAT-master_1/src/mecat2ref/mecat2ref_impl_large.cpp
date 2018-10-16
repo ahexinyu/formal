@@ -356,7 +356,7 @@ static void build_read_index(const char *path, char *path1){
     seqcount1=actual_len;
     seq[actual_len+1]='\0';
     //printf("Constructing look-up table...\n");
-    countin1=(int *)malloc((index_count)*sizeof(int));
+    
     for(int i=0; i<index_count; i++)countin1[i]=0;
     
     // Count the number
@@ -1042,15 +1042,12 @@ static void reference_mapping(int threadint)
 				int bid = fwd_index_list[t];
 				fwd_database[bid].score = 0;
 				fwd_database[bid].score2 = 0;
-                
 				fwd_database[bid].index = -1;
 			}
 			for (int t = 0; t < rnblk; ++t) {
 				int bid = rev_index_list[t];
 				rev_database[bid].score = 0;
 				rev_database[bid].score2 = 0;
-                
-                
 				rev_database[bid].index = -1;
 			}
 
@@ -2156,7 +2153,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     }
     free(outfile);
     free(savework);
-    free(readinfo);
+    free(readinfo);//这里要删掉，别先急着释放
     free(refinfo);
     free(thread);
     return 0;
