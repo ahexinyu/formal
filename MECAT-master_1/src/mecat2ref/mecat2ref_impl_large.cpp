@@ -2155,7 +2155,7 @@ static void map(char *sonedata,char *sonedata1,char dir,TempResult *a,TempResult
                     u_k++;
                 }
             }
-            flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
+            flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len,ddfs_cutoff);
             if(flag_end==0)continue;
             if(temp_score[repeat_loc]<6)continue;//这个改一下待商榷
             canidate_temp.score=temp_score[repeat_loc];
@@ -2167,7 +2167,7 @@ static void map(char *sonedata,char *sonedata1,char dir,TempResult *a,TempResult
             ref_right=a->se-location_loc[0];
             left_length1=location_loc[0]+seed_len-1;
             right_length1=seqcount-location_loc[0];
-            read_lef=location[1]+seed_len-1-a->qb;
+            read_lef=location_loc[1]+seed_len-1-a->qb;
             read_right=a->qe-location_loc[1];
             left_length2=location_loc[1]+seed_len-1;
             right_length2=read_len-location_loc[1];
@@ -2265,7 +2265,7 @@ static void map(char *sonedata,char *sonedata1,char dir,TempResult *a,TempResult
                     u_k++;
                 }
             }
-            flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutof);
+            flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
             if(flag_end==0)continue;
             if(temp_score[repeat_loc]<6)continue;//这个改一下待商榷
             canidate_temp.score=temp_score[repeat_loc];
@@ -2277,7 +2277,7 @@ static void map(char *sonedata,char *sonedata1,char dir,TempResult *a,TempResult
             ref_right=a->se-location_loc[0];
             left_length1=location_loc[0]+seed_len-1;
             right_length1=seqcount-location_loc[0];
-            read_lef=location[1]+seed_len-1-a->qb;
+            read_lef=location_loc[1]+seed_len-1-a->qb;
             read_right=a->qe-location_loc[1];
             left_length2=location_loc[1]+seed_len-1;
             right_length2=read_len-location_loc[1];
@@ -2480,7 +2480,7 @@ static int  small_meap(TempResult *a,TempResult *b,FILE *upfile){
      //seq=REFSEQ;//REFSEQ也是原来的，在map函数里面
      //build_small_index(onedata1);//这里应该放read的部分。read和一条参考基因上两个地方比对，考虑了一下，建立两次index吧*/
     long length_read=strlen(raw_read);//这个要加进map函数里面
-    map(raw_read,raw_reference,upfile,dir,a,b,length_read,read_name,upfile);
+    map(raw_read,raw_reference,dir,a,b,length_read,read_name,upfile);
     
     return 0;
     
