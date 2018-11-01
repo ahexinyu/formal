@@ -1983,16 +1983,16 @@ static void reference_map_reference(int threadint)
     free(rev_index_score);
     delete[] aln_seqs;
 }
-static void map(char *sonedata,char *sonedata1,char dir,TempResult *a,TempResult *b,long length_read,int read_name,FILE *outfile){//onedata是longread 。别的两个是参考基因组的部分
+static void map(char *sonedata,char *sonedata1,char dir,TempResult *a,TempResult *b,long length_read,int read_name,FILE *outfile){
     int cleave_num,read_len;
     int mvalue[20000],flag_end;
     long *leadarray,u_k,s_k,loc;
-    int count1=0,i,j,k,templong,read_name;
+    int count1=0,i,j,k,templong;
     struct Back_List *database,*temp_spr,*temp_spr1;
     int repeat_loc = 0,*index_list,*index_spr;
     long location_loc[4],left_length1,right_length1,left_length2,right_length2,loc_list,start_loc;
     short int *index_score,*index_ss;
-    int temp_list[200],temp_seedn[200],temp_score[200];int read_lef,read_right;ref_lef,ref_right;
+    int temp_list[200],temp_seedn[200],temp_score[200];int read_lef,read_right,ref_lef,ref_right;
     int localnum,read_i,read_end,fileid;
     int endnum,ii;int num3,num4;
     char *seq,*onedata,onedata1[RM],onedata2[RM],FR;
@@ -2000,7 +2000,7 @@ static void map(char *sonedata,char *sonedata1,char dir,TempResult *a,TempResult
     int num1,num2,BC;
     int low,high,mid,seedcount;
     candidate_save canidate_1,canidate_temp;
-    candidate_save  candidate_2;//2de
+    candidate_save  canidate_2;
     seq=REFSEQ;
     j=seqcount/ZV+5;//z这边考虑下长度要不要改是原来
     
@@ -2079,7 +2079,7 @@ static void map(char *sonedata,char *sonedata1,char dir,TempResult *a,TempResult
     {
         count1=countin[mvalue[k]];
         //if(count1>20)continue;
-        leadarray=sdatabaseindex[mvalue[k]];//leadarry存的位置
+        leadarray=databaseindex[mvalue[k]];//leadarry存的位置
         for(i=0; i<count1; i++,leadarray++)
         {
             templong=(*leadarray)/ZV;//位置信息，第几个block
@@ -2167,7 +2167,7 @@ static void map(char *sonedata,char *sonedata1,char dir,TempResult *a,TempResult
             ref_right=a->se-location_loc[0];
             left_length1=location_loc[0]+seed_len-1;
             right_length1=seqcount-location_loc[0];
-            read_lef=location[1]+sees_len-1-a->qb;
+            read_lef=location[1]+seed_len-1-a->qb;
             read_right=a->qe-location_loc[1];
             left_length2=location_loc[1]+seed_len-1;
             right_length2=read_len-location_loc[1];
@@ -2277,7 +2277,7 @@ static void map(char *sonedata,char *sonedata1,char dir,TempResult *a,TempResult
             ref_right=a->se-location_loc[0];
             left_length1=location_loc[0]+seed_len-1;
             right_length1=seqcount-location_loc[0];
-            read_lef=location[1]+sees_len-1-a->qb;
+            read_lef=location[1]+seed_len-1-a->qb;
             read_right=a->qe-location_loc[1];
             left_length2=location_loc[1]+seed_len-1;
             right_length2=read_len-location_loc[1];
@@ -2323,8 +2323,8 @@ static void map(char *sonedata,char *sonedata1,char dir,TempResult *a,TempResult
     }//这里是改之后的
     naln = 0;
     nresults = 0;
-    if(candidate_2.score>canidate_1.score){
-        extend_candidate(candidate_2,
+    if(canidate_2.score>canidate_1.score){
+        extend_candidate(canidate_2,
                          aligner,
                          seq,
                          seqcount,
@@ -2360,7 +2360,7 @@ static void map(char *sonedata,char *sonedata1,char dir,TempResult *a,TempResult
         
     }
     else{
-        extend_candidate(candidate_1,
+        extend_candidate(canidate_1,
                          aligner,
                          seq,
                          seqcount,
@@ -2480,7 +2480,7 @@ static int  small_meap(TempResult *a,TempResult *b,FILE *upfile){
      //seq=REFSEQ;//REFSEQ也是原来的，在map函数里面
      //build_small_index(onedata1);//这里应该放read的部分。read和一条参考基因上两个地方比对，考虑了一下，建立两次index吧*/
     long length_read=strlen(raw_read);//这个要加进map函数里面
-    map(raw_read,raw_reference,upfile,dir,a,b,length_read,read_name);
+    map(raw_read,raw_reference,upfile,dir,a,b,length_read,read_name,upfile);
     
     return 0;
     
