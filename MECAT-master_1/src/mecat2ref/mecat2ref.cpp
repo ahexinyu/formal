@@ -654,7 +654,7 @@ int extract_ref(const char *workpath,int filecount,TempResult **refpptr,int refc
 }
 
 extern int meap_ref_impl_large(int, int, int);
-extern int small_meap(TempResult,TempResult,FILE);
+extern int small_meap(TempResult*,TempResult*,FILE*);
 void polish_result(const char *workpath,int filecount,int refcount){
     char path[200];FILE *thread_file; FILE **up_file;int num_count=0;char buffer[1024];
     char *trbuffer=(char *)malloc(8192);char tempstr[200];
