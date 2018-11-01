@@ -466,7 +466,12 @@ output_query_results(fastaindexinfo* chr_idx, const int num_chr, TempResult** pp
 		if (output_cnt == num_output) break;
 	}
 }
-
+int judge(TempResult *a,TempResult *b,int sid){
+    int r;
+    if(sid==b->read_id&&labs((a->sb-b->qb))<300&&labs(a->se-b->qe)<300){r=1;}
+    else{r=0;}
+    return r;
+}
 int result_combine(int readcount, int filecount, char *workpath, char *outfile, char *fastaq, int main_argc, char* main_argv[])
 {
 	char path[1024], buffer[1024];
@@ -623,13 +628,200 @@ int result_combine2(int readcount, int filecount, char *workpath, char *outfile,
     return 0;
 }
 
+int extract_ref(const char *workpath,int filecount,TempResult **refpptr,int refcount){//TempResult *refpptr[refcount]
+    char path[200];
+    FILE *thread_ref_file;int num_ref_results=0;
+    int trsize=refcount*4;
+    TempResult *trslt1=create_temp_result();
+    char* trf_buffer1 = (char*)malloc(8192);
+    for (int i = 0; i < trsize; ++i) refpptr[i] = create_temp_result();
+    for(int i=0;i<filecount;i++){
+        sprintf(path,"%s/ref%d.r",workpath,i);
+        thread_ref_file=fopen(path,"r");
+        setvbuf(thread_ref_file,trf_buffer1,_IOFBF,8192);
+        int rok=load_temp_result(trslt1, thread_ref_file);
+        if(rok){copy_temp_result(trslt1,refpptr[0]);++num_ref_results;}
+        while(rok){
+            rok=load_temp_result(trslt1, thread_ref_file);
+            if(!rok)break;
+            copy_temp_result(trslt1,refpptr[num_ref_results]);
+            ++num_ref_results;
+        }
+        fclose(thread_ref_file);
+    }
+    free(trf_buffer1);
+    return num_ref_results;
+}
+
 extern int meap_ref_impl_large(int, int, int);
+extern int small_meap(TempResult,TempResult,FILE);
+void polish_result(const char *workpath,int filecount,int refcount){
+    char path[200];FILE *thread_file; FILE **up_file;int num_count=0;char buffer[1024];
+    char *trbuffer=(char *)malloc(8192);char tempstr[200];
+    int num_results=0;int num_ref_results=0;//这里需要赋值（假装先是100）
+    const int trsize=num_candidates + 6;
+    TempResult *pptr[trsize];
+    TempResult **refpptr;
+    for (int i = 0; i < trsize; ++i) pptr[i] = create_temp_result();
+    TempResult *trslt=create_temp_result();
+    char* trf_buffer = (char*)malloc(8192);int flag=0;
+    num_ref_results=extract_ref(workpath,filecount,refpptr,refcount);//这里加入引入extract——ref这个函数
+    FILE* chr_idx_file = fopen(path, "r");
+    if (!chr_idx_file) { fprintf(stderr, "failed to open file %s for reading.\n", path); abort(); }
+    int num_chr = 0;
+    while(fgets(buffer, 1024, chr_idx_file)) ++num_chr;
+    --num_chr;
+    up_file=(FILE **)malloc(filecount*sizeof(FILE *));
+    fastaindexinfo* chr_idx = (fastaindexinfo*)malloc(sizeof(fastaindexinfo) * num_chr);
+    fseek(chr_idx_file, 0L, SEEK_SET);
+    int i, flag2;
+    for (i = 0; i < num_chr; ++i)
+    {
+        flag = fscanf(chr_idx_file, "%ld\t%s\t%ld\n", &chr_idx[i].chrstart, chr_idx[i].chrname, &chr_idx[i].chrsize);
+        assert(flag == 3);
+    }
+    fclose(chr_idx_file);
+    chr_idx_file = NULL;
+    for(int i=0;i<filecount;i++){
+        sprintf(tempstr,"%s/up%d.r",workpath,filecount+1);
+        up_file[i]=fopen(path,"w");
+    }//初始化文件
+    for(int i=0;i<filecount;i++)
+    {
+        sprintf(path,"%s/%d.r",workpath,i);
+        
+        thread_file=fopen(path,"r");
+        
+        if(!thread_file){fprintf(stderr,"failed to open file %s for reading\n",path);abort();}
+        
+        setvbuf(thread_file,trbuffer,_IOFBF,8192);
+        num_results=0;int judg=0;
+        //先写long——read的
+        int rok=load_temp_result(trslt,thread_file);
+        if(rok){copy_temp_result(trslt,pptr[num_results]);++num_results;}
+        int last_id=pptr[0]->read_id;
+        while(rok){
+            rok=load_temp_result(trslt, thread_file);
+            if(!rok)break;//可以建立一个哈希表，把reference 的ID散列到哈希表中 。这里可以改一下。
+            if(trslt->read_id!=last_id){//这是同一个read的比对写到文件里面
+                for(int j=0;j<num_results;j++){
+                    int sid = get_chr_id(chr_idx, num_chr, pptr[j]->sb);
+                    for(int i=sid-1;i<num_ref_results;i++){
+                        if(sid!=refpptr[i]->read_id){flag=1;continue;}//这边写进那个文件，不是最后这个文件
+                        else {
+                            judg=judge(pptr[j], refpptr[i],sid);
+                            if(judg){
+                                small_meap(pptr[j], refpptr[i], up_file[filecount]);}
+                            else{
+                                output_temp_result(pptr[j],up_file[filecount]);
+                            }
+                            flag2=0;
+                        }
+                        if(flag2&&i==num_ref_results-1){
+                            output_temp_result(pptr[j],up_file[filecount]);
+                        }//找不到的情况
+                    }
+                }
+                num_results=0;
+            }
+            last_id = trslt->read_id;
+            copy_temp_result(trslt, pptr[num_results]);
+            ++num_results;
+            
+        }
+        fclose(thread_file);
+    }
+    for(int i=0;i<trsize;++i)pptr[i]=destroy_temp_result(pptr[i]);
+    for(int i=0;i<refcount*4;++i)refpptr[i]=destroy_temp_result(refpptr[i]);
+    destroy_temp_result(trslt);
+    free(chr_idx);
+    free(up_file);
+    free(refpptr);
+    
+}
 
 #define __run_system(cmd) \
 	do { \
 	int __rc_status = system(cmd); \
 	if (__rc_status != 0) { fprintf(stderr, "[%s, %u] system() error. Error code is %d.\n", __func__, __LINE__, __rc_status); exit(1); } \
 } while (0);
+int result_combine3(int readcount, int filecount, char *workpath, char *outfile, char *fastaq, int main_argc, char* main_argv[])
+{
+    char path[1024], buffer[1024];
+    sprintf(path, "%s/chrindex.txt", workpath);
+    FILE* chr_idx_file = fopen(path, "r");
+    if (!chr_idx_file) { fprintf(stderr, "failed to open file %s for reading.\n", path); abort(); }
+    int num_chr = 0;
+    while(fgets(buffer, 1024, chr_idx_file)) ++num_chr;
+    --num_chr;
+    fastaindexinfo* chr_idx = (fastaindexinfo*)malloc(sizeof(fastaindexinfo) * num_chr);
+    fseek(chr_idx_file, 0L, SEEK_SET);
+    int i, flag;
+    for (i = 0; i < num_chr; ++i)
+    {
+        flag = fscanf(chr_idx_file, "%ld\t%s\t%ld\n", &chr_idx[i].chrstart, chr_idx[i].chrname, &chr_idx[i].chrsize);
+        assert(flag == 3);
+    }
+    fclose(chr_idx_file);
+    chr_idx_file = NULL;
+    
+    fprintf(stderr, "output file name: %s\n", outfile);
+    FILE* out = fopen(outfile, "w");
+    char* out_buffer = (char*)malloc(8192);
+    setvbuf(out, out_buffer, _IOFBF, 8192);
+    
+    if (output_format == FMT_SAM)
+    {
+        print_sam_header(out);
+        print_sam_references(chr_idx, num_chr, out);
+        print_sam_program(main_argc, main_argv, out);
+    }
+    
+    const int trsize = num_candidates + 6;
+    TempResult* pptr[trsize];
+    for (i = 0; i < trsize; ++i) pptr[i] = create_temp_result();
+    int num_results = 0;
+    TempResult* trslt = create_temp_result();
+    char* trf_buffer = (char*)malloc(8192);
+    for (i = 1; i <= filecount; ++i)
+    {
+        sprintf(path, "%s/up%d.r", workpath, i);
+        FILE* thread_results_file = fopen(path, "r");
+        if (!thread_results_file) { fprintf(stderr, "failed to open reffile %s for reading.\n", path); abort(); }
+        setvbuf(thread_results_file, trf_buffer, _IOFBF, 8192);
+        num_results = 0;
+        int rok = load_temp_result(trslt, thread_results_file);
+        if (rok) { copy_temp_result(trslt, pptr[num_results]); ++num_results; }
+        int last_qid = pptr[0]->read_id;
+        while (rok)
+        {
+            rok = load_temp_result(trslt, thread_results_file);
+            if (!rok) break;
+            
+            if (trslt->read_id != last_qid)
+            {
+                output_query_results(chr_idx, num_chr, pptr, num_results, out);
+                num_results = 0;
+            }
+            
+            last_qid = trslt->read_id;
+            copy_temp_result(trslt, pptr[num_results]);
+            ++num_results;
+        }
+        if (num_results) output_query_results(chr_idx, num_chr, pptr, num_results, out);
+        
+        fclose(thread_results_file);
+    }
+    
+    for (i = 0; i < trsize; ++i) pptr[i] = destroy_temp_result(pptr[i]);
+    destroy_temp_result(trslt);
+    fclose(out);
+    free(out_buffer);
+    free(trf_buffer);
+    free(chr_idx);
+    
+    return 0;
+}
 
 int main(int argc, char *argv[])
 {
@@ -643,7 +835,7 @@ int main(int argc, char *argv[])
     float timeuse;
     char saved[150], fastqfile[150], fastafile[150], tempstr[150],tempstr1[150];
     int  readcount;
-    int   refcount;
+    int  refcount;
     FILE *fid1, *fid2;
 
     gettimeofday(&tpstart, NULL);
@@ -677,11 +869,12 @@ int main(int argc, char *argv[])
     gettimeofday(&mapend, NULL);
     timeuse = 1000000 * (mapend.tv_sec - mapstart.tv_sec) + mapend.tv_usec - mapstart.tv_usec;
     timeuse /= 1000000;
-    
     sprintf(tempstr,"%s/0.fq",saved);
     sprintf(tempstr1,"%s/ref.fq",saved);
-    result_combine(readcount, corenum, saved, outfile,tempstr, argc, argv);
+    //result_combine(readcount, corenum, saved, outfile,tempstr, argc, argv);
     result_combine2(refcount, corenum, saved, refoutfile,tempstr1, argc, argv);
+    polish_result(saved,corenum,refcount);
+    result_combine3(readcount, corenum, saved, outfile,tempstr, argc, argv);
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
