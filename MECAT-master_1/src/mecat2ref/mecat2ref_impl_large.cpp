@@ -2058,24 +2058,25 @@ static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long 
     read_len=strlen(onedata);
     BC=5+(read_len/1000);//******这边要改一改。不是1000
     if(BC>20)BC=20;
-    //if(dir=='F'){
+    if(dir=='F'){
         index_list = fwd_index_list;// int repeat_loc =
         index_score = fwd_index_score;//short int *index_score,*index_ss;
         database = fwd_database;
         pnblk = &fnblk;
-    //}
-   /* else{
+    }
+   else{
         index_list = rev_index_list;
         index_score = rev_index_score;
         database = rev_database;
         pnblk = &rnblk;
-    }*/
+    }
     j=0;//j=0
-    index_spr=index_list;
-    index_ss=index_score;
+    
     endnum=0;
     read_len=strlen(onedata);
     cleave_num=transnum_buchang(onedata,mvalue,&endnum,read_len,seed_len,BC);
+    index_spr=index_list;
+    index_ss=index_score;
     for(k=0; k<cleave_num; k++)if(mvalue[k]>=0)
     {
         count1=countin[mvalue[k]];
@@ -2118,7 +2119,7 @@ static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long 
     int loc_mid=(a->sb+a->se)/2;
     int block_mid=(loc_mid-12)/ZVL-1;
     for(int i=0,index_spr=index_list,index_ss=index_score;i<cc1;i++,index_spr++,index_ss++){
-        if(*index_spr=block_mid)
+        if(*index_ss>4)//这里改动过
         {
             temp_spr=database+*index_spr;
             if(temp_spr->score==0)continue;
