@@ -2003,7 +2003,7 @@ static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long 
     candidate_save  canidate_2;
     seq=REFSEQ;char dir;
     j=seqcount/ZV+5;//z这边考虑下长度要不要改是原来
-    dir=a->read_dir;
+    
     int* fwd_index_list = (int*)malloc(sizeof(int) * j);
     short* fwd_index_score = (short*)malloc(sizeof(short) * j);
     Back_List* fwd_database = (Back_List*)malloc(sizeof(Back_List) * j);
@@ -2045,6 +2045,7 @@ static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long 
     } else {
         ERROR("TECH must be either %d or %d", TECH_PACBIO, TECH_NANOPORE);
     }
+    dir=a->read_dir;
     if(dir=='F'){
         strcpy(onedata1,sonedata);
         onedata=onedata1;
@@ -2057,18 +2058,18 @@ static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long 
     read_len=strlen(onedata);
     BC=5+(read_len/1000);//******这边要改一改。不是1000
     if(BC>20)BC=20;
-    if(dir=='F'){
+    //if(dir=='F'){
         index_list = fwd_index_list;// int repeat_loc =
         index_score = fwd_index_score;//short int *index_score,*index_ss;
         database = fwd_database;
         pnblk = &fnblk;
-    }
-    else{
+    //}
+   /* else{
         index_list = rev_index_list;
         index_score = rev_index_score;
         database = rev_database;
         pnblk = &rnblk;
-    }
+    }*/
     j=0;//j=0
     index_spr=index_list;
     index_ss=index_score;
@@ -2092,10 +2093,10 @@ static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long 
                     loc=++(temp_spr->score);
                     if(loc<=SM)
                     {
-                        temp_spr->loczhi[loc-1]=u_k;//位置，block位置。
+                        temp_spr->loczhi[loc-1]=u_k;
                         temp_spr->seedno[loc-1]=k+1;
                     }
-                    else insert_loc2(temp_spr,u_k,k+1,BC);//删除分数最小的。保持在20个左右//
+                    else insert_loc2(temp_spr,u_k,k+1,BC);
                     if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
                     else s_k=temp_spr->score;
                     if(endnum<s_k)endnum=s_k;
