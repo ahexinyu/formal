@@ -1983,7 +1983,7 @@ static void reference_map_reference(int threadint)
     free(rev_index_score);
     delete[] aln_seqs;
 }
-static void map(char *sonedata,char *sonedata1,char dir,TempResult *a,TempResult *b,long length_read,int read_name,FILE *outfile){
+static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long length_read,int read_name,FILE *outfile){
     int cleave_num,read_len;
     int mvalue[20000],flag_end;
     long *leadarray,u_k,s_k,loc;
@@ -2001,9 +2001,9 @@ static void map(char *sonedata,char *sonedata1,char dir,TempResult *a,TempResult
     int low,high,mid,seedcount;
     candidate_save canidate_1,canidate_temp;
     candidate_save  canidate_2;
-    seq=REFSEQ;
+    seq=REFSEQ;char dir;
     j=seqcount/ZV+5;//z这边考虑下长度要不要改是原来
-    
+    dir=a->read_dir;
     int* fwd_index_list = (int*)malloc(sizeof(int) * j);
     short* fwd_index_score = (short*)malloc(sizeof(short) * j);
     Back_List* fwd_database = (Back_List*)malloc(sizeof(Back_List) * j);
@@ -2480,7 +2480,7 @@ static int  small_meap(TempResult *a,TempResult *b,FILE *upfile){
      //seq=REFSEQ;//REFSEQ也是原来的，在map函数里面
      //build_small_index(onedata1);//这里应该放read的部分。read和一条参考基因上两个地方比对，考虑了一下，建立两次index吧*/
     long length_read=strlen(raw_read);//这个要加进map函数里面
-    map(raw_read,raw_reference,dir,a,b,length_read,read_name,upfile);
+    map(raw_read,raw_reference,a,b,length_read,read_name,upfile);
     
     return 0;
     
