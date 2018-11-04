@@ -2072,7 +2072,7 @@ static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long 
     }*/
     
     j=0;
-    index_list = fwd_index_list;// int repeat_loc =
+   /* index_list = fwd_index_list;// int repeat_loc =
     index_score = fwd_index_score;//short int *index_score,*index_ss;
     database = fwd_database;
     pnblk = &fnblk;
@@ -2409,7 +2409,7 @@ static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long 
     free(rev_database);
     free(rev_index_list);
     free(rev_index_score);
-    delete[] aln_seqs;
+    delete[] aln_seqs;*/
     
     
     
