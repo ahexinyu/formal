@@ -2123,7 +2123,7 @@ static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long 
     cc1=j;//index 数
    int loc_mid=(a->sb+a->se)/2;
     int block_mid=(loc_mid-12)/ZVL-1;
-    for(int i=0,index_spr=index_list,index_ss=index_score;i<cc1;i++,index_spr++,index_ss++){
+    for(i=0,index_spr=index_list,index_ss=index_score;i<cc1;i++,index_spr++,index_ss++){
         if(*index_spr==block_mid)
         {
             temp_spr=database+*index_spr;
@@ -2233,7 +2233,7 @@ static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long 
     nresults=0;
     int ref_mid=(b->sb+b->se)/2;
     long ref_block_mid=(ref_mid-12)/ZVL-1;
-    for(int i=0,index_spr=index_list,index_ss=index_score;i<cc1;i++,index_spr++,index_ss++){
+    for(i=0,index_spr=index_list,index_ss=index_score;i<cc1;i++,index_spr++,index_ss++){
         if(*index_spr==ref_block_mid)
         {
             temp_spr=database+*index_spr;
