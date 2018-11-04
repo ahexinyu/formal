@@ -2058,7 +2058,7 @@ static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long 
     read_len=strlen(onedata);
     BC=5+(read_len/1000);//******这边要改一改。不是1000
     if(BC>20)BC=20;
-    /*if(dir=='F'){
+    if(dir=='F'){
         index_list = fwd_index_list;// int repeat_loc =
         index_score = fwd_index_score;//short int *index_score,*index_ss;
         database = fwd_database;
@@ -2069,10 +2069,10 @@ static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long 
         index_score = rev_index_score;
         database = rev_database;
         pnblk = &rnblk;
-    }*/
+    }
     
     j=0;
-   /* index_list = fwd_index_list;// int repeat_loc =
+    index_list = fwd_index_list;// int repeat_loc =
     index_score = fwd_index_score;//short int *index_score,*index_ss;
     database = fwd_database;
     pnblk = &fnblk;
@@ -2121,7 +2121,7 @@ static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long 
     }
     *pnblk = j;
     cc1=j;//index 数
-    int loc_mid=(a->sb+a->se)/2;
+   /* int loc_mid=(a->sb+a->se)/2;
     int block_mid=(loc_mid-12)/ZVL-1;
     for(int i=0,index_spr=index_list,index_ss=index_score;i<cc1;i++,index_spr++,index_ss++){
         if(*index_spr==block_mid)
@@ -2414,7 +2414,7 @@ static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long 
     
     
 }
-static int  small_meap(TempResult *a,TempResult *b,FILE *upfile){
+ int small_meap(TempResult *a,TempResult *b,FILE *upfile){
     
     char onedata[5000],onedata1[5000],onedata2[5000],*onedata3;//onedata2是截取的参考基因部分。
     char raw_read[100000],raw_reference[100000];char *seq;char FR;int j_s=0;
