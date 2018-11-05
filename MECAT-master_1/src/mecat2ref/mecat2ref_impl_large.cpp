@@ -2233,7 +2233,7 @@ static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long 
     nresults=0;
     int ref_mid=(b->sb+b->se)/2;
     long ref_block_mid=(ref_mid-12)/ZVL-1;
-    for(·i=0,index_spr=index_list,index_ss=index_score;i<cc1;i++,index_spr++,index_ss++){
+    for(i=0,index_spr=index_list,index_ss=index_score;i<cc1;i++,index_spr++,index_ss++){
         if(*index_spr==ref_block_mid)
         {
             temp_spr=database+*index_spr;
@@ -2477,18 +2477,17 @@ static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long 
      }
      for(int i=0;i<(b->qe)-(b->qb);i++){
      onedata1[i]=raw_reference[ref_start+i];
-     }
+     }*/
      //long r_start=(a->sb<b->sb)?a->sb:b->sb;
      //long r_end=(a->se>b->se)?a->se:b->se;
      
      /*for(int i=r_start,j_s=0;i<r_end;i++,j_s++){
      onedata[j_s]=seq[i];
-     }
+     }*/
      //seq=REFSEQ;//REFSEQ也是原来的，在map函数里面
      //build_small_index(onedata1);//这里应该放read的部分。read和一条参考基因上两个地方比对，考虑了一下，建立两次index吧*/
     long length_read=strlen(raw_read);//这个要加进map函数里面
     map(raw_read,raw_reference,a,b,length_read,read_name,upfile);
-    
     return 0;
     
 }
@@ -2664,8 +2663,6 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     }
     free(outfile);
     free(savework);
-    free(readinfo);//这里要删掉，别先急着释放
-    free(refinfo);
     free(thread);
     return 0;
 }
