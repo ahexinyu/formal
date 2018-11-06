@@ -2554,13 +2554,15 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     save_work=(char *)malloc((MAXSTR+RM)*sizeof(char));
     fp=fopen("config.txt","r");
     assert(fscanf(fp,"%s\n%s\n%s\n%s\n%s\n%d %d\n%d\n",workpath,fastafile,fastqfile,tempstr,tempstr2,&corenum,&readall,&refall) == 8);//********
+     printf("read config is sucess\n");//*********
     fclose(fp);//FASTA是参考基因组文件
     threadnum=corenum;
     //building reference index
     gettimeofday(&tpstart, NULL);
     seed_len=13;
+    printf("build_read_index pre is sucess\n");
     build_read_index(workpath,fastqfile);
-    printf("build_read_index sucess");
+    printf("build_read_index sucess\n");
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
