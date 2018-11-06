@@ -840,6 +840,7 @@ int main(int argc, char *argv[])
 
     gettimeofday(&tpstart, NULL);
     corenum = firsttask(argc, argv);
+    printf("first task is sucess\n");//*******
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
@@ -865,6 +866,7 @@ int main(int argc, char *argv[])
     fclose(fid1);
     filelength=get_file_size(fastafile);
     gettimeofday(&mapstart, NULL);
+    printf("meap  pre is sucuess\n");
 	meap_ref_impl_large(num_candidates, num_output, tech);
     gettimeofday(&mapend, NULL);
     timeuse = 1000000 * (mapend.tv_sec - mapstart.tv_sec) + mapend.tv_usec - mapstart.tv_usec;
