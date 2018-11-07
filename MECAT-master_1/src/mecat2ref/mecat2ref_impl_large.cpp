@@ -2565,6 +2565,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     gettimeofday(&tpstart, NULL);
     seed_len=13;
     printf("build_read_index pre is sucess\n");
+    printf("workpath is%s\n",workpath);
     build_read_index(workpath,fastqfile);
     printf("build_read_index sucess\n");
     gettimeofday(&tpend, NULL);
