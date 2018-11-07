@@ -316,6 +316,7 @@ void sortdata(candidate_save *can,int num){
 static void build_read_index(const char *path, char *path1){//buildindex
     unsigned int eit,temp;long start;
     char tempstr[200];
+    printf(" path is %d",path);
     sprintf(tempstr, "%s/0.fq",path);
     printf(" tempstr is %d",tempstr);
     int leftnum;
@@ -2555,7 +2556,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     save_work=(char *)malloc((MAXSTR+RM)*sizeof(char));
     fp=fopen("config.txt","r");
     assert(fscanf(fp,"%s\n%s\n%s\n%s\n%s\n%d %d\n%d\n",workpath,fastafile,fastqfile,tempstr,tempstr2,&corenum,&readall,&refall) == 8);//********
-     printf("read config is sucess\n");//*********
+     printf("read config is sucess\n");//*********workpath是config的路径
     printf("fastqfile is %s\n",fastqfile);
     fclose(fp);//FASTA是参考基因组文件
     threadnum=corenum;
