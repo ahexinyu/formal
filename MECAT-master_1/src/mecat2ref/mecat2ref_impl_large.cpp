@@ -317,12 +317,13 @@ static void build_read_index(const char *path, char *path1){//buildindex
     unsigned int eit,temp;long start;
     char tempstr[200];
     sprintf(tempstr, "%s/0.fq",path);
+    printf(" tempstr is %d",tempstr);
     int leftnum;
     leftnum=34-2*seed_len;
     FILE  *fp;
     fp=fopen(tempstr,"r");
     char *seq;
-    int length=get_file_size(path1);
+    int length=get_file_size(tempstr);//***read文件大小
     printf(" read length is %d",length);
     read_REFESQ=(char *)malloc((length+200000)*sizeof(char));
     seq=read_REFESQ;
@@ -455,7 +456,7 @@ static void build_read_index(const char *path, char *path1){//buildindex
         }
         
     }
-    
+    free(read_REFESQ);//****
 }
 
 int filter_loc(candidate_save a,candidate_save b){
