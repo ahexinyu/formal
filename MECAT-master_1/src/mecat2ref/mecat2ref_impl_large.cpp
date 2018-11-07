@@ -313,7 +313,7 @@ void sortdata(candidate_save *can,int num){
     }
     
 }
-static void build_read_index(const char *path, char *path1){
+static void build_read_index(const char *path, char *path1){//buildindex
     unsigned int eit,temp;long start;
     char tempstr[200];
     sprintf(tempstr, "%s/0.fq",path);
@@ -2555,8 +2555,10 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     fp=fopen("config.txt","r");
     assert(fscanf(fp,"%s\n%s\n%s\n%s\n%s\n%d %d\n%d\n",workpath,fastafile,fastqfile,tempstr,tempstr2,&corenum,&readall,&refall) == 8);//********
      printf("read config is sucess\n");//*********
+    printf("fastqfile is %s\n",fastqfile);
     fclose(fp);//FASTA是参考基因组文件
     threadnum=corenum;
+    
     //building reference index
     gettimeofday(&tpstart, NULL);
     seed_len=13;
