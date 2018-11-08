@@ -39,7 +39,6 @@ typedef struct REF_info{
     int refno;
     int reflen;
     char *ref_sequ;
-    
 }REF_info;//*************
 REF_info *refinfo;//************
 char *ref_savework;//************
@@ -321,7 +320,7 @@ static void build_read_index(char *path, char *path1){//buildindex
     printf(" tempstr is %s",tempstr);
     int leftnum;
     leftnum=34-2*seed_len;
-    FILE  *fp;
+    FILE *fp;
     fp=fopen(tempstr,"r");
     char *seq;
     int length=get_file_size(tempstr);//***read文件大小
@@ -358,7 +357,7 @@ static void build_read_index(char *path, char *path1){//buildindex
     seqcount1=actual_len;
     seq[actual_len+1]='\0';
     //printf("Constructing look-up table...\n");
-    
+    countin1=(int *)malloc((index_count)*sizeof(int));
     for(int i=0; i<index_count; i++)countin1[i]=0;
     
     // Count the number
@@ -2528,7 +2527,6 @@ static int load_fastq(FILE *fq)
         readcount++;
     }
     if(flag!=EOF)
-        
     {
         readinfo[readcount].seqloc=pre;
         readinfo[readcount].readno=readno;
