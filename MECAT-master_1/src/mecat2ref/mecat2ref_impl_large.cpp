@@ -316,9 +316,9 @@ void sortdata(candidate_save *can,int num){
 static void build_read_index(char *path, char *path1){//buildindex
     unsigned int eit,temp;long start;
     char tempstr[200];
-    printf(" path is %d",path);
+    printf(" path is %s",path);
     sprintf(tempstr, "%s/0.fq",path);
-    printf(" tempstr is %d",tempstr);
+    printf(" tempstr is %s",tempstr);
     int leftnum;
     leftnum=34-2*seed_len;
     FILE  *fp;
