@@ -518,16 +518,16 @@ static void creat_ref_index(char *fastafile)
     seqcount=count;
     similarity_count=(seqcount-12)/200+1;
     sc=(sim *)malloc((similarity_count+10)*sizeof(sim));
-    sc1=sc;
     printf("sim si sucess\n");
     for(int k=0;k<similarity_count;k++){
-        sc1[k].k_count=0;
-        sc1[k].simm=0;
-        sc1[k].TF=0;
-        sc1[k].LDF=0;//词频
-        sc1[k].r_count=0;
-        sc1[k].vote=0;
+        sc[k].k_count=0;
+        sc[k].simm=0;
+        sc[k].TF=0;
+        sc[k].LDF=0;//词频
+        sc[k].r_count=0;
+        sc[k].vote=0;
     }//初始化
+    sc1=sc;
     printf("%ld\n",seqcount);
 //printf("Constructing look-up table...\n");
     countin=(int *)malloc((indexcount)*sizeof(int));
@@ -558,7 +558,6 @@ static void creat_ref_index(char *fastafile)
             eit=eit+temp;
             start=start+1;
             countin[eit]=countin[eit]+1;
-            
             eit=eit<<leftnum;
             eit=eit>>leftnum;
             // printf("this is eit%d\n",eit);
@@ -621,9 +620,9 @@ static void creat_ref_index(char *fastafile)
             }
            
             nn=(i-12)/200;//按照200划分，
-            if(countin1[eit]>0){
+         /*   if(countin1[eit]>0){
                 sc1[nn].k_count=sc1[nn].k_count+countin1[eit];//在long_read里面出现的次数
-            }
+            }*/
             eit=eit<<leftnum;
             eit=eit>>leftnum;
         }
@@ -644,7 +643,6 @@ static void get_vote(){
     int start=0;//num 有关
     int leftnum=8;int nn=0;
     for(int j=0;j<similarity_count;j++){
-        
         if(sc1[j].k_count>0){
             sc1[j].LDF=log((read_kmer)/sc1[j].k_count);
            
