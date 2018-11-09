@@ -625,6 +625,7 @@ static void creat_ref_index(char *fastafile)
             }*/
             eit=eit<<leftnum;
             eit=eit>>leftnum;
+            printf("%d\n",eit);
         }
     }
     printf("555 is suceess\n");
