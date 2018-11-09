@@ -323,12 +323,11 @@ static void build_read_index(char *path, char *path1){//buildindex
     FILE *fp;
     fp=fopen(tempstr,"r");
     char *seq;
-    int length=get_file_size(tempstr);//***read文件大小
+    int length=get_file_size(path1);//***read文件大小
     printf(" read length is %d",length);
     read_REFESQ=(char *)malloc((length+200000)*sizeof(char));
     seq=read_REFESQ;
     
-    int templen;
     char *pre;int lenl=0;
     int flag;int readno,readlen;int read_count;
     pre=save_work;
@@ -521,7 +520,7 @@ static void creat_ref_index(char *fastafile)
     sc=(sim *)malloc((similarity_count+10)*sizeof(sim));
     sc1=sc;
     printf("sim si sucess\n");
-    for(int k=0;k<similarity_count-1;k++){
+    for(int k=0;k<similarity_count;k++){
         sc1[k].k_count=0;
         sc1[k].simm=0;
         sc1[k].TF=0;
@@ -621,7 +620,7 @@ static void creat_ref_index(char *fastafile)
                 databaseindex[eit][countin[eit]-1]=i+2-seed_len;//存的位置
             }
            
-            nn=(i-12)/200+1;//按照200划分，
+            nn=(i-12)/200;//按照200划分，
             if(countin1[eit]>0){
                 sc1[nn].k_count=sc1[nn].k_count+countin1[eit];//在long_read里面出现的次数
             }
@@ -644,7 +643,7 @@ static void get_vote(){
     memcpy(cpycount, countin, sizeof(int)*index_count);
     int start=0;//num 有关
     int leftnum=8;int nn=0;
-    for(int j=0;j<similarity_count-1;j++){
+    for(int j=0;j<similarity_count;j++){
         
         if(sc1[j].k_count>0){
             sc1[j].LDF=log((read_kmer)/sc1[j].k_count);
@@ -674,7 +673,7 @@ static void get_vote(){
             eit=eit<<2;
             eit=eit+temp;
             start=start+1;
-            nn=(i-12)/200+1;
+            nn=(i-12)/200;
             if(cpycount[eit]>0){
                 //printf("%d\n",cpycount[eit]);
                 sc1[nn].r_count=sc1[nn].r_count+cpycount[eit];
@@ -2577,7 +2576,6 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     gettimeofday(&tpstart, NULL);
     printf("get time sis sucess\n");
     creat_ref_index(fastafile);
-    
     printf("get ref_index sucess");
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
