@@ -700,7 +700,7 @@ static void get_vote(){
         
     }
     }
-        free(cpycount);
+        //free(cpycount);
 }
 
 
