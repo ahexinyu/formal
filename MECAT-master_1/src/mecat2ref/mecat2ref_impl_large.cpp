@@ -641,6 +641,7 @@ static void get_vote(){
     int *cpycount;
     cpycount=(int *)malloc((index_count)*sizeof(int));
     memcpy(cpycount, countin, sizeof(int)*index_count);
+    printf(" memcy sucuess\n");
     int start=0;//num 有关
     int leftnum=8;int nn=0;
     for(int j=0;j<similarity_count;j++){
