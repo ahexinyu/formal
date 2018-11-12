@@ -2515,7 +2515,7 @@ static int load_fastq(FILE *fq)
     char *pre;
     readcount=0;
     pre=savework;
-    while((flag=(fq,"%d\t%d\t%s\n",&readno,&readlen,pre))!=EOF&&readcount<SVM&&sum<MAXSTR)
+    while((flag=fscanf(fq,"%d\t%d\t%s\n",&readno,&readlen,pre))!=EOF&&readcount<SVM&&sum<MAXSTR)
     {
         readinfo[readcount].seqloc=pre;
         readinfo[readcount].readno=readno;
