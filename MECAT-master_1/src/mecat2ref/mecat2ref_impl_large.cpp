@@ -397,7 +397,7 @@ static void build_read_index(char *path, char *path1){//buildindex
     
     //Max_index
     sumcount1=sumvalue_x(countin1,index_count);
-    read_kmer=sumcount1;
+    read_kmer=seqcount1-seed_len+1;
     allloc1=(long *)malloc(sumcount1*sizeof(long));
     databaseindex1=(long **)malloc((index_count)*sizeof(long*));
     //allocate memory
@@ -638,17 +638,16 @@ static void get_vote(){
     readseq=read_REFESQ;//sim *sc1;
     seq=REFSEQ;
     //sc1=sc;
-    int *cpycount;
-    cpycount=(int *)malloc((index_count)*sizeof(int));
-    memcpy(cpycount, countin, sizeof(int)*index_count);
+    //int *cpycount;
+    //cpycount=(int *)malloc((index_count)*sizeof(int));
+   // memcpy(cpycount, countin, sizeof(int)*index_count);
     printf("memcy sucuess\n");
     int start=0;//num 有关
     int leftnum=8;int nn=0;
     for(int j=0;j<similarity_count;j++){
         if(sc[j].k_count>0){
             sc[j].LDF=log((read_kmer)/sc[j].k_count);
-           
-           // printf("LDF is %f\n",sc1[j].LDF);
+           // printf("LDF is %f\n",sc1[j].LDF)
         }
     }//在Longread里面出现的词频
     printf("here is sucuess");
@@ -674,9 +673,9 @@ static void get_vote(){
             eit=eit+temp;
             start=start+1;
             nn=(i-12)/200;
-            if(cpycount[eit]>0){
+            if(countin[eit]>0){
                 //printf("%d\n",cpycount[eit]);
-                sc[nn].r_count=sc[nn].r_count+cpycount[eit];
+                sc[nn].r_count=sc[nn].r_count+countin[eit];
             } //在参考基因里出现的次数
             eit=eit<<leftnum;
             eit=eit>>leftnum;
