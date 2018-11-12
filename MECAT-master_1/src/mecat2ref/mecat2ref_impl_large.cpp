@@ -641,7 +641,7 @@ static void get_vote(){
     int *cpycount;
     cpycount=(int *)malloc((index_count)*sizeof(int));
     memcpy(cpycount, countin, sizeof(int)*index_count);
-    printf(" memcy sucuess\n");
+    printf("memcy sucuess\n");
     int start=0;//num 有关
     int leftnum=8;int nn=0;
     for(int j=0;j<similarity_count;j++){
@@ -651,7 +651,7 @@ static void get_vote(){
            // printf("LDF is %f\n",sc1[j].LDF);
         }
     }//在Longread里面出现的词频
-    
+    printf("here is sucuess");
     for(i=0; i<seqcount; i++)
     {
         
@@ -683,6 +683,7 @@ static void get_vote(){
         }
         
     }
+     printf("test is sucuess");
     for(int j=0;j<similarity_count;j++){
         if(count_value>0){
            // printf("r_count is %d\n",sc1[j].r_count);
