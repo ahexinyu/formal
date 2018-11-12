@@ -646,8 +646,8 @@ static void get_vote(){
     int leftnum=8;int nn=0;
     for(int j=0;j<similarity_count;j++){
         if(sc[j].k_count>0){
-            sc[j].LDF=log((read_kmer)/sc[j].k_count);
-           // printf("LDF is %f\n",sc1[j].LDF)
+            //sc[j].LDF=log((read_kmer)/sc[j].k_count);
+            printf("LDF is %f\n",sc[j].k_count);
         }
     }//在Longread里面出现的词频
     printf("here is sucuess");
@@ -2515,7 +2515,7 @@ static int load_fastq(FILE *fq)
     char *pre;
     readcount=0;
     pre=savework;
-    while((flag=fscanf(fq,"%d\t%d\t%s\n",&readno,&readlen,pre))!=EOF&&readcount<SVM&&sum<MAXSTR)
+    while((flag=(fq,"%d\t%d\t%s\n",&readno,&readlen,pre))!=EOF&&readcount<SVM&&sum<MAXSTR)
     {
         readinfo[readcount].seqloc=pre;
         readinfo[readcount].readno=readno;
