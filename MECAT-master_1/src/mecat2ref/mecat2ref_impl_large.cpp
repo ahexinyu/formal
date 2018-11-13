@@ -646,7 +646,7 @@ static void get_vote(){
     int leftnum=8;int nn=0;
     for(int j=0;j<similarity_count;j++){
         if(sc[j].k_count>0){
-            //sc[j].LDF=log((read_kmer)/sc[j].k_count);
+            sc[j].LDF=log((read_kmer)/sc[j].k_count);
             printf("LDF is %f\n",sc[j].k_count);
         }
     }//在Longread里面出现的词频
