@@ -645,13 +645,13 @@ static void get_vote(){
     int start=0;//num 有关
     int leftnum=8;int nn=0;
     
-    for(int j=0;j<similarity_count-1;j++){
+   /* for(int j=0;j<similarity_count-1;j++){
         if(sc[j].k_count>0){
             printf("K-count is %f\n",sc[j].k_count);
             sc[j].LDF=log((read_kmer)/sc[j].k_count);
             printf("LDF is %f\n", sc[j].LDF);
         }
-    }//在Longread里面出现的词频
+    }//在Longread里面出现的词频*/
     printf("here is sucuess");
     for(i=0; i<seqcount; i++)
     {
