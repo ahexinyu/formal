@@ -644,10 +644,12 @@ static void get_vote(){
     printf("memcy sucuess\n");
     int start=0;//num 有关
     int leftnum=8;int nn=0;
+    
     for(int j=0;j<similarity_count;j++){
         if(sc[j].k_count>0){
+            printf("K-count is %f\n",sc[j].k_count);
             sc[j].LDF=log((read_kmer)/sc[j].k_count);
-            printf("LDF is %f\n",sc[j].k_count);
+            printf("LDF is %f\n", sc[j].LDF);
         }
     }//在Longread里面出现的词频
     printf("here is sucuess");
@@ -679,8 +681,7 @@ static void get_vote(){
             } //在参考基因里出现的次数
             eit=eit<<leftnum;
             eit=eit>>leftnum;
-        }
-        
+
     }
      printf("test is sucuess");
     for(int j=0;j<similarity_count;j++){
