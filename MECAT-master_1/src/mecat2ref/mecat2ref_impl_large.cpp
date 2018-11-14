@@ -681,7 +681,7 @@ static void get_vote(){
             } //在参考基因里出现的次数
             eit=eit<<leftnum;
             eit=eit>>leftnum;
-
+        }
     }
      printf("test is sucuess");
     for(int j=0;j<similarity_count;j++){
