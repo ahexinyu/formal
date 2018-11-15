@@ -868,7 +868,7 @@ int main(int argc, char *argv[])
     gettimeofday(&mapstart, NULL);
     printf("meap  pre is sucuess\n");
 	meap_ref_impl_large(num_candidates, num_output, tech);
-    gettimeofday(&mapend, NULL);
+    /*gettimeofday(&mapend, NULL);
     timeuse = 1000000 * (mapend.tv_sec - mapstart.tv_sec) + mapend.tv_usec - mapstart.tv_usec;
     timeuse /= 1000000;
     sprintf(tempstr,"%s/0.fq",saved);
@@ -885,7 +885,7 @@ int main(int argc, char *argv[])
     fclose(fid2);
     sprintf(cmd, "cp -r config.txt \"%s.config\"", outfile);
     sprintf(cmd, "cp -r config.txt \"%s.config\"", refoutfile);
-    __run_system(cmd);
+    __run_system(cmd);*/
 	
 	return EXIT_SUCCESS;
 }
