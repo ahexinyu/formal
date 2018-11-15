@@ -651,7 +651,7 @@ static void get_vote(){
             sc[j].LDF=log((read_kmer)/sc[j].k_count);
             printf("LDF is %f\n", sc[j].LDF);
         }
-    }//在Longread里面出现的词频*/
+    }*/
     printf("here is sucuess");
     for(i=0; i<seqcount; i++)
     {
@@ -2584,7 +2584,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     fp = fopen("config.txt", "a");
     fprintf(fp, "The Building  Reference  Index Time: %f sec\n", timeuse);
     fclose(fp);
-    get_vote();
+    //get_vote();
     printf("get vote sucess");
     gettimeofday(&tpstart, NULL);
 
