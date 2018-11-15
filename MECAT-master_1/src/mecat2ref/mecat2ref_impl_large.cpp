@@ -618,7 +618,7 @@ static void creat_ref_index(char *fastafile)
                 countin[eit]=countin[eit]+1;
                 databaseindex[eit][countin[eit]-1]=i+2-seed_len;//存的位置
             }
-           
+            
             nn=(i-12)/200;//按照200划分，
            if(countin1[eit]>0){
                 sc[nn].k_count=sc[nn].k_count+countin1[eit];//在long_read里面出现的次数
@@ -631,16 +631,12 @@ static void creat_ref_index(char *fastafile)
     printf("555 is suceess\n");
 }
 
-static void get_vote(){
+/*static void get_vote(){
     int eit=0;
     int temp=0;
     int i=0;char *seq;char *readseq;
     readseq=read_REFESQ;//sim *sc1;
     seq=REFSEQ;
-    //sc1=sc;
-    //int *cpycount;
-    //cpycount=(int *)malloc((index_count)*sizeof(int));
-   // memcpy(cpycount, countin, sizeof(int)*index_count);
     printf("memcy sucuess\n");
     int start=0;//num 有关
     int leftnum=8;int nn=0;
@@ -652,7 +648,7 @@ static void get_vote(){
             printf("LDF is %f\n", sc[j].LDF);
         }
     }*/
-    printf("here is sucuess");
+   /* printf("here is sucuess");
     for(i=0; i<seqcount; i++)
     {
         
@@ -702,7 +698,7 @@ static void get_vote(){
     }
     }
         //free(cpycount);
-}
+}*/
 
 
 
