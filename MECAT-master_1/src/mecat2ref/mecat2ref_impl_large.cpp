@@ -631,7 +631,7 @@ static void creat_ref_index(char *fastafile)
     printf("555 is suceess\n");
 }
 
-/*static void get_vote(){
+static void get_vote(){
     int eit=0;
     int temp=0;
     int i=0;char *seq;char *readseq;
@@ -641,14 +641,14 @@ static void creat_ref_index(char *fastafile)
     int start=0;//num 有关
     int leftnum=8;int nn=0;
     
-   /* for(int j=0;j<similarity_count-1;j++){
+    for(int j=0;j<similarity_count-1;j++){
         if(sc[j].k_count>0){
             printf("K-count is %f\n",sc[j].k_count);
             sc[j].LDF=log((read_kmer)/sc[j].k_count);
             printf("LDF is %f\n", sc[j].LDF);
         }
-    }*/
-   /* printf("here is sucuess");
+    }
+    printf("here is sucuess");
     for(i=0; i<seqcount; i++)
     {
         
@@ -698,7 +698,7 @@ static void creat_ref_index(char *fastafile)
     }
     }
         //free(cpycount);
-}*/
+}
 
 
 
