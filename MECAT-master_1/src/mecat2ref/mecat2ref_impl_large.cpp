@@ -2605,7 +2605,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     ref_fastq=fopen(tempstr2,"r");//***********
     //multi process thread
     fileflag=1;
-    /*while(fileflag)
+    while(fileflag)
     {
         fileflag=load_fastq(fastq);
         load_ref_f(ref_fastq);//************8
@@ -2626,7 +2626,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         {
             for(threadno=0; threadno<threadnum; threadno++)
             {
-                threadflag= pthread_create(&thread[threadno], NULL, multithread, NULL);//(multithread)
+                //threadflag= pthread_create(&thread[threadno], NULL, multithread, NULL);//(multithread)
                 if(threadflag)
                 {
                     printf("ERROR; return code is %d\n", threadflag);
@@ -2667,5 +2667,5 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     free(savework);
     free(save_work);
     free(thread);
-    return 0;*/
+    return 0;
 }
