@@ -519,7 +519,7 @@ static void creat_ref_index(char *fastafile)
     similarity_count=(seqcount-12)/200+1;
     sc=(sim *)malloc((similarity_count+10)*sizeof(sim));
     printf("sim si sucess\n");
-    for(int k=0;k<similarity_count;k++){
+    for(int k=0;k<(similarity_count+10);k++){
         sc[k].k_count=0;
         sc[k].simm=0;
         sc[k].TF=0;
@@ -2580,7 +2580,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     //fp = fopen("config.txt", "a");
     fprintf(fp, "The Building  Reference  Index Time: %f sec\n", timeuse);
     fclose(fp);
-    //get_vote();
+    get_vote();
     printf("get vote sucess");
     gettimeofday(&tpstart, NULL);
 
