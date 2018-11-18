@@ -141,7 +141,7 @@ static int transnum_buchang(char *seqm,int *value,int *endn,int len_str,int read
     return(num);//extract_number
 }
 
-static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,sim *sc,long templong)
+static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long templong)
 {//insert_loc(temp_spr,u_k,k+1,BC,sc,templong)
     int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;int nn=0;int _loc;//在参考基因的位置
     float list_sim[SI];float score_sim[SI];//加了相似度之后的分数
@@ -241,8 +241,8 @@ static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
         spr->score--;
     }
 }
-static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len,sim *sc,long templong)
-{//insert_loc(temp_spr,u_k,k+1,BC,sc,templong)
+static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len,long templong)
+{//insert_loc(temp_spr,u_k,k+1,BC,templong)
     int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;int nn=0;int _loc;//在参考基因的位置
     float list_sim[SI];float score_sim[SI];
     for(i=0; i<SM; i++)
@@ -867,7 +867,7 @@ static void reference_mapping(int threadint)
                                         temp_spr->seedno[loc-1]=k+1;
                                     }
                                    // else insert_loc(temp_spr,u_k,k+1,BC,sc,templong);//删除分数最小的。保持在20个左右//
-                                    else insert_loc(temp_spr,u_k,k+1,BC);
+                                    else insert_loc2(temp_spr,u_k,k+1,BC);
                                     if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
                                     else s_k=temp_spr->score;
                                     if(endnum<s_k)endnum=s_k;
@@ -1192,7 +1192,7 @@ static void reference_mapping(int threadint)
                                 }
                             }
                             //flag_end=find_location(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,sc,start_loc);
-                            flag_end=find_location(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
+                            flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
                             if(flag_end==0)continue;
                             if(temp_score[repeat_loc]<6)continue;
                             canidate_temp.score=temp_score[repeat_loc];
