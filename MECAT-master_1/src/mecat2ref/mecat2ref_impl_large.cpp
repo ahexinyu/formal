@@ -154,6 +154,7 @@ int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep
     int nn=0;
     for(i=0;i<SI;i++){
         nn=(_loc[i]-12)/200;
+        printf("nn is %d",nn);
         list_sim[i]=(sc[nn].vote);
         t_score[i]=t_score[i]*list_sim[i];
     }
@@ -983,6 +984,7 @@ static void reference_mapping(int threadint)
                         if(*index_spr>0)loc=(temp_spr-1)->score;
                         else loc=0;
                         start_loc=(*index_spr)*ZVL;
+                        printf("start_loc is %d",start_loc);
                         if(*index_spr>0)
                         {
                             loc=(temp_spr-1)->score;
@@ -1003,6 +1005,7 @@ static void reference_mapping(int threadint)
                             for(j=0; j<k&&j<SM; j++)
                             {
                                 temp_list[u_k]=temp_spr1->loczhi[j];//int temp_list,temp_seedn类型
+                                printf("temp_list[u_k] is %d",temp_list[u_k]);
                                 temp_seedn[u_k]=temp_spr1->seedno[j];
                                 u_k++;
                             }
