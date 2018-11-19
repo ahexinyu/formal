@@ -16,7 +16,7 @@ int find_location(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_
     int nn=0;
     for(i=0;i<SI;i++){
         nn=(_loc[i]-12)/200;
-        list_sim[i]=(sc[nn-1].vote);
+        list_sim[i]=(sc[nn].vote);
         t_score[i]=t_score[i]*list_sim[i];
     }
 
