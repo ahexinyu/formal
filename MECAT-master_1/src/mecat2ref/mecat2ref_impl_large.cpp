@@ -953,6 +953,7 @@ static void reference_mapping(int threadint)
                                     if(loc<=SM)
                                     {
                                         temp_spr->loczhi[loc-1]=u_k;//位置，block位置。
+                                        printf("temp_spr->loczhi[loc-1] is %s\n",temp_spr->loczhi[loc-1]);
                                         temp_spr->seedno[loc-1]=k+1;
                                     }
                                     else insert_loc(temp_spr,u_k,k+1,BC,templong);//删除分数最小的。保持在20个左右//
@@ -995,6 +996,7 @@ static void reference_mapping(int threadint)
                             {
                                 temp_list[u_k]=temp_spr->loczhi[j];
                                 temp_seedn[u_k]=temp_spr->seedno[j];
+                                printf("temp_list[u_k] is %d",temp_list[u_k]);
                                 u_k++;
                             }
                         else
