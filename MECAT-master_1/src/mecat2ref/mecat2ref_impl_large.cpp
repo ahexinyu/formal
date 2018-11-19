@@ -149,7 +149,7 @@ int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep
         t_score[i]++;
         t_score[j]++;
     }
-    for(i=0;i<k;i++){_loc[i]=start_loc+t_loc[i];printf(" loc is %d\n",_loc[i]);}
+    for(i=0;i<k;i++){_loc[i]=start_loc+t_loc[i];printf(" loc is %d\n",start_loc);printf(" loc is %d\n",_loc[i]);}
     
     int nn=0;
     for(i=0;i<SI;i++){
