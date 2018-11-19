@@ -250,6 +250,7 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long te
     for(i=0;i<SI;i++){
         _loc=(templong*ZV)+list_loc[i];
         nn=(_loc-12)/200;
+        printf("n is%d",nn);
         list_sim[i]=(sc[nn].vote);
         score_sim[i]=list_score[i]*list_sim[i];}//考虑相似度
     for(i=0; i<SI; i++)if(minval>score_sim[i])
@@ -271,6 +272,7 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long te
         }
         spr->score--;//删掉最低一个
     }
+    for (int i=0;i<19;i++){printf("spr->loczhi[i] %d",spr->loczhi[i]);}
 }
 static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
 {
@@ -349,6 +351,7 @@ static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len,long t
     for(i=0;i<SI;i++){score_sim[i]=0;}
     for(i=0;i<SI;i++){
         _loc=(templong*ZVS)+list_loc[i];
+        
         nn=(_loc-12)/200;
         list_sim[i]=(sc[nn].vote);
         score_sim[i]=list_score[i]*list_sim[i];}//考虑相似度
