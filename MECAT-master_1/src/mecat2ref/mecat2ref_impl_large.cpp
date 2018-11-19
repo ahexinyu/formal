@@ -49,7 +49,7 @@ float count_value;
 typedef struct {
     char *read_string;
 }read_info;
-static sim *sc;
+sim *sc;
 static read_info *info;
 static int load_ref_f(FILE *fp){
     int readlen,readno,sum=0,flag;
@@ -140,7 +140,91 @@ static int transnum_buchang(char *seqm,int *value,int *endn,int len_str,int read
     }
     return(num);//extract_number
 }
-
+int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,long start_loc)
+{
+    int i,j,maxval=0,maxi,rep=0,lasti=0;long _loc[200];float list_sim[200];
+    for(i=0; i<k; i++){t_score[i]=0;_loc[i]=0;list_sim[i]=0;}
+    for(i=0; i<k-1; i++)for(j=i+1; j<k; j++)if(t_seedn[j]-t_seedn[i]>0&&t_loc[j]-t_loc[i]>0&&t_loc[j]-t_loc[i]<read_len1&&fabs((t_loc[j]-t_loc[i])/((t_seedn[j]-t_seedn[i])*len)-1)<ddfs_cutoff)
+    {
+        t_score[i]++;
+        t_score[j]++;
+    }
+    for(i=0;i<k;i++){_loc[i]=start_loc+t_loc[i];}
+    int nn=0;
+    for(i=0;i<SI;i++){
+        nn=(_loc[i]-12)/200;
+        list_sim[i]=(sc[nn-1].vote);
+        t_score[i]=t_score[i]*list_sim[i];
+    }
+    
+    for(i=0; i<k; i++)
+    {
+        if(maxval<t_score[i])
+        {
+            maxval=t_score[i];
+            maxi=i;
+            rep=0;
+        }
+        else if(maxval==t_score[i])
+        {
+            rep++;
+            lasti=i;
+        }
+    }
+    for(i=0; i<4; i++)loc[i]=0;
+    if(maxval>=5&&rep==maxval)
+    {
+        loc[0]=t_loc[maxi],loc[1]=t_seedn[maxi];
+        *rep_loc=maxi;
+        loc[2]=t_loc[lasti],loc[3]=t_seedn[lasti];
+        return(1);
+    }
+    else if(maxval>=5&&rep!=maxval)
+    {
+        for(j=0; j<maxi; j++)if(t_seedn[maxi]-t_seedn[j]>0&&t_loc[maxi]-t_loc[j]>0&&t_loc[maxi]-t_loc[j]<read_len1&&fabs((t_loc[maxi]-t_loc[j])/((t_seedn[maxi]-t_seedn[j])*len)-1)<ddfs_cutoff)
+        {
+            if(loc[0]==0)
+            {
+                loc[0]=t_loc[j];
+                loc[1]=t_seedn[j];
+                *rep_loc=j;
+            }
+            else
+            {
+                loc[2]=t_loc[j];
+                loc[3]=t_seedn[j];
+            }
+        }
+        j=maxi;
+        if(loc[0]==0)
+        {
+            loc[0]=t_loc[j];
+            loc[1]=t_seedn[j];
+            *rep_loc=j;
+        }
+        else
+        {
+            loc[2]=t_loc[j];
+            loc[3]=t_seedn[j];
+        }
+        for(j=maxi+1; j<k; j++)if(t_seedn[j]-t_seedn[maxi]>0&&t_loc[j]-t_loc[maxi]>0&&t_loc[j]-t_loc[maxi]<=read_len1&&fabs((t_loc[j]-t_loc[maxi])/((t_seedn[j]-t_seedn[maxi])*len)-1)<ddfs_cutoff)
+        {
+            if(loc[0]==0)
+            {
+                loc[0]=t_loc[j];
+                loc[1]=t_seedn[j];
+                *rep_loc=j;
+            }
+            else
+            {
+                loc[2]=t_loc[j];
+                loc[3]=t_seedn[j];
+            }
+        }
+        return(1);
+    }
+    else return(0);
+}
 static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long templong)
 {//insert_loc(temp_spr,u_k,k+1,BC,sc,templong)
     int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;int nn=0;int _loc;//在参考基因的位置
@@ -925,7 +1009,7 @@ static void reference_mapping(int threadint)
                                 u_k++;
                             }
                         }
-                        flag_end=find_location(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,sc,start_loc);
+                        flag_end=find_location3(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,start_loc);
                         //flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
                         if(flag_end==0)continue;
                         if(temp_score[repeat_loc]<6)continue;
