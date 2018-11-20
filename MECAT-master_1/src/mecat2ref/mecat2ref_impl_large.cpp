@@ -1421,6 +1421,7 @@ static void reference_mapping(int threadint)
     free(rev_index_list);
     free(rev_index_score);
 	delete[] aln_seqs;
+    printf("hehehhhhhhh is suceussu\n");
 }
 static void reference_map_reference(int threadint)
 {
