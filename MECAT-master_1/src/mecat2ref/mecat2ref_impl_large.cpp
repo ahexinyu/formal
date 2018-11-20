@@ -273,7 +273,6 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long te
         }
         spr->score--;//删掉最低一个
     }
-    for (int i=0;i<19;i++){printf("spr->loczhi[i] %d",spr->loczhi[i]);}
 }
 static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
 {
