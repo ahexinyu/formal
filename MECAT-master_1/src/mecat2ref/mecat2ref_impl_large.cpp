@@ -140,7 +140,7 @@ static int transnum_buchang(char *seqm,int *value,int *endn,int len_str,int read
     }
     return(num);//extract_number
 }
-int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,long start_loc)
+int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,long start_loc)//绝了
 {
     int i,j,maxval=0,maxi,rep=0,lasti=0;long _loc[200];float list_sim[200];
     for(i=0; i<k; i++){t_score[i]=0;_loc[i]=0;list_sim[i]=0;}
@@ -605,6 +605,7 @@ static void creat_ref_index(char *fastafile)
     fclose(fastaindex);
     seqcount=count;
     similarity_count=(seqcount-12)/200+1;
+    printf("similarity_count is\n",similarity_count);
     sc=(sim *)malloc((similarity_count+10)*sizeof(sim));
     printf("sim si sucess\n");
     for(int k=0;k<(similarity_count+10);k++){
