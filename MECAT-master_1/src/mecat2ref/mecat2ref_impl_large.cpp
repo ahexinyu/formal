@@ -158,7 +158,7 @@ int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep
         list_sim[i]=(sc[nn].vote);
         t_score[i]=t_score[i]*list_sim[i];
     }
-    
+    printf("hhhhhhhhhhhhhhhhhhhhhh si sucesss\n");
     for(i=0; i<k; i++)
     {
         if(maxval<t_score[i])
@@ -1006,7 +1006,7 @@ static void reference_mapping(int threadint)
                             for(j=0; j<k&&j<SM; j++)
                             {
                                 temp_list[u_k]=temp_spr1->loczhi[j];//int temp_list,temp_seedn类型
-                                printf("temp_list[u_k] is %d",temp_list[u_k]);
+                                //printf("temp_list[u_k] is %d",temp_list[u_k]);
                                 temp_seedn[u_k]=temp_spr1->seedno[j];
                                 u_k++;
                             }
@@ -1017,8 +1017,8 @@ static void reference_mapping(int threadint)
                                 u_k++;
                             }
                         }
-                        //flag_end=find_location3(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,start_loc);
-                        flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
+                        flag_end=find_location3(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,start_loc);
+                        //flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
                         if(flag_end==0)continue;
                         if(temp_score[repeat_loc]<6)continue;
                         canidate_temp.score=temp_score[repeat_loc];
