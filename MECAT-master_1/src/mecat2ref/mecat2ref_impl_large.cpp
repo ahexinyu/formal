@@ -1019,8 +1019,8 @@ static void reference_mapping(int threadint)
                                 u_k++;
                             }
                         }
-                        flag_end=find_location3(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,start_loc);
-                        //flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
+                       // flag_end=find_location3(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,start_loc);
+                        flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
                         if(flag_end==0)continue;
                         if(temp_score[repeat_loc]<6)continue;
                         canidate_temp.score=temp_score[repeat_loc];
@@ -1227,8 +1227,8 @@ static void reference_mapping(int threadint)
                                             temp_spr->loczhi[loc-1]=u_k;
                                             temp_spr->seedno[loc-1]=k+1;
                                         }
-                                        //else insert_loc3(temp_spr,u_k,k+1,BC,templong);
-                                        else insert_loc2(temp_spr,u_k,k+1,BC);
+                                        else insert_loc3(temp_spr,u_k,k+1,BC,templong);
+                                        //else insert_loc2(temp_spr,u_k,k+1,BC);
                                         if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
                                         else s_k=temp_spr->score;
                                         if(endnum<s_k)endnum=s_k;
@@ -1285,7 +1285,7 @@ static void reference_mapping(int threadint)
                                     u_k++;
                                 }
                             }
-                            //flag_end=find_location(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,sc,start_loc);
+                            //flag_end=find_location3(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,start_loc);
                             flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
                             if(flag_end==0)continue;
                             if(temp_score[repeat_loc]<6)continue;
