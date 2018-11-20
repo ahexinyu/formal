@@ -2747,7 +2747,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     free(countin1);
     free(databaseindex1);
     free(allloc1);
-    free(read_REFESQ);
+    //free(read_REFESQ);
 
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
