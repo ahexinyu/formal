@@ -163,9 +163,9 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long te
             }
     for(i=0;i<SI;i++){score_sim[i]=0;}
     for(i=0;i<SI;i++){
-        _loc=(templong*ZV)+list_loc[i];
+        _loc=(templong*ZVL)+list_loc[i];
         nn=(_loc-12)/200;
-        printf("n is%d",nn);
+        printf("n is%d\n",nn);
         list_sim[i]=(sc[nn].vote);
         score_sim[i]=list_score[i]*list_sim[i];}//考虑相似度
     for(i=0; i<SI; i++)if(minval>score_sim[i])
