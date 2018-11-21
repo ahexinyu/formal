@@ -1727,6 +1727,7 @@ static void reference_map_reference(int threadint)
                                 if(high+1<MAXC)canidate_loc[high+1]=canidate_temp;
                                 if(canidatenum<MAXC)canidatenum++;
                                 else canidatenum=MAXC;//从高往低排序
+                                printf("fliter is sucess\n");
                         
                             }
                         else{
@@ -2009,6 +2010,7 @@ static void reference_map_reference(int threadint)
                                 if(high+1<MAXC)canidate_loc[high+1]=canidate_temp;
                                 if(canidatenum<MAXC)canidatenum++;
                                 else canidatenum=MAXC;//从高往低排序
+                                printf("fliter is sucess\n");
                                 
                             }
                             else{
