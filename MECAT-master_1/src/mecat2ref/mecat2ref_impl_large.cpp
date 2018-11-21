@@ -164,7 +164,7 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long te
     for(i=0;i<SI;i++){score_sim[i]=0;}
     printf("hhhhhhpppp  is sucresss\n");
     for(i=0;i<SI;i++){
-        _loc=(templong*ZVL)+list_loc[i];
+        _loc=(templong*ZV)+list_loc[i];
         nn=(_loc-12)/200;
         printf("n is%d\n",nn);
         list_sim[i]=(sc[nn].vote);
@@ -954,12 +954,12 @@ static void reference_mapping(int threadint)
                                     loc=++(temp_spr->score);
                                     if(loc<=SM)
                                     {
-                                        temp_spr->loczhi[loc-1]=u_k;//位置，block位置。
+                                        temp_spr->loczhi[loc-1]=u_k;//位置，block位置。绝了
                                         printf("temp_spr->loczhi[loc-1] is %d\n",u_k);
                                         temp_spr->seedno[loc-1]=k+1;
                                     }
-                                    else insert_loc(temp_spr,u_k,k+1,BC,templong);//删除分数最小的。保持在20个左右//
-                                    //else insert_loc2(temp_spr,u_k,k+1,BC);
+                                    //else insert_loc(temp_spr,u_k,k+1,BC,templong);//删除分数最小的。保持在20个左右//
+                                    else insert_loc2(temp_spr,u_k,k+1,BC);
                                     if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
                                     else s_k=temp_spr->score;
                                     if(endnum<s_k)endnum=s_k;
