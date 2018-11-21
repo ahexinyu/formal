@@ -703,11 +703,11 @@ static void get_vote(){
         else{
             sc[j].vote=1;
         
-        };*/}
+        }*/
         printf("vote is %f\n",sc[j].vote);
-        
+   }
     
-    }
+
         //free(cpycount);
 }
 int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,long start_loc)//绝了
