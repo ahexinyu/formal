@@ -168,7 +168,8 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long te
         nn=(_loc-12)/200;
         printf("n is%d\n",nn);
         list_sim[i]=(sc[nn].vote);
-        score_sim[i]=list_score[i]*list_sim[i];}//考虑相似度
+        score_sim[i]=list_score[i]*list_sim[i];
+        _loc=0;}//考虑相似度
     for(i=0; i<SI; i++)if(minval>score_sim[i])
         {
             minval=score_sim[i];
@@ -2602,7 +2603,7 @@ static void* multithread(void* arg)
     runthreadnum2++;
     pthread_mutex_unlock(&mutilock);
     reference_mapping(localthreadno);
-    reference_map_reference(localthreadno2);
+    //reference_map_reference(localthreadno2);
 	return NULL;
 }
 
