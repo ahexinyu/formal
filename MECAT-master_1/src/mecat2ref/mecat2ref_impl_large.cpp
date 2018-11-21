@@ -652,12 +652,14 @@ static void get_vote(){
             //printf("K-count is %f\n",sc[j].k_count);
             sc[j].LDF=log((read_kmer)/sc[j].k_count);
             //printf("LDF is %f\n", sc[j].LDF);
-            //sc[j].vote=sc[j].LDF/10;
+            sc[j].vote=sc[j].LDF/5;
         }
-        
+        else{
+            sc[j].vote=1;
+        }
     }
     printf("here is sucuess");
-   for(i=0; i<seqcount; i++)
+  /* for(i=0; i<seqcount; i++)
     {
         
         if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
@@ -686,10 +688,10 @@ static void get_vote(){
             eit=eit<<leftnum;
             eit=eit>>leftnum;
         }
-    }
+    }*/
      printf("test is sucuess");
    for(int j=0;j<similarity_count;j++){
-        if(sc[j].r_count){
+        /*if(sc[j].r_count){
            // printf("r_count is %d\n",sc1[j].r_count);
             sc[j].TF=log(count_value/sc[j].r_count);
         
@@ -701,10 +703,10 @@ static void get_vote(){
         else{
             sc[j].vote=1;
         
-        };
+        };*/}
         printf("vote is %f\n",sc[j].vote);
         
-    }
+    
     }
         //free(cpycount);
 }
