@@ -1711,7 +1711,8 @@ static void reference_map_reference(int threadint)
                     //insert canidate position or delete this position
                     
                     while(canidate_loc[p].score!=0){
-                        pp=filter_loc(canidate_loc[p],canidate_temp);
+                       // pp=filter_loc(canidate_loc[p],canidate_temp);
+                        pp=1;
                         if(pp){
                                 low=0;
                                 high=canidatenum-1;
@@ -1992,7 +1993,8 @@ static void reference_map_reference(int threadint)
                         p=0;
                         pp=0;//insert canidate position or delete this position
                         while(canidate_loc[p].score!=0){
-                            pp=filter_loc(canidate_loc[p],canidate_temp);
+                            //pp=filter_loc(canidate_loc[p],canidate_temp);
+                            pp=1;
                             if(pp){
                                 low=0;
                                 high=canidatenum-1;
