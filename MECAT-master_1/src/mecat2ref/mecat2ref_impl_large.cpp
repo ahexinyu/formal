@@ -465,9 +465,9 @@ static void build_read_index(char *path, char *path1){//buildindex
 
 int filter_loc(candidate_save a,candidate_save b){
     int i=0;
-    if(fabs((a.loc1-b.loc1)/(a.loc2-b.loc2))>0.7){i=1;return i;}
+    if((a.loc2!=b.loc2)&&fabs((a.loc1-b.loc1)/(a.loc2-b.loc2))>0.7){i=1;return i;}
     else {i=0;return i;}
-}
+}//过滤位置
 
 static void creat_ref_index(char *fastafile)
 {
@@ -649,13 +649,18 @@ static void get_vote(){
     
     for(int j=0;j<similarity_count-1;j++){
         if(sc[j].k_count>0){
-            printf("K-count is %f\n",sc[j].k_count);
+            //printf("K-count is %f\n",sc[j].k_count);
             sc[j].LDF=log((read_kmer)/sc[j].k_count);
             printf("LDF is %f\n", sc[j].LDF);
+            sc[j].vote=sc[j].LDF;
+        }
+        else{
+            sc[j].vote=1;
+        
         }
     }
     printf("here is sucuess");
-    for(i=0; i<seqcount; i++)
+   /* for(i=0; i<seqcount; i++)
     {
         
         if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
@@ -684,9 +689,9 @@ static void get_vote(){
             eit=eit<<leftnum;
             eit=eit>>leftnum;
         }
-    }
+    }*/
      printf("test is sucuess");
-    for(int j=0;j<similarity_count;j++){
+   /* for(int j=0;j<similarity_count;j++){
         if(count_value>0){
            // printf("r_count is %d\n",sc1[j].r_count);
             sc[j].TF=sc[j].r_count/count_value;
@@ -702,7 +707,7 @@ static void get_vote(){
         //printf("vote is %f\n",sc1[j].vote);
         
     }
-    }
+    }*/
         //free(cpycount);
 }
 int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,long start_loc)//绝了
@@ -1288,7 +1293,7 @@ static void reference_mapping(int threadint)
                                 }
                             }
                             flag_end=find_location3(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,start_loc);
-                          // flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
+                          /// flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
                             if(flag_end==0)continue;
                             if(temp_score[repeat_loc]<6)continue;
                             canidate_temp.score=temp_score[repeat_loc];
