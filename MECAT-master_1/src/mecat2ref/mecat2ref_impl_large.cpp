@@ -465,9 +465,9 @@ static void build_read_index(char *path, char *path1){//buildindex
 
 int filter_loc(candidate_save a,candidate_save b){
     int i=0;
-    if((a.loc2!=b.loc2)&&fabs((a.loc1-b.loc1)/(a.loc2-b.loc2))>0.7){i=1;return i;}
+    if(fabs((a.loc1-b.loc1)/(a.loc2-b.loc2))>0.7){i=1;return i;}
     else {i=0;return i;}
-}//过滤位置
+}
 
 static void creat_ref_index(char *fastafile)
 {
