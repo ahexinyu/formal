@@ -651,16 +651,13 @@ static void get_vote(){
         if(sc[j].k_count>0){
             //printf("K-count is %f\n",sc[j].k_count);
             sc[j].LDF=log((read_kmer)/sc[j].k_count);
-            printf("LDF is %f\n", sc[j].LDF);
-            sc[j].vote=sc[j].LDF/10;
+            //printf("LDF is %f\n", sc[j].LDF);
+            //sc[j].vote=sc[j].LDF/10;
         }
-        else{
-            sc[j].vote=1;
         
-        }
     }
     printf("here is sucuess");
-   /* for(i=0; i<seqcount; i++)
+   for(i=0; i<seqcount; i++)
     {
         
         if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
@@ -689,25 +686,26 @@ static void get_vote(){
             eit=eit<<leftnum;
             eit=eit>>leftnum;
         }
-    }*/
+    }
      printf("test is sucuess");
-   /* for(int j=0;j<similarity_count;j++){
-        if(count_value>0){
+   for(int j=0;j<similarity_count;j++){
+        if(sc[j].r_count){
            // printf("r_count is %d\n",sc1[j].r_count);
-            sc[j].TF=sc[j].r_count/count_value;
+            sc[j].TF=log(count_value/sc[j].r_count);
         
            // printf("TF is %f\n",sc1[j].TF);}
         
         if((sc[j].TF*sc[j].LDF)>0){
-            sc[j].vote=fabs(log(sc[j].TF*sc[j].LDF));}
+            sc[j].vote=(sc[j].TF*sc[j].LDF)/100;
+            }
         else{
             sc[j].vote=1;
         
         };
-        //printf("vote is %f\n",sc1[j].vote);
+        printf("vote is %f\n",sc1[j].vote);
         
     }
-    }*/
+    }
         //free(cpycount);
 }
 int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,long start_loc)//绝了
