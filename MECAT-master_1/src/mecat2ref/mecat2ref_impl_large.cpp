@@ -168,7 +168,7 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long te
         nn=(_loc-12)/200;
         printf("n is%d\n",nn);
         list_sim[i]=(sc[nn].vote);
-        score_sim[i]=list_score[i]*list_sim[i];
+        score_sim[i]=list_score[i]/list_sim[i];
         _loc=0;}//考虑相似度
     for(i=0; i<SI; i++)if(minval>score_sim[i])
         {
@@ -270,7 +270,7 @@ static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len,long t
         
         nn=(_loc-12)/200;
         list_sim[i]=(sc[nn].vote);
-        score_sim[i]=list_score[i]*list_sim[i];}//考虑相似度
+        score_sim[i]=list_score[i]/list_sim[i];}//考虑相似度
     for(i=0; i<SI; i++)if(minval>score_sim[i])
     {
         minval=score_sim[i];
@@ -652,7 +652,7 @@ static void get_vote(){
             //printf("K-count is %f\n",sc[j].k_count);
             sc[j].LDF=log((read_kmer)/sc[j].k_count);
             printf("LDF is %f\n", sc[j].LDF);
-            sc[j].vote=sc[j].LDF;
+            sc[j].vote=sc[j].LDF/10;
         }
         else{
             sc[j].vote=1;
@@ -726,7 +726,7 @@ int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep
         nn=(_loc[i]-12)/200;
         printf("nn is %d\n",nn);
         list_sim[i]=(sc[nn].vote);
-        t_score[i]=t_score[i]*list_sim[i];
+        t_score[i]=t_score[i]／list_sim[i];
     }
     printf("hhhhhhhhhhhhhhhhhhhhhh si sucesss\n");
     for(i=0; i<k; i++)
