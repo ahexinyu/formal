@@ -702,7 +702,7 @@ static void get_vote(){
             sc[j].vote=1;
         
         };
-        printf("vote is %f\n",sc1[j].vote);
+        printf("vote is %f\n",sc[j].vote);
         
     }
     }
