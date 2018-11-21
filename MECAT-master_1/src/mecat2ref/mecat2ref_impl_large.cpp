@@ -726,7 +726,7 @@ int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep
         nn=(_loc[i]-12)/200;
         printf("nn is %d\n",nn);
         list_sim[i]=(sc[nn].vote);
-        t_score[i]=t_score[i]／list_sim[i];
+        t_score[i]=t_score[i]/list_sim[i];
     }
     printf("hhhhhhhhhhhhhhhhhhhhhh si sucesss\n");
     for(i=0; i<k; i++)
