@@ -162,6 +162,7 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long te
                 list_score[j]++;
             }
     for(i=0;i<SI;i++){score_sim[i]=0;}
+    printf("hhhhhhpppp  is sucresss\n");
     for(i=0;i<SI;i++){
         _loc=(templong*ZVL)+list_loc[i];
         nn=(_loc-12)/200;
