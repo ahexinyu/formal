@@ -807,7 +807,7 @@ int result_combine3(int readcount, int filecount, char *workpath, char *outfile,
             last_qid = trslt->read_id;
             copy_temp_result(trslt, pptr[num_results]);
             ++num_results;
-        }
+        
         if (num_results) output_query_results(chr_idx, num_chr, pptr, num_results, out);
         
         fclose(thread_results_file);

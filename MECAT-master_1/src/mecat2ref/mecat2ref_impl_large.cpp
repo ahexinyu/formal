@@ -1710,7 +1710,7 @@ static void reference_map_reference(int threadint)
                     else canidate_temp.chain='R';
                     //insert canidate position or delete this position
                     
-                    while(canidate_loc[p].score!=0){
+                    /*while(canidate_loc[p].score!=0){
                        // pp=filter_loc(canidate_loc[p],canidate_temp);
                         pp=1;
                         if(pp){
@@ -1738,8 +1738,22 @@ static void reference_map_reference(int threadint)
                                 }
                             }
                         p++;
+                    }*/
+                    low=0;
+                    high=canidatenum-1;
+                    while(low<=high)
+                    {
+                        mid=(low+high)/2;
+                        if(mid>=canidatenum||canidate_loc[mid].score<canidate_temp.score)high=mid-1;
+                        else low=mid+1;
                     }
                     
+                    if(canidatenum<MAXC)for(u_k=canidatenum-1; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
+                    else for(u_k=canidatenum-2; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
+                    if(high+1<MAXC)canidate_loc[high+1]=canidate_temp;
+                    if(canidatenum<MAXC)canidatenum++;
+                    else canidatenum=MAXC;
+
                     
                 }
                 
@@ -1993,7 +2007,7 @@ static void reference_map_reference(int threadint)
                         else canidate_temp.chain='R';
                         p=0;
                         pp=0;//insert canidate position or delete this position
-                        while(canidate_loc[p].score!=0){
+                       /* while(canidate_loc[p].score!=0){
                             //pp=filter_loc(canidate_loc[p],canidate_temp);
                             pp=1;
                             if(pp){
@@ -2021,9 +2035,24 @@ static void reference_map_reference(int threadint)
                                 }
                             }
                             p++;
+                        }*/
+                        low=0;
+                        high=canidatenum-1;
+                        while(low<=high)
+                        {
+                            mid=(low+high)/2;
+                            if(mid>=canidatenum||canidate_loc[mid].score<canidate_temp.score)high=mid-1;
+                            else low=mid+1;
                         }
+                        
+                        if(canidatenum<MAXC)for(u_k=canidatenum-1; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
+                        else for(u_k=canidatenum-2; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
+                        if(high+1<MAXC)canidate_loc[high+1]=canidate_temp;
+                        if(canidatenum<MAXC)canidatenum++;
+                        else canidatenum=MAXC;
 
                     }
+                    
                 }
                 
                 naln = 0;
