@@ -711,7 +711,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
                         else {
                             judg=judge(pptr[j], refpptr[i],sid);
                             if(judg){
-                                small_meap(pptr[j], refpptr[i], up_file[filecount]);}
+                                small_meap(pptr[j], refpptr[i], up_file[filecount]);}//直接连了。不用判断了
                             else{
                                 output_temp_result(pptr[j],up_file[filecount]);
                             }

@@ -301,20 +301,17 @@ void swapdata(candidate_save *a,candidate_save *b){
 void sortdata(candidate_save *can,int num){
     for (int i=0;i<num-1;i++)
     {
-        int index=i;
-        for(int j=i+1;j<num;j++)
+        
+        for(int j=0;j<num-i-1;j++)
         {
-            if(can[j].score>can[i].score)
-            {
-                index=j;
-            }
-            if(index!=i)
-            {
-                swapdata(&can[index], &can[i]);
+            if(can[j].score<can[j+1].score){
+                candidate_save temp;
+                temp=can[j];
+                can[j]=can[j+1];
+                can[j+1]=temp;
             }
         }
     }
-    
 }
 static void build_read_index(char *path, char *path1){//buildindex
     unsigned int eit,temp;long start;
@@ -463,10 +460,19 @@ static void build_read_index(char *path, char *path1){//buildindex
     free(info);
 }
 
-int filter_loc(candidate_save a,candidate_save b){
-    int i=0;
-    if(fabs((a.loc1-b.loc1)/(a.loc2-b.loc2))>0.7){i=1;return i;}
-    else {i=0;return i;}
+int filter_loc(candidate_save *a,candidate_save b,int *location,int num){
+    int i=1;int p=0;
+    float k;
+    for(int j=0;j<num;j++){
+        if(a[p].loc2!=b.loc2){
+            k=fabs((a[p].loc1-b.loc1)/(a[p].loc2-b.loc2));
+            if(k<0.6){
+                *location=p;
+                i=0;
+            }
+        }
+    }
+    return i;
 }
 
 static void creat_ref_index(char *fastafile)
@@ -1709,37 +1715,36 @@ static void reference_map_reference(int threadint)
                     if(ii==1)canidate_temp.chain='F';
                     else canidate_temp.chain='R';
                     //insert canidate position or delete this position
-                    
-                    /*while(canidate_loc[p].score!=0){
-                       // pp=filter_loc(canidate_loc[p],canidate_temp);
-                        pp=1;
-                        if(pp){
-                                low=0;
-                                high=canidatenum-1;
-                                while(low<=high)
-                                {
-                                mid=(low+high)/2;
-                                if(mid>=canidatenum||canidate_loc[mid].score<canidate_temp.score)high=mid-1;
-                                else low=mid+1;
-                                }
-                                if(canidatenum<MAXC)for(u_k=canidatenum-1; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
-                                else for(u_k=canidatenum-2; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
-                                if(high+1<MAXC)canidate_loc[high+1]=canidate_temp;
-                                if(canidatenum<MAXC)canidatenum++;
-                                else canidatenum=MAXC;//从高往低排序
-                                printf("fliter is sucess\n");
-                        
+                    int *chang_loc;int QAQ;
+                    int p=0,pp;
+                    pp=filter_loc(canidate_loc,canidate_temp,chang_loc,canidatenum);//直接加进去
+                    printf(" pp  is %d\n",pp);
+                    if(canidatenum<MAXC){
+                        canidatenum++;
+                        canidate_loc[canidatenum-1]=canidate_temp;
+                        sortdata(canidate_loc,canidatenum);
+                        printf("canidatenum  is %d\n",canidatenum);
+                    }
+                    else{
+                        if(pp==1){
+                            if(canidate_loc[canidatenum-1].score<canidate_temp.score){
+                                canidate_loc[canidatenum-1]=canidate_temp;
+                                sortdata(canidate_loc,canidatenum);
+                                printf("here is sucuess\n");
+                                canidatenum=MAXC;
                             }
+                        }//不需要改的
                         else{
-                                if(canidate_loc[p].score>=canidate_temp.score){break;}
-                                else{
-                                    canidate_loc[p]=canidate_temp;
-                                    sortdata(canidate_loc,canidatenum);
-                                }
+                            QAQ=*chang_loc;
+                            printf("QAQ is %d\n",QAQ);
+                            if(canidate_loc[QAQ].score<canidate_temp.score){
+                                canidate_loc[QAQ]=canidate_temp;
+                                printf("here is sucuess\n");
+                                sortdata(canidate_loc,canidatenum);
                             }
-                        p++;
-                    }*/
-                    low=0;
+                        }
+                    
+                    /*low=0;
                     high=canidatenum-1;
                     while(low<=high)
                     {
@@ -1752,7 +1757,7 @@ static void reference_map_reference(int threadint)
                     else for(u_k=canidatenum-2; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
                     if(high+1<MAXC)canidate_loc[high+1]=canidate_temp;
                     if(canidatenum<MAXC)canidatenum++;
-                    else canidatenum=MAXC;
+                    else canidatenum=MAXC;*/
 
                     
                 }
@@ -2005,8 +2010,36 @@ static void reference_map_reference(int threadint)
                         canidate_temp.score=canidate_temp.score+seedcount;
                         if(ii==1)canidate_temp.chain='F';
                         else canidate_temp.chain='R';
-                        p=0;
-                        pp=0;//insert canidate position or delete this position
+                        int *chang_loc;int QAQ;
+                        int p=0,pp;
+                        pp=filter_loc(canidate_loc,canidate_temp,chang_loc,canidatenum);//直接加进去
+                        printf(" pp  is %d\n",pp);
+                        if(canidatenum<MAXC){
+                            canidatenum++;
+                            canidate_loc[canidatenum-1]=canidate_temp;
+                            sortdata(canidate_loc,canidatenum);
+                            printf("canidatenum  is %d\n",canidatenum);
+                        }
+                        else{
+                            if(pp==1){
+                                if(canidate_loc[canidatenum-1].score<canidate_temp.score){
+                                    canidate_loc[canidatenum-1]=canidate_temp;
+                                    sortdata(canidate_loc,canidatenum);
+                                    printf("here is sucuess\n");
+                                    canidatenum=MAXC;
+                                }
+                            }//不需要改的
+                            else{
+                                QAQ=*chang_loc;
+                                printf("QAQ is %d\n",QAQ);
+                                if(canidate_loc[QAQ].score<canidate_temp.score){
+                                    canidate_loc[QAQ]=canidate_temp;
+                                    printf("here is sucuess\n");
+                                    sortdata(canidate_loc,canidatenum);
+                                }
+                            }
+                        }
+                        //insert canidate position or delete this position
                        /* while(canidate_loc[p].score!=0){
                             //pp=filter_loc(canidate_loc[p],canidate_temp);
                             pp=1;
@@ -2036,7 +2069,7 @@ static void reference_map_reference(int threadint)
                             }
                             p++;
                         }*/
-                        low=0;
+                        /*low=0;
                         high=canidatenum-1;
                         while(low<=high)
                         {
@@ -2049,7 +2082,7 @@ static void reference_map_reference(int threadint)
                         else for(u_k=canidatenum-2; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
                         if(high+1<MAXC)canidate_loc[high+1]=canidate_temp;
                         if(canidatenum<MAXC)canidatenum++;
-                        else canidatenum=MAXC;
+                        else canidatenum=MAXC;*/
 
                     }
                     

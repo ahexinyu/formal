@@ -250,7 +250,18 @@ output_temp_result(TempResult* result, FILE* out)
 				 result->qmap,
 				 result->smap);
 }
+output_temp_result2(TempResult* result, FILE* out){
+    fprintf(out, "%d\t%c\t%d\t%d\t%d\t%d\t%ld\t%ld\n",
+            result->read_id,
+            result->read_dir,
+            result->vscore,
+            result->qb,
+            result->qe,
+            result->qs,
+            result->sb,
+            result->se);
 
+}
 int
 load_temp_result(TempResult* result, FILE* in)
 {
