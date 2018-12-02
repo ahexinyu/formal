@@ -1743,7 +1743,7 @@ static void reference_map_reference(int threadint)
                                 sortdata(canidate_loc,canidatenum);
                             }
                         }
-                    
+                    }
                     /*low=0;
                     high=canidatenum-1;
                     while(low<=high)
