@@ -463,7 +463,7 @@ static void build_read_index(char *path, char *path1){//buildindex
 int filter_loc(candidate_save *a,candidate_save b,int *location,int num){
     int i=1;int p=0;
     float k;
-    for(int j=0;j<num;j++){
+    /*for(int j=0;j<num;j++){
         if(a[p].loc2!=b.loc2){
             k=fabs((a[p].loc1-b.loc1)/(a[p].loc2-b.loc2));
             if(k<0.6){
@@ -471,7 +471,7 @@ int filter_loc(candidate_save *a,candidate_save b,int *location,int num){
                 i=0;
             }
         }
-    }
+    }*/
     return i;
 }
 
@@ -2673,7 +2673,7 @@ static void* multithread(void* arg)
     runthreadnum++;
     runthreadnum2++;
     pthread_mutex_unlock(&mutilock);
-    reference_mapping(localthreadno);
+    //reference_mapping(localthreadno);
     reference_map_reference(localthreadno2);
 	return NULL;
 }
