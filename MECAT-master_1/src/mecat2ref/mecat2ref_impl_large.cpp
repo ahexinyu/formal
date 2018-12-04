@@ -1724,7 +1724,7 @@ static void reference_map_reference(int threadint)
                     //insert canidate position or delete this position
                     int *chang_loc;int QAQ;
                     int p=0,pp;
-                    pp=filter_loc(canidate_loc,canidate_temp,chang_loc,canidatenum);//直接加进去
+                    //pp=filter_loc(canidate_loc,canidate_temp,chang_loc,canidatenum);//直接加进去
                     printf(" pp  is %d\n",pp);
                    /* if(canidatenum<MAXC){
                         canidatenum++;
@@ -2019,7 +2019,7 @@ static void reference_map_reference(int threadint)
                         else canidate_temp.chain='R';
                         int *chang_loc;int QAQ;
                         int p=0,pp;
-                        pp=filter_loc(canidate_loc,canidate_temp,chang_loc,canidatenum);//直接加进去
+                        //pp=filter_loc(canidate_loc,canidate_temp,chang_loc,canidatenum);//直接加进去
                         printf(" pp  is %d\n",pp);
                        /* if(canidatenum<MAXC){
                             canidatenum++;
