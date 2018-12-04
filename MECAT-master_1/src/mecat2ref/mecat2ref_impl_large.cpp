@@ -1726,12 +1726,12 @@ static void reference_map_reference(int threadint)
                     int p=0,pp;
                     pp=filter_loc(canidate_loc,canidate_temp,chang_loc,canidatenum);//直接加进去
                     printf(" pp  is %d\n",pp);
-                    if(canidatenum<MAXC){
+                   /* if(canidatenum<MAXC){
                         canidatenum++;
                         canidate_loc[canidatenum-1]=canidate_temp;
                         sortdata(canidate_loc,canidatenum);
                         printf("canidatenum  is %d\n",canidatenum);
-                    }
+                    }*/
                     /*else{
                         if(pp==1){
                             if(canidate_loc[canidatenum-1].score<canidate_temp.score){
@@ -1751,7 +1751,7 @@ static void reference_map_reference(int threadint)
                             }
                         }
                     }*/
-                    /*low=0;
+                    low=0;
                     high=canidatenum-1;
                     while(low<=high)
                     {
@@ -1764,7 +1764,7 @@ static void reference_map_reference(int threadint)
                     else for(u_k=canidatenum-2; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
                     if(high+1<MAXC)canidate_loc[high+1]=canidate_temp;
                     if(canidatenum<MAXC)canidatenum++;
-                    else canidatenum=MAXC;*/
+                    else canidatenum=MAXC;
 
                     
                 }
@@ -2021,12 +2021,12 @@ static void reference_map_reference(int threadint)
                         int p=0,pp;
                         pp=filter_loc(canidate_loc,canidate_temp,chang_loc,canidatenum);//直接加进去
                         printf(" pp  is %d\n",pp);
-                        if(canidatenum<MAXC){
+                       /* if(canidatenum<MAXC){
                             canidatenum++;
                             canidate_loc[canidatenum-1]=canidate_temp;
                             sortdata(canidate_loc,canidatenum);
                             printf("canidatenum  is %d\n",canidatenum);
-                        }
+                        }*/
                         /*else{
                             if(pp==1){
                                 if(canidate_loc[canidatenum-1].score<canidate_temp.score){
@@ -2047,36 +2047,7 @@ static void reference_map_reference(int threadint)
                             }
                         }*/
                         //insert canidate position or delete this position
-                       /* while(canidate_loc[p].score!=0){
-                            //pp=filter_loc(canidate_loc[p],canidate_temp);
-                            pp=1;
-                            if(pp){
-                                low=0;
-                                high=canidatenum-1;
-                                while(low<=high)
-                                {
-                                    mid=(low+high)/2;
-                                    if(mid>=canidatenum||canidate_loc[mid].score<canidate_temp.score)high=mid-1;
-                                    else low=mid+1;
-                                }
-                                if(canidatenum<MAXC)for(u_k=canidatenum-1; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
-                                else for(u_k=canidatenum-2; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
-                                if(high+1<MAXC)canidate_loc[high+1]=canidate_temp;
-                                if(canidatenum<MAXC)canidatenum++;
-                                else canidatenum=MAXC;//从高往低排序
-                                printf("fliter is sucess\n");
-                                
-                            }
-                            else{
-                                if(canidate_loc[p].score>=canidate_temp.score){break;}
-                                else{
-                                    canidate_loc[p]=canidate_temp;
-                                    sortdata(canidate_loc,canidatenum);
-                                }
-                            }
-                            p++;
-                        }*/
-                        /*low=0;
+                        low=0;
                         high=canidatenum-1;
                         while(low<=high)
                         {
@@ -2089,7 +2060,8 @@ static void reference_map_reference(int threadint)
                         else for(u_k=canidatenum-2; u_k>high; u_k--)canidate_loc[u_k+1]=canidate_loc[u_k];
                         if(high+1<MAXC)canidate_loc[high+1]=canidate_temp;
                         if(canidatenum<MAXC)canidatenum++;
-                        else canidatenum=MAXC;*/
+                        else canidatenum=MAXC;
+                        
 
                     }
                     
