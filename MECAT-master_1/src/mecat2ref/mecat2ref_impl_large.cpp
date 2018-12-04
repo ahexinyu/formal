@@ -462,16 +462,23 @@ static void build_read_index(char *path, char *path1){//buildindex
 
 int filter_loc(candidate_save *a,candidate_save b,int *location,int num){
     int i=1;int p=0;
-    float k;
-    /*for(int j=0;j<num;j++){
-        if(a[p].loc2!=b.loc2){
-            k=fabs((a[p].loc1-b.loc1)/(a[p].loc2-b.loc2));
-            if(k<0.6){
-                *location=p;
+    float k;float x,y;
+    for(int j=0;j<num;j++){
+        if(a[j].loc2!=b.loc2){
+            x=fabs(a[j].loc1-b.loc1);
+            y=fabs(a[j].loc2-b.loc2);
+            printf("x is%f,y is%f",x,y);
+            k=x/y;
+            printf(" k is%f\n",k);
+            if(k<0.3){
+                *location=j;
                 i=0;
             }
         }
-    }*/
+        printf(" a[p].score is%d\n",a[j].score);
+        
+    }
+    printf(" p is%d\n",*location);
     return i;
 }
 
@@ -1725,7 +1732,7 @@ static void reference_map_reference(int threadint)
                         sortdata(canidate_loc,canidatenum);
                         printf("canidatenum  is %d\n",canidatenum);
                     }
-                    else{
+                    /*else{
                         if(pp==1){
                             if(canidate_loc[canidatenum-1].score<canidate_temp.score){
                                 canidate_loc[canidatenum-1]=canidate_temp;
@@ -1743,7 +1750,7 @@ static void reference_map_reference(int threadint)
                                 sortdata(canidate_loc,canidatenum);
                             }
                         }
-                    }
+                    }*/
                     /*low=0;
                     high=canidatenum-1;
                     while(low<=high)
@@ -2020,7 +2027,7 @@ static void reference_map_reference(int threadint)
                             sortdata(canidate_loc,canidatenum);
                             printf("canidatenum  is %d\n",canidatenum);
                         }
-                        else{
+                        /*else{
                             if(pp==1){
                                 if(canidate_loc[canidatenum-1].score<canidate_temp.score){
                                     canidate_loc[canidatenum-1]=canidate_temp;
@@ -2038,7 +2045,7 @@ static void reference_map_reference(int threadint)
                                     sortdata(canidate_loc,canidatenum);
                                 }
                             }
-                        }
+                        }*/
                         //insert canidate position or delete this position
                        /* while(canidate_loc[p].score!=0){
                             //pp=filter_loc(canidate_loc[p],canidate_temp);
