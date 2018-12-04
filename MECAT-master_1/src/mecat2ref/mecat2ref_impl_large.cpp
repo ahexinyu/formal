@@ -2653,7 +2653,7 @@ static void* multithread(void* arg)
     runthreadnum2++;
     pthread_mutex_unlock(&mutilock);
     reference_mapping(localthreadno);
-    reference_map_reference(localthreadno2);
+    //reference_map_reference(localthreadno2);
 	return NULL;
 }
 
