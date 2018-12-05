@@ -15,10 +15,12 @@ static const double ddfs_cutoff_nanopore = 0.1;
 static double ddfs_cutoff = ddfs_cutoff_pacbio;
 
 static pthread_t *thread;
+static pthread_t *thread2;
 static int threadnum=2;
 static FILE **outfile;
 static FILE **refoutfile;
-static pthread_mutex_t mutilock; 
+static pthread_mutex_t mutilock;
+static pthread_mutex_t mutilock2;
 static int runnumber=0,runthreadnum=0, readcount,terminalnum;
 static int runnumber2=0,runthreadnum2=0,terminalnum2;//*********
 static int *countin;
@@ -2645,18 +2647,27 @@ static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long 
 
 static void* multithread(void* arg)
 {
-    int localthreadno;int localthreadno2;
+    int localthreadno;
     pthread_mutex_lock(&mutilock);
     localthreadno=runthreadnum;
-    localthreadno2=runthreadnum2;
     runthreadnum++;
-    runthreadnum2++;
     pthread_mutex_unlock(&mutilock);
     reference_mapping(localthreadno);
-    reference_map_reference(localthreadno2);
-	return NULL;
+   	return NULL;
 }
-
+static void* multithread2(void* arg)
+{
+    int localthreadno2;
+    pthread_mutex_lock(&mutilock2);
+    //localthreadno=runthreadnum;
+    localthreadno2=runthreadnum2;
+    //runthreadnum++;
+    runthreadnum2++;
+    pthread_mutex_unlock(&mutilock2);
+    //reference_mapping(localthreadno);
+    reference_map_reference(localthreadno2);
+    return NULL;
+}
 static int load_fastq(FILE *fq)
 {
     int readlen,readno,sum=0,flag;
@@ -2740,6 +2751,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     readinfo=(ReadFasta*)malloc((SVM+2)*sizeof(ReadFasta));
     refinfo=(REF_info*)malloc((RVM)*sizeof(REF_info));//*********
     thread=(pthread_t*)malloc(threadnum*sizeof(pthread_t));
+    thread2=(pthread_t*)malloc(threadnum*sizeof(pthread_t));
     outfile=(FILE **)malloc(threadnum*sizeof(FILE *));
     refoutfile=(FILE **)malloc(threadnum*sizeof(FILE *));//*********
     for(threadno=0; threadno<threadnum; threadno++)
@@ -2791,6 +2803,25 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
 
         // reference_mapping(1);
     }
+    pthread_mutex_init(&mutilock2,NULL);
+    if(REFcount>0)
+    {
+        for(threadno=0; threadno<threadnum; threadno++)
+        {
+            threadflag= pthread_create(&thread2[threadno], NULL, multithread2, NULL);//(multithread)
+            if(threadflag)
+            {
+                printf("ERROR; return code is %d\n", threadflag);
+                return EXIT_FAILURE;
+            }
+        }
+        //waiting thread
+        for(threadno=0; threadno<threadnum; threadno++)pthread_join(thread2[threadno],NULL);
+        
+    }
+    
+    // reference_mapping(1);
+}
     fclose(fastq);
     //clear creat index memory
     //free(countin);好像不能free。下面还要用
