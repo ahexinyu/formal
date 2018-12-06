@@ -40,7 +40,7 @@ float similarity=0;
 typedef struct REF_info{
     int refno;
     int reflen;
-    char *ref_sequ;
+    char ref_sequ[20000];
 }REF_info;//*************
 REF_info *refinfo;//************
 char *ref_savework;//************
@@ -53,7 +53,7 @@ typedef struct {
 }read_info;
 static sim *sc;
 static read_info *info;
-static int load_ref_f(FILE *fp){
+/*static int load_ref_f(FILE *fp){
     int readlen,readno,sum=0,flag;
     char *pre;
     REFcount=0;
@@ -79,7 +79,7 @@ static int load_ref_f(FILE *fp){
         return(1);
     }
     else return(0);
-}//*
+}*/
 static long get_file_size(const char *path)
 {
     long filesize = -1;
@@ -510,6 +510,7 @@ static void creat_ref_index(char *fastafile)
     fastaindex=fopen(nameall,"w");
 
     REFSEQ=(char *)malloc((length+1000)*sizeof(char));
+    refinfo=(REF_info*)malloc((SVM)*sizeof(REF_info));//
     seq=REFSEQ;
     for (ch=getc(fasta),count=0; ch!=EOF; ch=getc(fasta))
     {
@@ -648,6 +649,19 @@ static void creat_ref_index(char *fastafile)
             eit=eit>>leftnum;
            // printf("%d\n",eit);
         }
+    }
+    int lel=0;REFcount=0;
+    for(int p=0;p<seqcount;p++){
+        if(lel<split_len){
+            refinfo[REFcount].ref_sequ[lel]=seq[p];
+            lel++;
+        }
+        else{
+            lel=0;
+            refinfo[REFcount].refno=REFcount;
+            REFcount++;
+        }
+        
     }
     printf("555 is suceess\n");
 }
@@ -2749,7 +2763,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
     ref_savework=(char *)malloc((MAXSTR+RM)*sizeof(char));//********
     readinfo=(ReadFasta*)malloc((SVM+2)*sizeof(ReadFasta));
-    refinfo=(REF_info*)malloc((RVM)*sizeof(REF_info));//*********
+    //refinfo=(REF_info*)malloc((RVM)*sizeof(REF_info));//*********
     thread=(pthread_t*)malloc(threadnum*sizeof(pthread_t));
     thread2=(pthread_t*)malloc(threadnum*sizeof(pthread_t));
     outfile=(FILE **)malloc(threadnum*sizeof(FILE *));
@@ -2771,7 +2785,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     while(fileflag)
     {
         fileflag=load_fastq(fastq);
-        load_ref_f(ref_fastq);//************8
+        //load_ref_f(ref_fastq);//************8
         if(readcount%PLL==0)terminalnum=readcount/PLL;
         else terminalnum=readcount/PLL+1;
         if(REFcount%PLL==0)terminalnum2=REFcount/PLL;
