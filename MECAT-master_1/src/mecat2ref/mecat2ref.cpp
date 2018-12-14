@@ -631,7 +631,7 @@ int result_combine2(int readcount, int filecount, char *workpath, char *outfile,
 int extract_ref(const char *workpath,int filecount,TempResult **refpptr,int refcount){//TempResult *refpptr[refcount]
     char path[200];
     FILE *thread_ref_file;int num_ref_results=0;
-    int trsize=refcount*4;
+    int trsize=refcount*5;
     TempResult *trslt1=create_temp_result();
     char* trf_buffer1 = (char*)malloc(8192);
     for (int i = 0; i < trsize; ++i) refpptr[i] = create_temp_result();
@@ -660,13 +660,15 @@ void polish_result(const char *workpath,int filecount,int refcount){
     char *trbuffer=(char *)malloc(8192);char tempstr[200];
     int num_results=0;int num_ref_results=0;//这里需要赋值（假装先是100）
     const int trsize=num_candidates + 6;
+    int ref_trsize=refcount *5;
     TempResult *pptr[trsize];
-    TempResult **refpptr;
+    TempResult *refpptr[ref_trsize];
     for (int i = 0; i < trsize; ++i) pptr[i] = create_temp_result();
     TempResult *trslt=create_temp_result();
     char* trf_buffer = (char*)malloc(8192);int flag=0;
     num_ref_results=extract_ref(workpath,filecount,refpptr,refcount);//这里加入引入extract——ref这个函数
-    FILE* chr_idx_file = fopen(path, "r");
+    printf("num_ref_results is %d\n",num_ref_results);
+    /*FILE* chr_idx_file = fopen(path, "r");
     if (!chr_idx_file) { fprintf(stderr, "failed to open file %s for reading.\n", path); abort(); }
     int num_chr = 0;
     while(fgets(buffer, 1024, chr_idx_file)) ++num_chr;
@@ -730,9 +732,9 @@ void polish_result(const char *workpath,int filecount,int refcount){
             
         }
         fclose(thread_file);
-    }
+    }*/
     for(int i=0;i<trsize;++i)pptr[i]=destroy_temp_result(pptr[i]);
-    for(int i=0;i<refcount*4;++i)refpptr[i]=destroy_temp_result(refpptr[i]);
+    for(int i=0;i<refcount*5;++i)refpptr[i]=destroy_temp_result(refpptr[i]);
     destroy_temp_result(trslt);
     free(chr_idx);
     free(up_file);
@@ -875,7 +877,7 @@ int main(int argc, char *argv[])
     sprintf(tempstr1,"%s/ref.fq",saved);
     result_combine(readcount, corenum, saved, outfile,tempstr, argc, argv);
     //result_combine2(refcount, corenum, saved, refoutfile,tempstr1, argc, argv);
-    //polish_result(saved,corenum,refcount);
+    polish_result(saved,corenum,refcount);
     //result_combine3(readcount, corenum, saved, outfile,tempstr, argc, argv);
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
