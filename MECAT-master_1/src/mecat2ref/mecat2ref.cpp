@@ -736,8 +736,8 @@ void polish_result(const char *workpath,int filecount,int refcount){
     for(int i=0;i<trsize;++i)pptr[i]=destroy_temp_result(pptr[i]);
     for(int i=0;i<refcount*5;++i)refpptr[i]=destroy_temp_result(refpptr[i]);
     destroy_temp_result(trslt);
-    free(chr_idx);
-    free(up_file);
+   // free(chr_idx);
+   // free(up_file);
     free(refpptr);
     
 }
