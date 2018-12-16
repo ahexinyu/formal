@@ -628,7 +628,7 @@ int result_combine2(int readcount, int filecount, char *workpath, char *outfile,
     return 0;
 }
 
-int extract_ref(const char *workpath,int filecount,TempResult **refpptr,int refcount){//TempResult *refpptr[refcount]
+/*int extract_ref(const char *workpath,int filecount,TempResult **refpptr,int refcount){//TempResult *refpptr[refcount]
     char path[200];
     FILE *thread_ref_file;int num_ref_results=0;
     int trsize=refcount*5;
@@ -640,7 +640,7 @@ int extract_ref(const char *workpath,int filecount,TempResult **refpptr,int refc
         thread_ref_file=fopen(path,"r");
         setvbuf(thread_ref_file,trf_buffer1,_IOFBF,8192);
         int rok=load_temp_result(trslt1, thread_ref_file);
-        if(rok){copy_temp_result(trslt1,refpptr[0]);++num_ref_results;}
+        if(rok){copy_temp_result(trslt1,refpptr[1]);++num_ref_results;}
         while(rok){
             rok=load_temp_result(trslt1, thread_ref_file);
             if(!rok)break;
@@ -651,21 +651,44 @@ int extract_ref(const char *workpath,int filecount,TempResult **refpptr,int refc
     }
     free(trf_buffer1);
     return num_ref_results;
-}
+}*/
 
 extern int meap_ref_impl_large(int, int, int);
 extern int small_meap(TempResult*,TempResult*,FILE*);
 void polish_result(const char *workpath,int filecount,int refcount){
     char path[200];FILE *thread_file; FILE **up_file;int num_count=0;char buffer[1024];
     char *trbuffer=(char *)malloc(8192);char tempstr[200];
-    int num_results=0;int num_ref_results=0;//这里需要赋值（假装先是100）
+    int num_results=0;//这里需要赋值（假装先是100）
     const int trsize=num_candidates + 6;
     int ref_trsize=refcount *5;
     TempResult *pptr[trsize];
-    TempResult *refpptr[ref_trsize];
     for (int i = 0; i < trsize; ++i) pptr[i] = create_temp_result();
     TempResult *trslt=create_temp_result();
     char* trf_buffer = (char*)malloc(8192);int flag=0;
+    TempResult *refpptr[100];
+    FILE *thread_ref_file;int num_ref_results=0;
+    TempResult *trslt1=create_temp_result();
+    char* trf_buffer1 = (char*)malloc(8192);
+    for (int i = 0; i < ref_trsize; ++i) refpptr[i] = create_temp_result();
+    for(int i=0;i<filecount;i++){
+        sprintf(path,"%s/ref%d.r",workpath,i);
+        thread_ref_file=fopen(path,"r");
+        setvbuf(thread_ref_file,trf_buffer1,_IOFBF,8192);
+        int rok=load_temp_result(trslt1, thread_ref_file);
+        printf("rok is%d\n",rok);
+        if(rok){copy_temp_result(trslt1,refpptr[0]);num_ref_results++;}
+        printf("hehe i ssucexed\n");
+        while(rok){
+            rok=load_temp_result(trslt1, thread_ref_file);
+            if(!rok)break;
+            copy_temp_result(trslt1,refpptr[num_ref_results]);
+            ++num_ref_results;
+        }
+        fclose(thread_ref_file);
+    }
+    
+    printf("num_ref_results is %d\n",num_ref_results);
+    
     num_ref_results=extract_ref(workpath,filecount,refpptr,refcount);//这里加入引入extract——ref这个函数
     printf("num_ref_results is %d\n",num_ref_results);
     /*FILE* chr_idx_file = fopen(path, "r");
@@ -738,6 +761,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
     destroy_temp_result(trslt);
    // free(chr_idx);
    // free(up_file);
+    free(trf_buffer1);
     free(refpptr);
     
 }
