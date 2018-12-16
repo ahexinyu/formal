@@ -658,14 +658,14 @@ extern int small_meap(TempResult*,TempResult*,FILE*);
 void polish_result(const char *workpath,int filecount,int refcount){
     char path[200];FILE *thread_file; FILE **up_file;int num_count=0;char buffer[1024];
     char *trbuffer=(char *)malloc(8192);char tempstr[200];
-    int num_results=0;//这里需要赋值（假装先是100）
+    int num_results=0;
     const int trsize=num_candidates + 6;
     int ref_trsize=refcount *5;
     TempResult *pptr[trsize];
     for (int i = 0; i < trsize; ++i) pptr[i] = create_temp_result();
     TempResult *trslt=create_temp_result();
     char* trf_buffer = (char*)malloc(8192);int flag=0;
-    TempResult *refpptr[100];
+    TempResult *refpptr[100];//这个100之后要改掉
     FILE *thread_ref_file;int num_ref_results=0;
     TempResult *trslt1=create_temp_result();
     char* trf_buffer1 = (char*)malloc(8192);
@@ -689,8 +689,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
     
     printf("num_ref_results is %d\n",num_ref_results);
     
-    num_ref_results=extract_ref(workpath,filecount,refpptr,refcount);//这里加入引入extract——ref这个函数
-    printf("num_ref_results is %d\n",num_ref_results);
+    //num_ref_results=extract_ref(workpath,filecount,refpptr,refcount);//这里加入引入extract——ref这个函数
     /*FILE* chr_idx_file = fopen(path, "r");
     if (!chr_idx_file) { fprintf(stderr, "failed to open file %s for reading.\n", path); abort(); }
     int num_chr = 0;
