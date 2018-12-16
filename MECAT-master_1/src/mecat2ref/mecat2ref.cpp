@@ -676,7 +676,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
         setvbuf(thread_ref_file,trf_buffer1,_IOFBF,8192);
         int rok=load_temp_result(trslt1, thread_ref_file);
         printf("rok is%d\n",rok);
-        if(rok){copy_temp_result(trslt1,refpptr[0]);num_ref_results++;}
+        if(rok){copy_temp_result(trslt1,refpptr[num_ref_results]);num_ref_results++;}
         printf("hehe i ssucexed\n");
         while(rok){
             rok=load_temp_result(trslt1, thread_ref_file);
