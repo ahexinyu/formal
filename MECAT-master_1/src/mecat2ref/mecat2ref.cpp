@@ -761,7 +761,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
    // free(chr_idx);
    // free(up_file);
     free(trf_buffer1);
-    free(refpptr);
+    //free(refpptr);
     
 }
 
