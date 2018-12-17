@@ -670,7 +670,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
     TempResult *trslt1=create_temp_result();
     char* trf_buffer1 = (char*)malloc(8192);
     for (int i = 0; i < ref_trsize; ++i) refpptr[i] = create_temp_result();
-    for(int i=1;i<filecount;i++){
+    for(int i=1;i<=filecount;i++){
         sprintf(path,"%s/ref%d.r",workpath,i);
         thread_ref_file=fopen(path,"r");
         setvbuf(thread_ref_file,trf_buffer1,_IOFBF,8192);
