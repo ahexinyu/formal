@@ -2835,7 +2835,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
 }
     fclose(fastq);
     //clear creat index memory
-    free(countin);好像不能free。下面还要用
+    free(countin);//好像不能free。下面还要用
     free(databaseindex);
     free(allloc);
     free(REFSEQ);
