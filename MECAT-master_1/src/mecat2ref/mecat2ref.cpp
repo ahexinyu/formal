@@ -686,10 +686,8 @@ void polish_result(const char *workpath,int filecount,int refcount){
         }
         fclose(thread_ref_file);
     }
-    printf("num_ref_results is %d\n",num_ref_results);
-    
-    //num_ref_results=extract_ref(workpath,filecount,refpptr,refcount);//这里加入引入extract——ref这个函数
-    /*FILE* chr_idx_file = fopen(path, "r");
+    printf("num_ref_results is %d\n",num_ref_results);//到这里没问题
+    FILE* chr_idx_file = fopen(path, "r");
     if (!chr_idx_file) { fprintf(stderr, "failed to open file %s for reading.\n", path); abort(); }
     int num_chr = 0;
     while(fgets(buffer, 1024, chr_idx_file)) ++num_chr;
@@ -722,7 +720,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
         //先写long——read的
         int rok=load_temp_result(trslt,thread_file);
         if(rok){copy_temp_result(trslt,pptr[num_results]);++num_results;}
-        int last_id=pptr[0]->read_id;
+        int last_id=pptr[0]->read_id;int formal_id;int formal_loc;int org_sta,org_end;
         while(rok){
             rok=load_temp_result(trslt, thread_file);
             if(!rok)break;//可以建立一个哈希表，把reference 的ID散列到哈希表中 。这里可以改一下。
@@ -733,12 +731,37 @@ void polish_result(const char *workpath,int filecount,int refcount){
                         if(sid!=refpptr[i]->read_id){flag=1;continue;}//这边写进那个文件，不是最后这个文件
                         else {
                             judg=judge(pptr[j], refpptr[i],sid);
-                            if(judg){
-                                small_meap(pptr[j], refpptr[i], up_file[filecount]);}//直接连了。不用判断了
-                            else{
-                                output_temp_result(pptr[j],up_file[filecount]);
-                            }
                             flag2=0;
+                            if(judg){
+                                org_sta=pptr[j]->sb;
+                                pptr[j]->sb=(pptr[j]->sb<refpptr[i]->sb)?pptr[j]->sb:refpptr[i]->sb;
+                                org_end=pptr[j]->se;
+                                pptr[j]->se=(pptr[j]->se>refpptr[i]->se)?pptr[j]->se:refpptr[i]->se;
+                                if(pptr[j]->qb-(org_sta-pptr[j]->sb)>=0){
+                                    pptr[j]->qb=pptr[j]->qb-(org_sta-pptr[j]->sb);
+                                }
+                                else{
+                                    temp1=pptr[j]->qb;
+                                    pptr[j]->sb=org_sta-temp1;
+                                    pptr[j]->qb=0;
+                                }
+                                if(pptr[j]->qe+(pptr[j]->sb-org_end)<pptr[j]->qs){
+                                    pptr[j]->qe=pptr[j]->qe+(pptr[j]->sb-org_end);
+                                }else{
+                                    temp2=pptr[j]->qe;
+                                    pptr[j]->qe=pptr[j]->qs;
+                                    pptr[j]->se=org_end+pptr[j]->qs-temp2;
+                                }
+                                output_temp_result2(pptr[j],up_file[filecount]);//改过之后写一遍
+                            }//直接连了。不用判断了
+                            else{
+                                if(i==num_ref_results-1){
+                                    output_temp_result2(pptr[j],up_file[filecount]);
+                                    break;//没改的
+                                }
+                                else{continue;}
+                            }
+                            
                         }
                         if(flag2&&i==num_ref_results-1){
                             output_temp_result(pptr[j],up_file[filecount]);
@@ -753,14 +776,14 @@ void polish_result(const char *workpath,int filecount,int refcount){
             
         }
         fclose(thread_file);
-    }*/
+    }
     for(int i=0;i<trsize;++i)pptr[i]=destroy_temp_result(pptr[i]);
     for(int i=0;i<refcount*5;++i)refpptr[i]=destroy_temp_result(refpptr[i]);
     destroy_temp_result(trslt);
-   // free(chr_idx);
-   // free(up_file);
+    free(chr_idx);
+    free(up_file);
     free(trf_buffer1);
-    //free(refpptr);
+    free(refpptr);
     
 }
 

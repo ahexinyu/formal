@@ -2673,12 +2673,9 @@ static void* multithread2(void* arg)
 {
     int localthreadno2;
     pthread_mutex_lock(&mutilock2);
-    //localthreadno=runthreadnum;
     localthreadno2=runthreadnum2;
-    //runthreadnum++;
     runthreadnum2++;
     pthread_mutex_unlock(&mutilock2);
-    //reference_mapping(localthreadno);
     reference_map_reference(localthreadno2);
     return NULL;
 }
@@ -2838,14 +2835,14 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
 }
     fclose(fastq);
     //clear creat index memory
-    //free(countin);好像不能free。下面还要用
+    free(countin);好像不能free。下面还要用
     free(databaseindex);
     free(allloc);
-    //free(REFSEQ);
+    free(REFSEQ);
     free(countin1);
     free(databaseindex1);
     free(allloc1);
-    //free(read_REFESQ);
+    free(read_REFESQ);
 
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
