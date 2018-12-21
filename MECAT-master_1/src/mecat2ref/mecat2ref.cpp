@@ -664,7 +664,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
     TempResult *pptr[trsize];
     for (int i = 0; i < trsize; ++i) pptr[i] = create_temp_result();
     TempResult *trslt=create_temp_result();
-    char* trf_buffer = (char*)malloc(8192);int flag=0;
+    char* trf_buffer = (char*)malloc(8192);
     TempResult *refpptr[100];//这个100之后要改掉
     FILE *thread_ref_file;int num_ref_results=0;
     TempResult *trslt1=create_temp_result();
@@ -696,7 +696,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
     up_file=(FILE **)malloc(filecount*sizeof(FILE *));
     fastaindexinfo* chr_idx = (fastaindexinfo*)malloc(sizeof(fastaindexinfo) * num_chr);
     fseek(chr_idx_file, 0L, SEEK_SET);
-    int i, flag,flag2;
+    int i, flag,flag2=0;
     for (i = 0; i < num_chr; ++i)
     {
         flag = fscanf(chr_idx_file, "%ld\t%s\t%ld\n", &chr_idx[i].chrstart, chr_idx[i].chrname, &chr_idx[i].chrsize);
@@ -729,7 +729,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
                 for(int j=0;j<num_results;j++){
                     int sid = get_chr_id(chr_idx, num_chr, pptr[j]->sb);
                     for(int i=sid-1;i<num_ref_results;i++){
-                        if(sid!=refpptr[i]->read_id){flag=1;continue;}//这边写进那个文件，不是最后这个文件
+                        if(sid!=refpptr[i]->read_id){flag2=1;continue;}//这边写进那个文件，不是最后这个文件
                         else {
                             judg=judge(pptr[j], refpptr[i],sid);
                             flag2=0;
