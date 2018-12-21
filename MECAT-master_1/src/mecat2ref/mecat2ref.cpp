@@ -687,6 +687,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
         fclose(thread_ref_file);
     }
     printf("num_ref_results is %d\n",num_ref_results);//到这里没问题
+    
     FILE* chr_idx_file = fopen(path, "r");
     if (!chr_idx_file) { fprintf(stderr, "failed to open file %s for reading.\n", path); abort(); }
     int num_chr = 0;
@@ -695,7 +696,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
     up_file=(FILE **)malloc(filecount*sizeof(FILE *));
     fastaindexinfo* chr_idx = (fastaindexinfo*)malloc(sizeof(fastaindexinfo) * num_chr);
     fseek(chr_idx_file, 0L, SEEK_SET);
-    int i, flag2;
+    int i, flag,flag2;
     for (i = 0; i < num_chr; ++i)
     {
         flag = fscanf(chr_idx_file, "%ld\t%s\t%ld\n", &chr_idx[i].chrstart, chr_idx[i].chrname, &chr_idx[i].chrsize);
