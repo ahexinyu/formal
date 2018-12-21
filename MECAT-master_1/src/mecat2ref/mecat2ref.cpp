@@ -657,7 +657,7 @@ extern int meap_ref_impl_large(int, int, int);
 extern int small_meap(TempResult*,TempResult*,FILE*);
 void polish_result(const char *workpath,int filecount,int refcount){
     char path[200];FILE *thread_file; FILE **up_file;int num_count=0;char buffer[1024];
-    char *trbuffer=(char *)malloc(8192);char tempstr[200];
+    char *trbuffer=(char *)malloc(8192);char tempstr[200];int temp1,temp2;
     int num_results=0;
     const int trsize=num_candidates + 6;
     int ref_trsize=refcount *5;
@@ -764,7 +764,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
                             
                         }
                         if(flag2&&i==num_ref_results-1){
-                            output_temp_result(pptr[j],up_file[filecount]);
+                            output_temp_result2(pptr[j],up_file[filecount]);
                         }//找不到的情况
                     }
                 }

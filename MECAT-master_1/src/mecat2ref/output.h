@@ -128,6 +128,8 @@ set_temp_result(int read_id,
 
 void
 output_temp_result(TempResult* result, FILE* out);
+void
+output_temp_result2(TempResult* result, FILE* out);
 
 int
 load_temp_result(TempResult* result, FILE* in);
