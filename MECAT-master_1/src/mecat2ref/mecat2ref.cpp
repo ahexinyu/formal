@@ -665,7 +665,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
     for (int i = 0; i < trsize; ++i) pptr[i] = create_temp_result();
     TempResult *trslt=create_temp_result();
     char* trf_buffer = (char*)malloc(8192);
-    TempResult *refpptr[100];//这个100之后要改掉
+    TempResult *refpptr[RM];//这个100之后要改掉
     FILE *thread_ref_file;int num_ref_results=0;
     TempResult *trslt1=create_temp_result();
     char* trf_buffer1 = (char*)malloc(8192);
@@ -705,8 +705,8 @@ void polish_result(const char *workpath,int filecount,int refcount){
     }
     fclose(chr_idx_file);
     chr_idx_file = NULL;
-    for(int i=0;i<filecount;i++){
-        sprintf(tempstr,"%s/up%d.r",workpath,filecount+1);
+    for(int i=1;i<=filecount;i++){
+        sprintf(tempstr,"%s/up%d.r",workpath,filecount);
         up_file[i]=fopen(path,"w");
     }//初始化文件
     for(int i=1;i<=filecount;i++)
