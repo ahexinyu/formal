@@ -738,7 +738,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
                     for(int i=sid-1;i<num_ref_results;i++){
                         formal_loc=(refpptr[i]->read_id)*split_le+refpptr[i]->qb;
                         formal_id=get_chr_id(chr_idx, num_chr, formal_loc);
-                        if(sid!=formal_id)){flag2=1;continue;}//这边写进那个文件，不是最后这个文件
+                        if(sid!=formal_id){flag2=1;continue;}//这边写进那个文件，不是最后这个文件
                         else {
                             judg=judge(pptr[j], refpptr[i],sid,formal_id);
                             flag2=0;
