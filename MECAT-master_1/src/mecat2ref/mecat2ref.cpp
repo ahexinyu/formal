@@ -510,8 +510,8 @@ int result_combine(int readcount, int filecount, char *workpath, char *outfile, 
 	}
     
 	const int trsize = num_candidates + 6;
-	TempResult* pptr[1000000];
-	for (i = 0; i < 1000000; ++i) pptr[i] = create_temp_result();
+	TempResult* pptr[trsize];
+	for (i = 0; i < trsize; ++i) pptr[i] = create_temp_result();
 	int num_results = 0;
 	TempResult* trslt = create_temp_result();
 	char* trf_buffer = (char*)malloc(8192);
@@ -675,7 +675,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
     FILE *thread_ref_file;int num_ref_results=0;
     TempResult *trslt1=create_temp_result();
     char* trf_buffer1 = (char*)malloc(8192);
-    for (int i = 0; i < ref_trsize; ++i) refpptr[i] = create_temp_result();
+    for (int i = 0; i < big_size; ++i) refpptr[i] = create_temp_result();
     for(int i=1;i<=filecount;++i){
         sprintf(path,"%s/ref%d.r",workpath,i);
         thread_ref_file=fopen(path,"r");
@@ -788,7 +788,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
         fclose(thread_file);
     }
     for(int i=0;i<trsize;++i)pptr[i]=destroy_temp_result(pptr[i]);
-    for(int i=0;i<refcount*5;++i)refpptr[i]=destroy_temp_result(refpptr[i]);
+    for(int i=0;i<big_size;++i)refpptr[i]=destroy_temp_result(refpptr[i]);
     destroy_temp_result(trslt);
     free(chr_idx);
     free(up_file);
