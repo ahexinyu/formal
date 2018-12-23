@@ -656,7 +656,7 @@ int result_combine2(int readcount, int filecount, char *workpath, char *outfile,
 extern int meap_ref_impl_large(int, int, int);
 extern int small_meap(TempResult*,TempResult*,FILE*);
 void polish_result(const char *workpath,int filecount,int refcount){
-    char path[200];FILE *thread_file; FILE **up_file;int num_count=0;char buffer[1024];
+    char path[200],path2[200];FILE *thread_file; FILE **up_file;int num_count=0;char buffer[1024];
     char *trbuffer=(char *)malloc(8192);char tempstr[200];int temp1,temp2;
     int num_results=0;
     const int trsize=num_candidates + 6;
@@ -687,8 +687,8 @@ void polish_result(const char *workpath,int filecount,int refcount){
         fclose(thread_ref_file);
     }
     printf("num_ref_results is %d\n",num_ref_results);//到这里没问题
-    
-    FILE* chr_idx_file = fopen(path, "r");
+    sprintf(path2, "%s/chrindex.txt", workpath);
+    FILE* chr_idx_file = fopen(path2, "r");
     if (!chr_idx_file) { fprintf(stderr, "failed to open file %s for reading.\n", path); abort(); }
     int num_chr = 0;
     while(fgets(buffer, 1024, chr_idx_file)) ++num_chr;
@@ -697,6 +697,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
     fastaindexinfo* chr_idx = (fastaindexinfo*)malloc(sizeof(fastaindexinfo) * num_chr);
     fseek(chr_idx_file, 0L, SEEK_SET);
     int i, flag,flag2=0;
+    
     for (i = 0; i < num_chr; ++i)
     {
         flag = fscanf(chr_idx_file, "%ld\t%s\t%ld\n", &chr_idx[i].chrstart, chr_idx[i].chrname, &chr_idx[i].chrsize);
