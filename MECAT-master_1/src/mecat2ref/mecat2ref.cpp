@@ -735,7 +735,6 @@ void polish_result(const char *workpath,int filecount,int refcount){
             if(trslt->read_id!=last_id){//这是同一个read的比对写到文件里面
                 for(int j=0;j<num_results;j++){
                     int sid = get_chr_id(chr_idx, num_chr, pptr[j]->sb);
-                    
                     for(int i=sid-1;i<num_ref_results;i++){
                         formal_loc=(refpptr[i]->read_id)*split_le+refpptr[i]->qb;
                         formal_id=get_chr_id(chr_idx, num_chr, formal_loc);
