@@ -705,7 +705,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
     }
     fclose(chr_idx_file);
     chr_idx_file = NULL;
-    for(int i=1;i<=filecount;i++){
+    for(int i=0;i<filecount;i++){
         sprintf(tempstr,"%s/up%d.r",workpath,filecount);
         up_file[i]=fopen(path,"w");
     }//初始化文件
@@ -754,11 +754,11 @@ void polish_result(const char *workpath,int filecount,int refcount){
                                     pptr[j]->qe=pptr[j]->qs;
                                     pptr[j]->se=org_end+pptr[j]->qs-temp2;
                                 }
-                                output_temp_result2(pptr[j],up_file[filecount]);//改过之后写一遍
+                                output_temp_result2(pptr[j],up_file[filecount-1]);//改过之后写一遍
                             }//直接连了。不用判断了
                             else{
                                 if(i==num_ref_results-1){
-                                    output_temp_result2(pptr[j],up_file[filecount]);
+                                    output_temp_result2(pptr[j],up_file[filecount-1]);
                                     break;//没改的
                                 }
                                 else{continue;}
@@ -766,7 +766,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
                             
                         }
                         if(flag2&&i==num_ref_results-1){
-                            output_temp_result2(pptr[j],up_file[filecount]);
+                            output_temp_result2(pptr[j],up_file[filecount-1]);
                         }//找不到的情况
                     }
                 }
@@ -924,7 +924,7 @@ int main(int argc, char *argv[])
     sprintf(tempstr1,"%s/ref.fq",saved);
     result_combine(readcount, corenum, saved, outfile,tempstr, argc, argv);
     //result_combine2(refcount, corenum, saved, refoutfile,tempstr1, argc, argv);
-    //polish_result(saved,corenum,refcount);
+    polish_result(saved,corenum,refcount);
     //result_combine3(readcount, corenum, saved, outfile,tempstr, argc, argv);
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
