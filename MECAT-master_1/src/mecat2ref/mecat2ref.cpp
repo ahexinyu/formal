@@ -510,8 +510,8 @@ int result_combine(int readcount, int filecount, char *workpath, char *outfile, 
 	}
     
 	const int trsize = num_candidates + 6;
-	TempResult* pptr[trsize];
-	for (i = 0; i < trsize; ++i) pptr[i] = create_temp_result();
+	TempResult* pptr[1000000];
+	for (i = 0; i < 1000000; ++i) pptr[i] = create_temp_result();
 	int num_results = 0;
 	TempResult* trslt = create_temp_result();
 	char* trf_buffer = (char*)malloc(8192);
@@ -735,7 +735,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
             if(trslt->read_id!=last_id){//这是同一个read的比对写到文件里面
                 for(int j=0;j<num_results;j++){
                     int sid = get_chr_id(chr_idx, num_chr, pptr[j]->sb);
-                    for(int i=sid-1;i<num_ref_results;i++){
+                    for(int i=0;i<num_ref_results;i++){
                         formal_loc=(refpptr[i]->read_id)*split_le+refpptr[i]->qb;
                         formal_id=get_chr_id(chr_idx, num_chr, formal_loc);
                         if(sid!=formal_id){flag2=1;continue;}//这边写进那个文件，不是最后这个文件
