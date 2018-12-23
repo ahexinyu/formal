@@ -10,9 +10,10 @@
 #include <unistd.h>
 #include <dirent.h>
 #define RM 1000000
+#define big_size 1000000
 #define FM 1000000000
 #define MAXSTR 1000000000
-
+#define split_le 20000
 #include "output.h"
 #include "../common/defs.h"
 
@@ -466,9 +467,13 @@ output_query_results(fastaindexinfo* chr_idx, const int num_chr, TempResult** pp
 		if (output_cnt == num_output) break;
 	}
 }
-int judge(TempResult *a,TempResult *b,int sid){
+int judge(TempResult *a,TempResult *b,int sid,int ref_sid){
     int r;
-    if(sid==b->read_id&&labs((a->sb-b->qb))<300&&labs(a->se-b->qe)<300){r=1;}
+    if(sid==ref_sid&&labs((a->sb-b->qb))<300&&labs(a->se-b->qe)<300){
+        if(labs(a->se-b->sb)<500||labs(a->sb-b->se)<500){
+            r=1;
+        }
+    }
     else{r=0;}
     return r;
 }
@@ -665,7 +670,8 @@ void polish_result(const char *workpath,int filecount,int refcount){
     for (int i = 0; i < trsize; ++i) pptr[i] = create_temp_result();
     TempResult *trslt=create_temp_result();
     char* trf_buffer = (char*)malloc(8192);
-    TempResult *refpptr[RM];//这个100之后要改掉
+    
+    TempResult *refpptr[big_size];//这个100之后要改掉
     FILE *thread_ref_file;int num_ref_results=0;
     TempResult *trslt1=create_temp_result();
     char* trf_buffer1 = (char*)malloc(8192);
@@ -729,10 +735,13 @@ void polish_result(const char *workpath,int filecount,int refcount){
             if(trslt->read_id!=last_id){//这是同一个read的比对写到文件里面
                 for(int j=0;j<num_results;j++){
                     int sid = get_chr_id(chr_idx, num_chr, pptr[j]->sb);
+                    
                     for(int i=sid-1;i<num_ref_results;i++){
-                        if(sid!=refpptr[i]->read_id){flag2=1;continue;}//这边写进那个文件，不是最后这个文件
+                        formal_loc=(refpptr[i]->read_id)*split_le+refpptr[i]->qb;
+                        formal_id=get_chr_id(chr_idx, num_chr, formal_loc);
+                        if(sid!=formal_id)){flag2=1;continue;}//这边写进那个文件，不是最后这个文件
                         else {
-                            judg=judge(pptr[j], refpptr[i],sid);
+                            judg=judge(pptr[j], refpptr[i],sid,formal_id);
                             flag2=0;
                             if(judg){
                                 org_sta=pptr[j]->sb;
