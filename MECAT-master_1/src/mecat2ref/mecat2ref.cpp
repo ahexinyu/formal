@@ -709,7 +709,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
         sprintf(tempstr,"%s/up%d.r",workpath,filecount+1);
         up_file[i]=fopen(path,"w");
     }//初始化文件
-    for(int i=0;i<filecount;i++)
+    for(int i=1;i<=filecount;i++)
     {
         sprintf(path,"%s/%d.r",workpath,i);
         
