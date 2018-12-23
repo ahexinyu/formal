@@ -670,7 +670,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
     TempResult *trslt1=create_temp_result();
     char* trf_buffer1 = (char*)malloc(8192);
     for (int i = 0; i < ref_trsize; ++i) refpptr[i] = create_temp_result();
-    for(int i=1;i<=filecount;i++){
+    for(int i=1;i<=filecount;++i){
         sprintf(path,"%s/ref%d.r",workpath,i);
         thread_ref_file=fopen(path,"r");
         setvbuf(thread_ref_file,trf_buffer1,_IOFBF,8192);
@@ -924,7 +924,7 @@ int main(int argc, char *argv[])
     sprintf(tempstr1,"%s/ref.fq",saved);
     result_combine(readcount, corenum, saved, outfile,tempstr, argc, argv);
     //result_combine2(refcount, corenum, saved, refoutfile,tempstr1, argc, argv);
-    polish_result(saved,corenum,refcount);
+    //polish_result(saved,corenum,refcount);
     //result_combine3(readcount, corenum, saved, outfile,tempstr, argc, argv);
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
