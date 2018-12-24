@@ -660,7 +660,7 @@ int result_combine2(int readcount, int filecount, char *workpath, char *outfile,
 
 extern int meap_ref_impl_large(int, int, int);
 extern int small_meap(TempResult*,TempResult*,FILE*);
-void polish_result(const char *workpath,int filecount,int refcount){
+void polish_result(const char *workpath,int filecount,int refcount,char  *refoutfile){
     char path[200],path2[200];FILE *thread_file; FILE **up_file;int num_count=0;char buffer[1024];
     char *trbuffer=(char *)malloc(8192);char tempstr[200];int temp1,temp2;
     int num_results=0;
@@ -709,6 +709,10 @@ void polish_result(const char *workpath,int filecount,int refcount){
         flag = fscanf(chr_idx_file, "%ld\t%s\t%ld\n", &chr_idx[i].chrstart, chr_idx[i].chrname, &chr_idx[i].chrsize);
         assert(flag == 3);
     }
+    fprintf(stderr, "output file name: %s\n", outfile);
+    FILE* out = fopen(outfile, "w");
+    char* out_buffer = (char*)malloc(8192);
+    setvbuf(out, out_buffer, _IOFBF, 8192);
     fclose(chr_idx_file);
     chr_idx_file = NULL;
     for(int i=0;i<filecount;i++){
@@ -738,7 +742,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
                     for(int i=0;i<num_ref_results;i++){
                         formal_loc=(refpptr[i]->read_id)*split_le+refpptr[i]->qb;
                         formal_id=get_chr_id(chr_idx, num_chr, formal_loc);
-                        if(sid!=formal_id){flag2=1;continue;}//这边写进那个文件，不是最后这个文件
+                        if(sid!=formal_id&&i!=num_ref_results-1){flag2=1;continue;}//这边写进那个文件，不是最后这个文件
                         else {
                             judg=judge(pptr[j], refpptr[i],sid,formal_id);
                             flag2=0;
@@ -762,11 +766,11 @@ void polish_result(const char *workpath,int filecount,int refcount){
                                     pptr[j]->qe=pptr[j]->qs;
                                     pptr[j]->se=org_end+pptr[j]->qs-temp2;
                                 }
-                                output_temp_result2(pptr[j],up_file[ww-1]);//改过之后写一遍
+                                output_temp_result2(pptr[j],up_file[out]);//改过之后写一遍
                             }//直接连了。不用判断了
                             else{
                                 if(i==num_ref_results-1){
-                                    output_temp_result2(pptr[j],up_file[ww-1]);
+                                    output_temp_result2(pptr[j],out);
                                     break;//没改的
                                 }
                                 else{continue;}
@@ -774,7 +778,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
                             
                         }
                         if(flag2&&i==num_ref_results-1){
-                            output_temp_result2(pptr[j],up_file[ww-1]);
+                            output_temp_result2(pptr[j],out);
                         }//找不到的情况
                     }
                 }
@@ -792,6 +796,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
     destroy_temp_result(trslt);
     free(chr_idx);
     free(up_file);
+    free(out_buffer);
     free(trf_buffer1);
     //free(refpptr);
     
@@ -932,11 +937,12 @@ int main(int argc, char *argv[])
     sprintf(tempstr1,"%s/ref.fq",saved);
     result_combine(readcount, corenum, saved, outfile,tempstr, argc, argv);
     //result_combine2(refcount, corenum, saved, refoutfile,tempstr1, argc, argv);
-    polish_result(saved,corenum,refcount);
+    polish_result(saved,corenum,refcount,refoutfile);
     //result_combine3(readcount, corenum, saved, outfile,tempstr, argc, argv);
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
+    
     fid2 = fopen("config.txt", "a");
     fprintf(fid2, "The total Time : %f sec\n", timeuse);
     fclose(fid2);
