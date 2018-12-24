@@ -715,7 +715,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
         sprintf(tempstr,"%s/up%d.r",workpath,filecount);
         up_file[i]=fopen(tempstr,"w");
     }//初始化文件
-    for(int i=1;i<=filecount;i++)
+    for(int ww=1;ww<=filecount;ww++)
     {
         sprintf(path,"%s/%d.r",workpath,i);
         
@@ -762,11 +762,11 @@ void polish_result(const char *workpath,int filecount,int refcount){
                                     pptr[j]->qe=pptr[j]->qs;
                                     pptr[j]->se=org_end+pptr[j]->qs-temp2;
                                 }
-                                output_temp_result2(pptr[j],up_file[filecount-1]);//改过之后写一遍
+                                output_temp_result2(pptr[j],up_file[ww-1]);//改过之后写一遍
                             }//直接连了。不用判断了
                             else{
                                 if(i==num_ref_results-1){
-                                    output_temp_result2(pptr[j],up_file[filecount-1]);
+                                    output_temp_result2(pptr[j],up_file[ww-1]);
                                     break;//没改的
                                 }
                                 else{continue;}
@@ -774,7 +774,7 @@ void polish_result(const char *workpath,int filecount,int refcount){
                             
                         }
                         if(flag2&&i==num_ref_results-1){
-                            output_temp_result2(pptr[j],up_file[filecount-1]);
+                            output_temp_result2(pptr[j],up_file[ww-1]);
                         }//找不到的情况
                     }
                 }
