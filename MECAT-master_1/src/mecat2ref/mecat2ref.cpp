@@ -709,8 +709,8 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         flag = fscanf(chr_idx_file, "%ld\t%s\t%ld\n", &chr_idx[i].chrstart, chr_idx[i].chrname, &chr_idx[i].chrsize);
         assert(flag == 3);
     }
-    fprintf(stderr, "output file name: %s\n", outfile);
-    FILE* out = fopen(outfile, "w");
+    fprintf(stderr, "output file name: %s\n", refoutfile);
+    FILE* out = fopen(refoutfile, "w");
     char* out_buffer = (char*)malloc(8192);
     setvbuf(out, out_buffer, _IOFBF, 8192);
     fclose(chr_idx_file);
