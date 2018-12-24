@@ -766,7 +766,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                     pptr[j]->qe=pptr[j]->qs;
                                     pptr[j]->se=org_end+pptr[j]->qs-temp2;
                                 }
-                                output_temp_result2(pptr[j],up_file[out]);//改过之后写一遍
+                                output_temp_result2(pptr[j],out);//改过之后写一遍
                             }//直接连了。不用判断了
                             else{
                                 if(i==num_ref_results-1){
