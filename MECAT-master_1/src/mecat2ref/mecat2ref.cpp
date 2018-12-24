@@ -933,7 +933,7 @@ int main(int argc, char *argv[])
     gettimeofday(&mapend, NULL);
     timeuse = 1000000 * (mapend.tv_sec - mapstart.tv_sec) + mapend.tv_usec - mapstart.tv_usec;
     timeuse /= 1000000;
-    sprintf(tempstr,"%s/0.fq",saved);
+    /*sprintf(tempstr,"%s/0.fq",saved);
     sprintf(tempstr1,"%s/ref.fq",saved);
     result_combine(readcount, corenum, saved, outfile,tempstr, argc, argv);
     //result_combine2(refcount, corenum, saved, refoutfile,tempstr1, argc, argv);
@@ -947,7 +947,7 @@ int main(int argc, char *argv[])
     fprintf(fid2, "The total Time : %f sec\n", timeuse);
     fclose(fid2);
     sprintf(cmd, "cp -r config.txt \"%s.config\"", outfile);
-    sprintf(cmd, "cp -r config.txt \"%s.config\"", refoutfile);
+    sprintf(cmd, "cp -r config.txt \"%s.config\"", refoutfile);*/
     __run_system(cmd);
 	
 	return EXIT_SUCCESS;

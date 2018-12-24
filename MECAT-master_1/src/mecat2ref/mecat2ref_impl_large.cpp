@@ -2745,7 +2745,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     //build read_long index
     gettimeofday(&tpstart, NULL);
     printf("get time sis sucess\n");
-    creat_ref_index(fastafile);
+    /*creat_ref_index(fastafile);
     printf("get ref_index sucess\n");
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
@@ -2859,6 +2859,6 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     free(outfile);
     free(savework);
     free(save_work);
-    free(thread);
+    free(thread);*/
     return 0;
 }
