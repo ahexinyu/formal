@@ -2757,7 +2757,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     printf("get vote sucess");
     gettimeofday(&tpstart, NULL);
 
-    /*savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
+    savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
     ref_savework=(char *)malloc((MAXSTR+RM)*sizeof(char));//********
     readinfo=(ReadFasta*)malloc((SVM+2)*sizeof(ReadFasta));
     //refinfo=(REF_info*)malloc((RVM)*sizeof(REF_info));//*********
@@ -2815,7 +2815,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         // reference_mapping(1);
     
     pthread_mutex_init(&mutilock2,NULL);
-    if(REFcount>0)
+   /* if(REFcount>0)
     {
         for(threadno=0; threadno<threadnum; threadno++)
         {
@@ -2831,9 +2831,10 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         
     }
     
-    // reference_mapping(1);
+    // reference_mapping(1);*/
 }
-    fclose(fastq);
+   /
+    /*fclose(fastq);
     //clear creat index memory
     free(countin);//好像不能free。下面还要用
     free(databaseindex);
