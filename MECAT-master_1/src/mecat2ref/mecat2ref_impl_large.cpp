@@ -2833,7 +2833,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     
     // reference_mapping(1);*/
 }
-   /
+   
     /*fclose(fastq);
     //clear creat index memory
     free(countin);//好像不能free。下面还要用
