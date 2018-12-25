@@ -949,6 +949,7 @@ int main(int argc, char *argv[])
     sprintf(cmd, "cp -r config.txt \"%s.config\"", outfile);
     sprintf(cmd, "cp -r config.txt \"%s.config\"", refoutfile);*/
     __run_system(cmd);
+    
 	
 	return EXIT_SUCCESS;
 }

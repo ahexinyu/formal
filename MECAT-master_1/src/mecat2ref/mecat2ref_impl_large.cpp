@@ -2745,7 +2745,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     //build read_long index
     gettimeofday(&tpstart, NULL);
     printf("get time sis sucess\n");
-    /*creat_ref_index(fastafile);
+    creat_ref_index(fastafile);
     printf("get ref_index sucess\n");
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
@@ -2753,7 +2753,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     //fp = fopen("config.txt", "a");
     fprintf(fp, "The Building  Reference  Index Time: %f sec\n", timeuse);
     fclose(fp);
-    get_vote();
+    /*get_vote();
     printf("get vote sucess");
     gettimeofday(&tpstart, NULL);
 
