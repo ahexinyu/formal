@@ -672,7 +672,6 @@ static void get_vote(){
     int i=0;char *seq;char *readseq;
     readseq=read_REFESQ;//sim *sc1;
     seq=REFSEQ;
-    printf("memcy sucuess\n");
     int start=0;//num 有关
     int leftnum=8;int nn=0;
     
@@ -2745,7 +2744,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     //build read_long index
     gettimeofday(&tpstart, NULL);
     printf("get time sis sucess\n");
-    creat_ref_index(fastafile);
+    /*creat_ref_index(fastafile);
     printf("get ref_index sucess\n");
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
@@ -2757,7 +2756,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     printf("get vote sucess");
     gettimeofday(&tpstart, NULL);
 
-    /*savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
+    savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
     ref_savework=(char *)malloc((MAXSTR+RM)*sizeof(char));//********
     readinfo=(ReadFasta*)malloc((SVM+2)*sizeof(ReadFasta));
     //refinfo=(REF_info*)malloc((RVM)*sizeof(REF_info));//*********
