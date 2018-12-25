@@ -25,6 +25,7 @@
 #define MAXSTR 1000000000
 #define MAX 10
 #define SVM 100000
+#define BVM 10000000
 #define RVM 400000
 #define PLL 1000
 #define split_len 20000
