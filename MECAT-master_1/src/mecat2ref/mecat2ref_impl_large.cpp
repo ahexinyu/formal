@@ -2805,8 +2805,8 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
                 {
                     printf("ERROR; return code is %d\n", threadflag);
                     return EXIT_FAILURE;
-                }
-            }*/
+                }*/
+            }
             //waiting thread
             //for(threadno=0; threadno<threadnum; threadno++)pthread_join(thread[threadno],NULL);
 
