@@ -2815,7 +2815,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         // reference_mapping(1);
     
     pthread_mutex_init(&mutilock2,NULL);
-   /* if(REFcount>0)
+    if(REFcount>0)
     {
         for(threadno=0; threadno<threadnum; threadno++)
         {
@@ -2831,10 +2831,10 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         
     }
     
-    // reference_mapping(1);*/
+    // reference_mapping(1);
 }
    
-    /*fclose(fastq);
+    fclose(fastq);
     //clear creat index memory
     free(countin);//好像不能free。下面还要用
     free(databaseindex);
@@ -2860,6 +2860,6 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     free(outfile);
     free(savework);
     free(save_work);
-    free(thread);*/
+    free(thread);
     return 0;
 }
