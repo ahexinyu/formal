@@ -2733,7 +2733,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     seed_len=13;
     printf("build_read_index pre is sucess\n");
     printf("workpath is %s\n",workpath);
-    build_read_index(workpath,fastqfile);//******
+    /*build_read_index(workpath,fastqfile);//******
     printf("build_read_index sucess\n");
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
@@ -2744,7 +2744,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     //build read_long index
     gettimeofday(&tpstart, NULL);
     printf("get time sis sucess\n");
-    /*creat_ref_index(fastafile);
+    creat_ref_index(fastafile);
     printf("get ref_index sucess\n");
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
