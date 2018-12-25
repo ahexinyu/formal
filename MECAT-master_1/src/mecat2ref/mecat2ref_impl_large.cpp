@@ -2733,10 +2733,10 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     seed_len=13;
     printf("build_read_index pre is sucess\n");
     printf("workpath is %s\n",workpath);
-    /*build_read_index(workpath,fastqfile);//******
+    build_read_index(workpath,fastqfile);//******
     printf("build_read_index sucess\n");
     gettimeofday(&tpend, NULL);
-    timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
+    /*timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
     fp = fopen("config.txt", "a");
     fprintf(fp, "The Building read Index Time: %f sec\n", timeuse);
