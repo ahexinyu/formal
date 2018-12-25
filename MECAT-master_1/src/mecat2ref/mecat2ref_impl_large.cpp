@@ -30,7 +30,7 @@ static char *REFSEQ;
 static char *savework,workpath[300],fastqfile[300];
 static int *countin1;
 static int seed_len=13;
-static int index_count=67108864;
+static int index_count=67108864000;
 static char *read_REFESQ;
 static char *save_work;
 static ReadFasta *readinfo;
