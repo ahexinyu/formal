@@ -2751,11 +2751,11 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     //fp = fopen("config.txt", "a");
     fprintf(fp, "The Building  Reference  Index Time: %f sec\n", timeuse);
     fclose(fp);
-    /*get_vote();
+    get_vote();
     printf("get vote sucess");
     gettimeofday(&tpstart, NULL);
 
-    savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
+    /*savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
     ref_savework=(char *)malloc((MAXSTR+RM)*sizeof(char));//********
     readinfo=(ReadFasta*)malloc((SVM+2)*sizeof(ReadFasta));
     //refinfo=(REF_info*)malloc((RVM)*sizeof(REF_info));//*********
