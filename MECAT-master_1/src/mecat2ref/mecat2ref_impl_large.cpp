@@ -320,15 +320,14 @@ static void build_read_index(char *path, char *path1){//buildindex
     char tempstr[200];
     printf(" path is %s",path);
     sprintf(tempstr, "%s/0.fq",path);
-    printf(" tempstr is %s",tempstr);
     int leftnum;
     leftnum=34-2*seed_len;
     FILE *fp;
     fp=fopen(tempstr,"r");
     char *seq;
     int length=get_file_size(path1);//***read文件大小
-    printf(" read length is %d",length);
-    read_REFESQ=(char *)malloc((length+200000)*sizeof(char));
+    printf(" read length is %d\n",length);
+    read_REFESQ=(char *)malloc((MAXSTR+RM)*sizeof(char));
     seq=read_REFESQ;
     
     char *pre;int lenl=0;
