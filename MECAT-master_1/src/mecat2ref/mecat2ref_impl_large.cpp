@@ -2755,7 +2755,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     printf("get vote sucess");
     gettimeofday(&tpstart, NULL);
 
-    /*savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
+    savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
     ref_savework=(char *)malloc((MAXSTR+RM)*sizeof(char));//********
     readinfo=(ReadFasta*)malloc((SVM+2)*sizeof(ReadFasta));
     //refinfo=(REF_info*)malloc((RVM)*sizeof(REF_info));//*********
@@ -2806,7 +2806,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
                 }
             }
             //waiting thread
-            //for(threadno=0; threadno<threadnum; threadno++)pthread_join(thread[threadno],NULL);
+            for(threadno=0; threadno<threadnum; threadno++)pthread_join(thread[threadno],NULL);
 
         }
 
@@ -2815,7 +2815,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     pthread_mutex_init(&mutilock2,NULL);
     if(REFcount>0)
     {
-        for(threadno=0; threadno<threadnum; threadno++)
+       /* for(threadno=0; threadno<threadnum; threadno++)
         {
            threadflag= pthread_create(&thread2[threadno], NULL, multithread2, NULL);//(multithread)
             if(threadflag)
@@ -2824,7 +2824,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
                 return EXIT_FAILURE;
             }
         }
-        //waiting thread
+        //waiting thread8*/
        // for(threadno=0; threadno<threadnum; threadno++)pthread_join(thread2[threadno],NULL);
         
     }
@@ -2858,6 +2858,6 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     free(outfile);
     free(savework);
     free(save_work);
-    free(thread);*/
+    free(thread);
     return 0;
 }
