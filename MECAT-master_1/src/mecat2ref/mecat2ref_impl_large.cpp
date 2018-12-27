@@ -2815,7 +2815,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     pthread_mutex_init(&mutilock2,NULL);
     if(REFcount>0)
     {
-       /* for(threadno=0; threadno<threadnum; threadno++)
+        for(threadno=0; threadno<threadnum; threadno++)
         {
            threadflag= pthread_create(&thread2[threadno], NULL, multithread2, NULL);//(multithread)
             if(threadflag)
@@ -2825,7 +2825,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
             }
         }
         //waiting thread8*/
-       // for(threadno=0; threadno<threadnum; threadno++)pthread_join(thread2[threadno],NULL);
+       for(threadno=0; threadno<threadnum; threadno++)pthread_join(thread2[threadno],NULL);
         
     }
     
