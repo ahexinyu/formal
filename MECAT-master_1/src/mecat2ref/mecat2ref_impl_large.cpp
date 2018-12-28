@@ -1736,10 +1736,9 @@ static void reference_map_reference(int threadint)
                     if(ii==1)canidate_temp.chain='F';
                     else canidate_temp.chain='R';
                     //insert canidate position or delete this position
-                    int *chang_loc;int QAQ;
+                    int *chang_loc;
                     int p=0,pp;
                     //pp=filter_loc(canidate_loc,canidate_temp,chang_loc,canidatenum);//直接加进去
-                    printf(" pp  is %d\n",pp);
                    /* if(canidatenum<MAXC){
                         canidatenum++;
                         canidate_loc[canidatenum-1]=canidate_temp;
@@ -2739,7 +2738,6 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     timeuse /= 1000000;
     fp = fopen("config.txt", "a");
     fprintf(fp, "The Building read Index Time: %f sec\n", timeuse);
-    //fclose(fp);
     //build read_long index
     gettimeofday(&tpstart, NULL);
     printf("get time sis sucess\n");
@@ -2824,7 +2822,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
                 return EXIT_FAILURE;
             }
         }
-        //waiting thread8*/
+        //waiting thread8
        for(threadno=0; threadno<threadnum; threadno++)pthread_join(thread2[threadno],NULL);
         
     }
