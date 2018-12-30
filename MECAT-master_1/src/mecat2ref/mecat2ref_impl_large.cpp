@@ -2815,12 +2815,12 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     {
         for(threadno=0; threadno<threadnum; threadno++)
         {
-           threadflag= pthread_create(&thread2[threadno], NULL, multithread2, NULL);//(multithread)
+           /*threadflag= pthread_create(&thread2[threadno], NULL, multithread2, NULL);//(multithread)
             if(threadflag)
             {
                 printf("ERROR; return code is %d\n", threadflag);
                 return EXIT_FAILURE;
-            }
+            }*/
         }
         //waiting thread8
        for(threadno=0; threadno<threadnum; threadno++)pthread_join(thread2[threadno],NULL);
