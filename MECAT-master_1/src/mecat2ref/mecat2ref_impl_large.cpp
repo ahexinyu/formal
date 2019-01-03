@@ -2749,7 +2749,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     //fp = fopen("config.txt", "a");
     fprintf(fp, "The Building  Reference  Index Time: %f sec\n", timeuse);
     fclose(fp);
-    get_vote();
+    //get_vote();
     printf("get vote sucess");
     gettimeofday(&tpstart, NULL);
 
