@@ -2749,7 +2749,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     //fp = fopen("config.txt", "a");
     fprintf(fp, "The Building  Reference  Index Time: %f sec\n", timeuse);
     fclose(fp);
-    //get_vote();
+    /*get_vote();
     printf("get vote sucess");
     gettimeofday(&tpstart, NULL);
 
@@ -2816,12 +2816,12 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     {
         for(threadno=0; threadno<threadnum; threadno++)
         {
-           /*threadflag= pthread_create(&thread2[threadno], NULL, multithread2, NULL);//(multithread)
+           threadflag= pthread_create(&thread2[threadno], NULL, multithread2, NULL);//(multithread)
             if(threadflag)
             {
                 printf("ERROR; return code is %d\n", threadflag);
                 return EXIT_FAILURE;
-            }*/
+            }
         }
         //waiting thread8
        for(threadno=0; threadno<threadnum; threadno++)pthread_join(thread2[threadno],NULL);
@@ -2857,6 +2857,6 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     free(outfile);
     free(savework);
     free(save_work);
-    free(thread);
+    free(thread);*/
     return 0;
 }
