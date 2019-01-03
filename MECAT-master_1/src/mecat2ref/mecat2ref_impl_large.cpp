@@ -2663,7 +2663,7 @@ static void* multithread(void* arg)
     localthreadno=runthreadnum;
     runthreadnum++;
     pthread_mutex_unlock(&mutilock);
-    reference_mapping(localthreadno);
+    //reference_mapping(localthreadno);
    	return NULL;
 }
 static void* multithread2(void* arg)
@@ -2725,7 +2725,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     printf("fastqfile is %s\n",fastqfile);
     fclose(fp);//FASTA是参考基因组文件
     threadnum=corenum;
-    
+    printf("corenum is %d\n",threadnum);
     //building reference index
     gettimeofday(&tpstart, NULL);
     seed_len=13;
@@ -2797,6 +2797,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
             for(threadno=0; threadno<threadnum; threadno++)
             {
                 threadflag= pthread_create(&thread[threadno], NULL, multithread, NULL);//(multithread)
+                printf("ddddddddd");
                 if(threadflag)
                 {
                     printf("ERROR; return code is %d\n", threadflag);
