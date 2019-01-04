@@ -164,11 +164,9 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long te
                 list_score[j]++;
             }
     for(i=0;i<SI;i++){score_sim[i]=0;}
-    printf("hhhhhhpppp  is sucresss\n");
     for(i=0;i<SI;i++){
         _loc=(templong*ZV)+list_loc[i];
         nn=(_loc-12)/200;
-        printf("n is%d\n",nn);
         list_sim[i]=(sc[nn].vote);
         score_sim[i]=list_score[i]/list_sim[i];
         _loc=0;}//考虑相似度
@@ -988,7 +986,7 @@ static void reference_mapping(int threadint)
                                     if(loc<=SM)
                                     {
                                         temp_spr->loczhi[loc-1]=u_k;//位置，block位置。绝了
-                                        printf("temp_spr->loczhi[loc-1] is %d\n",u_k);
+                                        //printf("temp_spr->loczhi[loc-1] is %d\n",u_k);
                                         temp_spr->seedno[loc-1]=k+1;
                                     }
                                     else insert_loc(temp_spr,u_k,k+1,BC,templong);//删除分数最小的。保持在20个左右//
@@ -1020,7 +1018,7 @@ static void reference_mapping(int threadint)
                         if(*index_spr>0)loc=(temp_spr-1)->score;
                         else loc=0;
                         start_loc=(*index_spr)*ZVL;
-                        printf("start_loc is %d",start_loc);
+                        //printf("start_loc is %d",start_loc);
                         if(*index_spr>0)
                         {
                             loc=(temp_spr-1)->score;
@@ -1031,7 +1029,7 @@ static void reference_mapping(int threadint)
                             {
                                 temp_list[u_k]=temp_spr->loczhi[j];
                                 temp_seedn[u_k]=temp_spr->seedno[j];
-                                printf("temp_list[u_k] is %d",temp_list[u_k]);
+                                //printf("temp_list[u_k] is %d",temp_list[u_k]);
                                 u_k++;
                             }
                         else
@@ -2797,7 +2795,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
             for(threadno=0; threadno<threadnum; threadno++)
             {
                 threadflag= pthread_create(&thread[threadno], NULL, multithread, NULL);//(multithread)
-                printf("ddddddddd");
+                printf("ddddddddd id %d\n",threadno);
                 if(threadflag)
                 {
                     printf("ERROR; return code is %d\n", threadflag);
