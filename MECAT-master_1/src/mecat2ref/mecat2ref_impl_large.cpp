@@ -2663,7 +2663,7 @@ static void* multithread(void* arg)
     localthreadno=runthreadnum;
     runthreadnum++;
     pthread_mutex_unlock(&mutilock);
-    //reference_mapping(localthreadno);
+    reference_mapping(localthreadno);
    	return NULL;
 }
 static void* multithread2(void* arg)
@@ -2753,7 +2753,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     printf("get vote sucess");
     gettimeofday(&tpstart, NULL);
 
-    /*savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
+    savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
     ref_savework=(char *)malloc((MAXSTR+RM)*sizeof(char));//********
     readinfo=(ReadFasta*)malloc((SVM+2)*sizeof(ReadFasta));
     //refinfo=(REF_info*)malloc((RVM)*sizeof(REF_info));//*********
@@ -2810,8 +2810,8 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         }
 
         // reference_mapping(1);
-    
-    pthread_mutex_init(&mutilock2,NULL);
+    }
+   /* pthread_mutex_init(&mutilock2,NULL);
     if(REFcount>0)
     {
         for(threadno=0; threadno<threadnum; threadno++)
