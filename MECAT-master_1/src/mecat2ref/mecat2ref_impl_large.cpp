@@ -744,16 +744,17 @@ int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep
         t_score[i]++;
         t_score[j]++;
     }
-    for(i=0;i<k;i++){_loc[i]=start_loc+t_loc[i];printf(" loc is %d\n",start_loc);printf(" loc is %d\n",_loc[i]);}
+    for(i=0;i<k;i++){_loc[i]=start_loc+t_loc[i];}
     
     int nn=0;
     for(i=0;i<k;i++){
         nn=(_loc[i]-12)/200;
-        printf("nn is %d\n",nn);
+        //printf("nn is %d\n",nn);
         list_sim[i]=(sc[nn].vote);
         t_score[i]=t_score[i]/list_sim[i];
     }
-    printf("hhhhhhhhhhhhhhhhhhhhhh si sucesss\n");
+    //printf("hhhhhhhhhhhhhhhhhhhhhh si sucesss\n");
+    
     for(i=0; i<k; i++)
     {
         if(maxval<t_score[i])
@@ -2795,7 +2796,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
             for(threadno=0; threadno<threadnum; threadno++)
             {
                 threadflag= pthread_create(&thread[threadno], NULL, multithread, NULL);//(multithread)
-                printf("ddddddddd id %d\n",threadno);
+                //printf("ddddddddd id %d\n",threadno);
                 if(threadflag)
                 {
                     printf("ERROR; return code is %d\n", threadflag);
@@ -2808,8 +2809,8 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         }
 
         // reference_mapping(1);
-    }
-   /* pthread_mutex_init(&mutilock2,NULL);
+    
+    pthread_mutex_init(&mutilock2,NULL);
     if(REFcount>0)
     {
         for(threadno=0; threadno<threadnum; threadno++)
@@ -2855,6 +2856,6 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     free(outfile);
     free(savework);
     free(save_work);
-    free(thread);*/
+    free(thread);
     return 0;
 }
