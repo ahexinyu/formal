@@ -2032,7 +2032,7 @@ static void reference_map_reference(int threadint)
                         int *chang_loc;int QAQ;
                         int p=0,pp;
                         //pp=filter_loc(canidate_loc,canidate_temp,chang_loc,canidatenum);//直接加进去
-                        printf(" pp  is %d\n",pp);
+                       // printf(" pp  is %d\n",pp);
                        /* if(canidatenum<MAXC){
                             canidatenum++;
                             canidate_loc[canidatenum-1]=canidate_temp;
@@ -2827,7 +2827,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         
     }
     
-    // reference_mapping(1);
+   
 }
    
     fclose(fastq);
