@@ -1525,10 +1525,10 @@ static void reference_map_reference(int threadint)
     fileid=1;
     while(fileid)
     {
-        pthread_mutex_lock(&mutilock);
+        pthread_mutex_lock(&mutilock2);
         localnum=runnumber2;
         runnumber2++;//runnumber是
-        pthread_mutex_unlock(&mutilock);
+        pthread_mutex_unlock(&mutilock2);
         if(localnum>=terminalnum2)
         {
             fileid=0;
@@ -2811,7 +2811,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         // reference_mapping(1);
     
     pthread_mutex_init(&mutilock2,NULL);
-    /*if(REFcount>0)
+    if(REFcount>0)
     {
         for(threadno=0; threadno<threadnum; threadno++)
         {
@@ -2825,7 +2825,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         //waiting thread8
        for(threadno=0; threadno<threadnum; threadno++)pthread_join(thread2[threadno],NULL);
         
-    }*/
+    }
     
    
 }
