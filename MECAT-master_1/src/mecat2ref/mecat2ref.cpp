@@ -937,7 +937,7 @@ int main(int argc, char *argv[])
     sprintf(tempstr1,"%s/ref.fq",saved);
     result_combine(readcount, corenum, saved, outfile,tempstr, argc, argv);
     //result_combine2(refcount, corenum, saved, refoutfile,tempstr1, argc, argv);
-   // polish_result(saved,corenum,refcount,refoutfile);
+    polish_result(saved,corenum,refcount,refoutfile);
     //result_combine3(readcount, corenum, saved, outfile,tempstr, argc, argv);
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
