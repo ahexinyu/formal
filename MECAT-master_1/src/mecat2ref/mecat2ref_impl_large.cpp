@@ -2810,7 +2810,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
 
         // reference_mapping(1);
     
-    /*pthread_mutex_init(&mutilock2,NULL);
+    pthread_mutex_init(&mutilock2,NULL);
     if(REFcount>0)
     {
         for(threadno=0; threadno<threadnum; threadno++)
@@ -2825,7 +2825,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         //waiting thread8
        for(threadno=0; threadno<threadnum; threadno++)pthread_join(thread2[threadno],NULL);
         
-    }*/
+    }
     
    
 }
@@ -2841,7 +2841,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     free(allloc1);
     free(read_REFESQ);
 
-    gettimeofday(&tpend, NULL);
+   /* gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
     fp = fopen("config.txt", "a");
@@ -2857,6 +2857,6 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     free(savework);
     free(save_work);
     free(thread);
-    //free(thread2);
+    //free(thread2);*/
     return 0;
 }
