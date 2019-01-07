@@ -455,7 +455,7 @@ static void build_read_index(char *path, char *path1){//buildindex
         }
         
     }
-    free(read_REFESQ);//****
+   // free(read_REFESQ);//****
     free(info);
 }
 
@@ -2831,7 +2831,6 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
 }
    
    fclose(fastq);
-    //clear creat index memory
     free(countin);//好像不能free。下面还要用
     free(databaseindex);
     free(allloc);
@@ -2840,8 +2839,8 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     free(databaseindex1);
     free(allloc1);
     free(read_REFESQ);
-
-    /*gettimeofday(&tpend, NULL);
+//clear creat index memory
+    gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
     fp = fopen("config.txt", "a");
@@ -2856,7 +2855,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     free(outfile);
     free(savework);
     free(save_work);
-    free(thread);*/
-    //free(thread2);
-    return 0;
+    free(thread);
+    free(thread2);
+        return 0;
 }
