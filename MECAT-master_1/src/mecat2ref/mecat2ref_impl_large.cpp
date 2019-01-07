@@ -2810,7 +2810,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
 
         // reference_mapping(1);
     
-    pthread_mutex_init(&mutilock2,NULL);
+   /* pthread_mutex_init(&mutilock2,NULL);
     if(REFcount>0)
     {
         for(threadno=0; threadno<threadnum; threadno++)
@@ -2825,12 +2825,12 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         //waiting thread8
        for(threadno=0; threadno<threadnum; threadno++)pthread_join(thread2[threadno],NULL);
         
-    }
+    }*/
     
    
 }
    
-    fclose(fastq);
+   /* fclose(fastq);
     //clear creat index memory
     free(countin);//好像不能free。下面还要用
     free(databaseindex);
@@ -2841,7 +2841,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     free(allloc1);
     free(read_REFESQ);
 
-   /* gettimeofday(&tpend, NULL);
+   gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
     fp = fopen("config.txt", "a");
