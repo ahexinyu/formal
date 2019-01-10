@@ -2830,7 +2830,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
    
 }
    
-   fclose(fastq);
+    fclose(fastq);
     free(countin);//好像不能free。下面还要用
     free(databaseindex);
     free(allloc);
@@ -2839,7 +2839,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     free(databaseindex1);
     free(allloc1);
     free(read_REFESQ);
-     //clear creat index memory
+    //clear creat index memory
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;

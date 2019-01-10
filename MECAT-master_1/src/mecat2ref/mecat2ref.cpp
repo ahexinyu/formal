@@ -721,7 +721,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
     }//初始化文件
     for(int ww=1;ww<=filecount;ww++)
     {
-        sprintf(path,"%s/%d.r",workpath,i);
+        sprintf(path,"%s/%d.r",workpath,ww);
         
         thread_file=fopen(path,"r");
         
