@@ -13,7 +13,7 @@
 #define big_size 1000000
 #define FM 1000000000
 #define MAXSTR 1000000000
-#define split_le 25000
+#define split_le 15000
 #include "output.h"
 #include "../common/defs.h"
 
@@ -735,7 +735,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         int last_id=pptr[0]->read_id;int formal_id;int formal_loc;int org_sta,org_end;
         while(rok){
             rok=load_temp_result(trslt, thread_file);
-            if(!rok)break;//可以建立一个哈希表，把reference 的ID散列到哈希表中 。这里可以改一下。
+            if(!rok)break;
             if(trslt->read_id!=last_id){//这是同一个read的比对写到文件里面
                 for(int j=0;j<num_results;j++){
                     int sid = get_chr_id(chr_idx, num_chr, pptr[j]->sb);

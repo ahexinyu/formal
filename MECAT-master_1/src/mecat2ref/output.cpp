@@ -1,5 +1,4 @@
 #include "output.h"
-
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>

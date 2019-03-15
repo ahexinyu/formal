@@ -1,4 +1,4 @@
-  #include "mecat2ref_defs.h"
+#include "mecat2ref_defs.h"
 #include "output.h"
 #include "mecat2ref_aux.h"
 #include "../common/diff_gapalign.h"
@@ -41,7 +41,7 @@ float similarity=0;
 typedef struct REF_info{
     int refno;
     int reflen;
-    char ref_sequ[25000];
+    char ref_sequ[15900];
 }REF_info;//*************
 REF_info *refinfo;//************
 char *ref_savework;//************
