@@ -1,4 +1,4 @@
-#include "mecat2ref_defs.h"
+  #include "mecat2ref_defs.h"
 #include "output.h"
 #include "mecat2ref_aux.h"
 #include "../common/diff_gapalign.h"
@@ -36,12 +36,12 @@ static char *save_work;
 static ReadFasta *readinfo;
 static int REFcount;//***********
 #define FM  200000
-#define CBL 600
+#define CBL 200
 float similarity=0;
 typedef struct REF_info{
     int refno;
     int reflen;
-    char ref_sequ[20000];
+    char ref_sequ[25000];
 }REF_info;//*************
 REF_info *refinfo;//************
 char *ref_savework;//************
