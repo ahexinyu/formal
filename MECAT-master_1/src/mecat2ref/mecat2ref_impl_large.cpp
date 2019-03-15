@@ -36,6 +36,7 @@ static char *save_work;
 static ReadFasta *readinfo;
 static int REFcount;//***********
 #define FM  200000
+#define CBL 400
 float similarity=0;
 typedef struct REF_info{
     int refno;
@@ -166,7 +167,7 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long te
     for(i=0;i<SI;i++){score_sim[i]=0;}
     for(i=0;i<SI;i++){
         _loc=(templong*ZV)+list_loc[i];
-        nn=(_loc-12)/200;
+        nn=(_loc-12)/CBL;
         list_sim[i]=(sc[nn].vote);
         score_sim[i]=list_score[i]/list_sim[i];
         _loc=0;}//考虑相似度
@@ -268,7 +269,7 @@ static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len,long t
     for(i=0;i<SI;i++){
         _loc=(templong*ZVS)+list_loc[i];
         
-        nn=(_loc-12)/200;
+        nn=(_loc-12)/CBL;
         list_sim[i]=(sc[nn].vote);
         score_sim[i]=list_score[i]/list_sim[i];}//考虑相似度
     for(i=0; i<SI; i++)if(minval>score_sim[i])
@@ -534,7 +535,7 @@ static void creat_ref_index(char *fastafile)
     seq[count+1]='\0';
     fclose(fastaindex);
     seqcount=count;
-    similarity_count=(seqcount-12)/200+1;
+    similarity_count=(seqcount-12)/CBL+1;
     printf("similarity_count is\n",similarity_count);
     sc=(sim *)malloc((similarity_count+10)*sizeof(sim));
     printf("sim si sucess\n");
@@ -638,7 +639,7 @@ static void creat_ref_index(char *fastafile)
                 databaseindex[eit][countin[eit]-1]=i+2-seed_len;//存的位置
             }
             
-            nn=(i-12)/200;//按照200划分，
+            nn=(i-12)/CBL;//按照200划分，
            if(countin1[eit]>0){
                 sc[nn].k_count=sc[nn].k_count+countin1[eit];//在long_read里面出现的次数
             }
@@ -748,7 +749,7 @@ int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep
     
     int nn=0;
     for(i=0;i<k;i++){
-        nn=(_loc[i]-12)/200;
+        nn=(_loc[i]-12)/CBL;
         //printf("nn is %d\n",nn);
         list_sim[i]=(sc[nn].vote);
         t_score[i]=t_score[i]/list_sim[i];

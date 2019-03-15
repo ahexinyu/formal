@@ -1,6 +1,7 @@
 #include "mecat2ref_aux.h"
 #include "../common/defs.h"
 #include <algorithm>
+#define CBLL 400
 using namespace std;
 
 int find_location(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,sim *sc,long start_loc)
@@ -15,7 +16,7 @@ int find_location(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_
     for(i=0;i<k;i++){_loc[i]=start_loc+t_loc[i];}
     int nn=0;
     for(i=0;i<SI;i++){
-        nn=(_loc[i]-12)/200;
+        nn=(_loc[i]-12)/CBLL;
         list_sim[i]=(sc[nn].vote);
         t_score[i]=t_score[i]*list_sim[i];
     }
