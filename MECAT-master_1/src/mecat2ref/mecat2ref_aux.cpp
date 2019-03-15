@@ -1,7 +1,7 @@
 #include "mecat2ref_aux.h"
 #include "../common/defs.h"
 #include <algorithm>
-#define CBLL 400
+#define CBLL 600
 using namespace std;
 
 int find_location(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,sim *sc,long start_loc)

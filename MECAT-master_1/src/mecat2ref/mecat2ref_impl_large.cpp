@@ -36,7 +36,7 @@ static char *save_work;
 static ReadFasta *readinfo;
 static int REFcount;//***********
 #define FM  200000
-#define CBL 400
+#define CBL 600
 float similarity=0;
 typedef struct REF_info{
     int refno;
