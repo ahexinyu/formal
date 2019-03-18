@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <dirent.h>
 #define RM 1000000
-#define big_size 9000000
+#define big_size 1000000
 #define FM 1000000000
 #define MAXSTR 1000000000
 #define split_le 15000
@@ -937,7 +937,7 @@ int main(int argc, char *argv[])
     sprintf(tempstr1,"%s/ref.fq",saved);
     result_combine(readcount, corenum, saved, outfile,tempstr, argc, argv);
     //result_combine2(refcount, corenum, saved, refoutfile,tempstr1, argc, argv);
-    polish_result(saved,corenum,refcount,refoutfile);
+    //polish_result(saved,corenum,refcount,refoutfile);
     //result_combine3(readcount, corenum, saved, outfile,tempstr, argc, argv);
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
