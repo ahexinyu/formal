@@ -2810,7 +2810,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         }
 
         // reference_mapping(1);
-    
+    printf("read is sucuess\n");
     pthread_mutex_init(&mutilock2,NULL);
     if(REFcount>0)
     {
@@ -2827,7 +2827,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
        for(threadno=0; threadno<threadnum; threadno++)pthread_join(thread2[threadno],NULL);
         
     }
-    
+        printf("ref is sucuess\n");
    
 }
    
