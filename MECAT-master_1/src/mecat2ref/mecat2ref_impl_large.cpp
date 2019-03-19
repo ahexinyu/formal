@@ -678,7 +678,7 @@ static void get_vote(){
             //printf("K-count is %f\n",sc[j].k_count);
             sc[j].LDF=log((read_kmer)/sc[j].k_count);
             //printf("LDF is %f\n", sc[j].LDF);
-            sc[j].vote=log(sc[j].LDF)/3;
+            sc[j].vote=log(sc[j].LDF)/3.5;
         }
         else{
             sc[j].vote=1;
