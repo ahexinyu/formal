@@ -2673,7 +2673,7 @@ static void* multithread2(void* arg)
     localthreadno2=runthreadnum2;
     runthreadnum2++;
     pthread_mutex_unlock(&mutilock2);
-    reference_map_reference(localthreadno2);
+    //reference_map_reference(localthreadno2);
     return NULL;
 }
 static int load_fastq(FILE *fq)
