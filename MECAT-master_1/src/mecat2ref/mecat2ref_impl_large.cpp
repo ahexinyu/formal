@@ -41,7 +41,7 @@ float similarity=0;
 typedef struct REF_info{
     int refno;
     int reflen;
-    char ref_sequ[15900];
+    char ref_sequ[20000];
 }REF_info;//*************
 REF_info *refinfo;//************
 char *ref_savework;//************
@@ -648,7 +648,8 @@ static void creat_ref_index(char *fastafile)
            // printf("%d\n",eit);
         }
     }
-    int lel=0;REFcount=0;
+    int lel=0;
+    REFcount=0;
     for(int p=0;p<seqcount;p++){
         if(lel<split_len){
             refinfo[REFcount].ref_sequ[lel]=seq[p];
