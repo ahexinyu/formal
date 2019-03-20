@@ -2144,6 +2144,7 @@ static void reference_map_reference(int threadint)
     free(rev_index_list);
     free(rev_index_score);
     delete[] aln_seqs;
+    printf("check out\n");
 }
 static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long length_read,int read_name,FILE *outfile){
     int cleave_num,read_len;
@@ -2673,7 +2674,7 @@ static void* multithread2(void* arg)
     localthreadno2=runthreadnum2;
     runthreadnum2++;
     pthread_mutex_unlock(&mutilock2);
-    //reference_map_reference(localthreadno2);
+    reference_map_reference(localthreadno2);
     return NULL;
 }
 static int load_fastq(FILE *fq)
