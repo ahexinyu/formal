@@ -41,7 +41,7 @@ float similarity=0;
 typedef struct REF_info{
     int refno;
     int reflen;
-    char ref_sequ[20000];
+    char ref_sequ[15000];
 }REF_info;//*************
 REF_info *refinfo;//************
 char *ref_savework;//************
