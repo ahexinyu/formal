@@ -41,7 +41,7 @@ float similarity=0;
 typedef struct REF_info{
     int refno;
     int reflen;
-    char ref_sequ[20000];
+    char ref_sequ[25000];
 }REF_info;//*************
 REF_info *refinfo;//************
 char *ref_savework;//************
@@ -679,7 +679,7 @@ static void get_vote(){
             //printf("K-count is %f\n",sc[j].k_count);
             sc[j].LDF=log((read_kmer)/sc[j].k_count);
             //printf("LDF is %f\n", sc[j].LDF);
-            sc[j].vote=log(sc[j].LDF)/4;
+            sc[j].vote=log(sc[j].LDF)/4.5;
         }
         else{
             sc[j].vote=1;
@@ -1544,7 +1544,6 @@ static void reference_map_reference(int threadint)
             read_name=refinfo[ref_i].refno;
             read_len=refinfo[ref_i].reflen;
             strcpy(onedata1,refinfo[ref_i].ref_sequ);
-            
             canidatenum=0;
             for(ii=1; ii<=2; ii++)
             {
