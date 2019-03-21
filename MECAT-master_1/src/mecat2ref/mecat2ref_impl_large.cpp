@@ -1787,7 +1787,7 @@ static void reference_map_reference(int threadint)
             
             naln = 0;
             nresults = 0;
-            /*for(i=0; i<canidatenum; i++)
+            for(i=0; i<canidatenum; i++)
             {
                 extend_candidate(canidate_loc[i],
                                  aligner,
@@ -1805,7 +1805,7 @@ static void reference_map_reference(int threadint)
                                  nresults);
             }
             
-            rescue_clipped_align(alns,
+           /* rescue_clipped_align(alns,
                                  naln,
                                  results,
                                  nresults,
@@ -2083,7 +2083,7 @@ static void reference_map_reference(int threadint)
                 
                 naln = 0;
                 nresults = 0;
-               /* for(i=0; i<canidatenum; i++)
+                for(i=0; i<canidatenum; i++)
                 {
                     extend_candidate(canidate_loc[i],
                                      aligner,
@@ -2101,7 +2101,7 @@ static void reference_map_reference(int threadint)
                                      nresults);
                 }
                 
-                rescue_clipped_align(alns,
+                /*rescue_clipped_align(alns,
                                      naln,
                                      results,
                                      nresults,
