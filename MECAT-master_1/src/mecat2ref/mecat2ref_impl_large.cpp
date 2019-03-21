@@ -41,7 +41,7 @@ float similarity=0;
 typedef struct REF_info{
     int refno;
     int reflen;
-    char ref_sequ[10000];
+    char ref_sequ[15000];
 }REF_info;//*************
 REF_info *refinfo;//************
 char *ref_savework;//************
@@ -1140,7 +1140,7 @@ static void reference_mapping(int threadint)
 								 tstr, 
 								 read_name, 
 								 read_len, 
-								 alns, 
+								 alns,
 								 &naln,
 								 results,
 								 nresults);
