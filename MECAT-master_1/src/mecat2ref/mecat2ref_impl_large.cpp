@@ -1824,7 +1824,7 @@ static void reference_map_reference(int threadint)
                                  rev_database,
                                  ddfs_cutoff);
             
-            output_results(alns, naln, results, nresults, num_output, refoutfile[threadint]);
+            //output_results(alns, naln, results, nresults, num_output, refoutfile[threadint]);
             
             for (int t = 0; t < fnblk; ++t) {
                 int bid = fwd_index_list[t];
@@ -2120,7 +2120,7 @@ static void reference_map_reference(int threadint)
                                      rev_database,
                                      ddfs_cutoff);
                 
-                output_results(alns, naln, results, nresults, num_output, refoutfile[threadint]);
+                //output_results(alns, naln, results, nresults, num_output, refoutfile[threadint]);
                 
                 for (int t = 0; t < fnblk; ++t) {
                     int bid = fwd_index_list[t];
