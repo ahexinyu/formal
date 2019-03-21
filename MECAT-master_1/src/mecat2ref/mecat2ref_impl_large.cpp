@@ -679,7 +679,7 @@ static void get_vote(){
             //printf("K-count is %f\n",sc[j].k_count);
             sc[j].LDF=log((read_kmer)/sc[j].k_count);
             //printf("LDF is %f\n", sc[j].LDF);
-            sc[j].vote=log(sc[j].LDF)/4.5;
+            sc[j].vote=log(sc[j].LDF)/4;
         }
         else{
             sc[j].vote=1;
@@ -1538,6 +1538,7 @@ static void reference_map_reference(int threadint)
         }
         if(localnum==terminalnum2-1)read_end=REFcount;//read 条数***********  read_end=readcount
         else read_end=(localnum+1)*PLL;
+        printf("chou\n");
         for(ref_i=localnum*PLL; ref_i<read_end; ref_i++)
         {
             
