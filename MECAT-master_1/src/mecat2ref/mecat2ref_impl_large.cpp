@@ -1774,7 +1774,7 @@ static void reference_map_reference(int threadint)
             nresults = 0;
             for(i=0; i<canidatenum; i++)
             {
-                extend_candidate(canidate_loc[1],
+                extend_candidate(canidate_loc[0],
                                  aligner,
                                  seq,
                                  seqcount,
@@ -2070,7 +2070,7 @@ static void reference_map_reference(int threadint)
                 nresults = 0;
                 for(i=0; i<canidatenum; i++)
                 {
-                    extend_candidate(canidate_loc[1],
+                    extend_candidate(canidate_loc[0],
                                      aligner,
                                      seq,
                                      seqcount,
