@@ -28,13 +28,13 @@
 #define BVM 10000000
 #define RVM 400000
 #define PLL 1000
-#define split_len 25000
+#define split_len 22000
 
 typedef struct
 {
     int aln_str_size,dist,aln_q_s,aln_q_e,aln_t_s,aln_t_e;
-    char q_aln_str[2500];
-    char t_aln_str[2500];
+    char q_aln_str[5000];
+    char t_aln_str[5000];
 
 } alignment;
 
