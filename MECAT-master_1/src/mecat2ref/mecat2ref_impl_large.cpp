@@ -662,6 +662,8 @@ static void creat_ref_index(char *fastafile)
         }
         
     }
+    refinfo[REFcount].ref_sequ="\n";
+    REFcount=REFcount-1;//把最后一个去掉
     printf("555 is suceess\n");
 }
 
