@@ -717,9 +717,9 @@ static void get_vote(){
         }
     }*/
      printf("test is sucuess");
-   for(int j=0;j<similarity_count;j++){
+   /*for(int j=0;j<similarity_count;j++){
         printf("vote is %f\n",sc[j].vote);
-   }
+   }*/
     
 }
 int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,long start_loc)//绝了
@@ -1774,7 +1774,7 @@ static void reference_map_reference(int threadint)
             nresults = 0;
             for(i=0; i<canidatenum; i++)
             {
-                extend_candidate(canidate_loc[0],
+                extend_candidate(canidate_loc[i],
                                  aligner,
                                  seq,
                                  seqcount,
@@ -2070,7 +2070,7 @@ static void reference_map_reference(int threadint)
                 nresults = 0;
                 for(i=0; i<canidatenum; i++)
                 {
-                    extend_candidate(canidate_loc[0],
+                    extend_candidate(canidate_loc[i],
                                      aligner,
                                      seq,
                                      seqcount,
