@@ -35,7 +35,6 @@ typedef struct
     int aln_str_size,dist,aln_q_s,aln_q_e,aln_t_s,aln_t_e;
     char q_aln_str[2500];
     char t_aln_str[2500];
-
 } alignment;
 
 typedef struct
