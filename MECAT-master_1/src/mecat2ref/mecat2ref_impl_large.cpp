@@ -1791,7 +1791,7 @@ static void reference_map_reference(int threadint)
                                  nresults);
             }
             
-           rescue_clipped_align(alns,
+          /* rescue_clipped_align(alns,
                                  naln,
                                  results,
                                  nresults,
@@ -1808,7 +1808,7 @@ static void reference_map_reference(int threadint)
                                  BC,
                                  fwd_database,
                                  rev_database,
-                                 ddfs_cutoff);
+                                 ddfs_cutoff);*/
             
             //output_results(alns, naln, results, nresults, num_output, refoutfile[threadint]);
             
