@@ -236,8 +236,8 @@ bool extend_candidate(candidate_save& can,
 					  qstr, 
 					  tstr);
 	if (aligner->go(qstr.data(), read_start, read_len, tstr.data(), left_ref_size, tstr.size(), 1000)) {
-		TempResult& r = trv[ntr++];
-		/*r.read_id = read_name;
+		/*TempResult& r = trv[ntr++];
+		r.read_id = read_name;
 		r.read_dir = can.chain;
 		r.vscore = can.score;
 		r.qb = aligner->query_start();
