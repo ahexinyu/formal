@@ -235,7 +235,7 @@ bool extend_candidate(candidate_save& can,
 					  right_ref_size, 
 					  qstr, 
 					  tstr);
-	/*if (aligner->go(qstr.data(), read_start, read_len, tstr.data(), left_ref_size, tstr.size(), 1000)) {
+	if (aligner->go(qstr.data(), read_start, read_len, tstr.data(), left_ref_size, tstr.size(), 1000)) {
 		TempResult& r = trv[ntr++];
 		r.read_id = read_name;
 		r.read_dir = can.chain;
@@ -248,7 +248,7 @@ bool extend_candidate(candidate_save& can,
 		strcpy(r.qmap, aligner->query_mapped_string());
 		strcpy(r.smap, aligner->target_mapped_string());
 
-		if (alns) {
+		/*if (alns) {
 			alns[*naln].qoff = r.qb;
 			alns[*naln].qend = r.qe;
 			alns[*naln].qdir = r.read_dir;
@@ -263,7 +263,7 @@ bool extend_candidate(candidate_save& can,
 		}*/
 		
 		return true;
-	//}
+	}
 	//return false;
 }
 
