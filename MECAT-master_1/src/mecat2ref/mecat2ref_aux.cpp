@@ -235,8 +235,8 @@ bool extend_candidate(candidate_save& can,
 					  right_ref_size, 
 					  qstr, 
 					  tstr);
-	if (aligner->go(qstr.data(), read_start, read_len, tstr.data(), left_ref_size, tstr.size(), 1000)) {
-		/*TempResult& r = trv[ntr++];
+	/*if (aligner->go(qstr.data(), read_start, read_len, tstr.data(), left_ref_size, tstr.size(), 1000)) {
+		TempResult& r = trv[ntr++];
 		r.read_id = read_name;
 		r.read_dir = can.chain;
 		r.vscore = can.score;
@@ -263,7 +263,7 @@ bool extend_candidate(candidate_save& can,
 		}*/
 		
 		return true;
-	}
+	//}
 	//return false;
 }
 
