@@ -243,10 +243,10 @@ bool extend_candidate(candidate_save& can,
 		r.qb = aligner->query_start();
 		r.qe = aligner->query_end();
 		r.qs = read_len;
-		r.sb = ref_start - left_ref_size + aligner->target_start();
+		/*r.sb = ref_start - left_ref_size + aligner->target_start();
 		r.se = ref_start - left_ref_size + aligner->target_end();
 		strcpy(r.qmap, aligner->query_mapped_string());
-		strcpy(r.smap, aligner->target_mapped_string());
+		strcpy(r.smap, aligner->target_mapped_string());*/
 
 		/*if (alns) {
 			alns[*naln].qoff = r.qb;
