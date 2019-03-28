@@ -225,7 +225,7 @@ bool extend_candidate(candidate_save& can,
 	int read_start = can.loc2;
 	long ref_start = can.loc1 - 1;
 	long left_ref_size, right_ref_size;
-	extract_sequences(raw_ref, 
+	/*extract_sequences(raw_ref,
 					  raw_read, 
 					  ref_start, 
 					  read_start,
@@ -234,8 +234,8 @@ bool extend_candidate(candidate_save& can,
 					  left_ref_size, 
 					  right_ref_size, 
 					  qstr, 
-					  tstr);
-	if (aligner->go(qstr.data(), read_start, read_len, tstr.data(), left_ref_size, tstr.size(), 1000)) {
+					  tstr);*/
+	/*if (aligner->go(qstr.data(), read_start, read_len, tstr.data(), left_ref_size, tstr.size(), 1000)) {
 		TempResult& r = trv[ntr++];
 		r.read_id = read_name;
 		r.read_dir = can.chain;
@@ -246,9 +246,9 @@ bool extend_candidate(candidate_save& can,
 		r.sb = ref_start - left_ref_size + aligner->target_start();
 		r.se = ref_start - left_ref_size + aligner->target_end();
 		strcpy(r.qmap, aligner->query_mapped_string());
-		strcpy(r.smap, aligner->target_mapped_string());
+		strcpy(r.smap, aligner->target_mapped_string());*/
 
-		if (alns) {
+		/*if (alns) {
 			alns[*naln].qoff = r.qb;
 			alns[*naln].qend = r.qe;
 			alns[*naln].qdir = r.read_dir;
@@ -260,11 +260,11 @@ bool extend_candidate(candidate_save& can,
 			alns[*naln].next_id = -1;
 			alns[*naln].parent_id = -1;
 			++(*naln);
-		} 
+		} */
 		
 		return true;
-	}
-	return false;
+	//}
+	//return false;
 }
 
 bool
