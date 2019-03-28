@@ -248,7 +248,7 @@ bool extend_candidate(candidate_save& can,
 		strcpy(r.qmap, aligner->query_mapped_string());
 		strcpy(r.smap, aligner->target_mapped_string());
 
-		/*if (alns) {
+		if (alns) {
 			alns[*naln].qoff = r.qb;
 			alns[*naln].qend = r.qe;
 			alns[*naln].qdir = r.read_dir;
@@ -260,11 +260,11 @@ bool extend_candidate(candidate_save& can,
 			alns[*naln].next_id = -1;
 			alns[*naln].parent_id = -1;
 			++(*naln);
-		} */
+		}
 		
 		return true;
 	}
-	//return false;
+	return false;
 }
 
 bool
