@@ -263,7 +263,7 @@ bool extend_candidate(candidate_save& can,
 		} */
 		
 		return true;
-	//}
+	}
 	//return false;
 }
 
