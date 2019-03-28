@@ -225,7 +225,7 @@ bool extend_candidate(candidate_save& can,
 	int read_start = can.loc2;
 	long ref_start = can.loc1 - 1;
 	long left_ref_size, right_ref_size;
-	/*extract_sequences(raw_ref,
+	extract_sequences(raw_ref,
 					  raw_read, 
 					  ref_start, 
 					  read_start,
@@ -234,7 +234,7 @@ bool extend_candidate(candidate_save& can,
 					  left_ref_size, 
 					  right_ref_size, 
 					  qstr, 
-					  tstr);*/
+					  tstr);
 	/*if (aligner->go(qstr.data(), read_start, read_len, tstr.data(), left_ref_size, tstr.size(), 1000)) {
 		TempResult& r = trv[ntr++];
 		r.read_id = read_name;
