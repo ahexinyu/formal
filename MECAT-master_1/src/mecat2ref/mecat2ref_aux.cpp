@@ -225,7 +225,7 @@ bool extend_candidate(candidate_save& can,
 	int read_start = can.loc2;
 	long ref_start = can.loc1 - 1;
 	long left_ref_size, right_ref_size;
-	extract_sequences(raw_ref,
+	/*extract_sequences(raw_ref,
 					  raw_read, 
 					  ref_start, 
 					  read_start,
@@ -260,11 +260,11 @@ bool extend_candidate(candidate_save& can,
 			alns[*naln].next_id = -1;
 			alns[*naln].parent_id = -1;
 			++(*naln);
-		}
+		}*/
 		
 		return true;
-	}
-	return false;
+	//}
+	//return false;
 }
 
 bool
