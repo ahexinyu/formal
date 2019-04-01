@@ -241,6 +241,7 @@ bool extend_candidate(candidate_save& can,
     if(read_len<=0){printf("4\n");}
     if(tstr.size()<=0){printf("5\n");}
     if(left_ref_size<0){printf("6\n");}
+    if(aligner==NULL){printf("7\n");}
 	if (aligner->go(qstr.data(), read_start, read_len, tstr.data(), left_ref_size, tstr.size(), 1000)) {
 		/*TempResult& r = trv[ntr++];
 		r.read_id = read_name;
