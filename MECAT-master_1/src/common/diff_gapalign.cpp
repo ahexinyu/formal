@@ -298,11 +298,11 @@ DiffAligner::go(const char* query, const int qstart, const int qsize,
 {
 	result->init();
 	align->init();
-	dw_in_one_direction(query + qstart - 1, qstart, 
+	/*dw_in_one_direction(query + qstart - 1, qstart,
 						target + tstart - 1, tstart,
 						dynq, dynt, align, d_path, 
 						aln_path, &param, result, 0);
-	/*dw_in_one_direction(query + qstart, qsize - qstart,
+	dw_in_one_direction(query + qstart, qsize - qstart,
 						target + tstart, tsize - tstart,
 						dynq, dynt, align, d_path,
 						aln_path, &param, result, 1);
