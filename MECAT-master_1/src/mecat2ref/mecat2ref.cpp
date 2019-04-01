@@ -13,7 +13,7 @@
 #define big_size 1000000
 #define FM 1000000000
 #define MAXSTR 1000000000
-#define split_le 16000
+#define split_le 15000
 #include "output.h"
 #include "../common/defs.h"
 

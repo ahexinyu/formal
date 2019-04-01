@@ -28,7 +28,7 @@
 #define BVM 10000000
 #define RVM 400000
 #define PLL 1000
-#define split_len 16000
+#define split_len 15000
 
 typedef struct
 {
