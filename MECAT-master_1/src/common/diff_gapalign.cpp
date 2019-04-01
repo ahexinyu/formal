@@ -243,7 +243,7 @@ void dw_in_one_direction(const char* query, const int query_size, const char* ta
 												  seq2,
 												  qblk,
 												  tblk);	  
-		Align(seq1,
+		/*Align(seq1,
 			  qblk,
 			  seq2,
 			  tblk,
@@ -287,7 +287,7 @@ void dw_in_one_direction(const char* query, const int query_size, const char* ta
 		
 		if (last_block || (!full_map)) break;
 		qidx += (align->aln_q_e - qcnt);
-		tidx += (align->aln_t_e - tcnt);
+		tidx += (align->aln_t_e - tcnt);*/
 	}
 }
 
@@ -298,11 +298,11 @@ DiffAligner::go(const char* query, const int qstart, const int qsize,
 {
 	result->init();
 	align->init();
-	/*dw_in_one_direction(query + qstart - 1, qstart,
+	dw_in_one_direction(query + qstart - 1, qstart,
 						target + tstart - 1, tstart,
 						dynq, dynt, align, d_path, 
 						aln_path, &param, result, 0);
-	dw_in_one_direction(query + qstart, qsize - qstart,
+	/*dw_in_one_direction(query + qstart, qsize - qstart,
 						target + tstart, tsize - tstart,
 						dynq, dynt, align, d_path,
 						aln_path, &param, result, 1);
