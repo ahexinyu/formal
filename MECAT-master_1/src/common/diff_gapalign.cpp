@@ -1,4 +1,4 @@
-#include "diff_gapalign.h"
+b#include "diff_gapalign.h"
 //#include "smart_assert.h"
 
 #include <algorithm>
@@ -306,7 +306,7 @@ DiffAligner::go(const char* query, const int qstart, const int qsize,
 						target + tstart, tsize - tstart,
 						dynq, dynt, align, d_path,
 						aln_path, &param, result, 1);
-	int i, j, k, idx = 0;
+	/*int i, j, k, idx = 0;
 	const char* dt = "ACGT-";
 	for (k = result->left_store_size - 1, i = 0, j = 0; k >= 0; --k, ++idx) {
 		unsigned char ch = result->left_store1[k];
@@ -345,5 +345,6 @@ DiffAligner::go(const char* query, const int qstart, const int qsize,
 	result->out_store1[result->out_store_size] = '\0';
 	result->out_store2[result->out_store_size] = '\0';
 	
-	return result->out_store_size >= min_aln_size;
+	return result->out_store_size >= min_aln_size;*/
+    return 0;
 }
