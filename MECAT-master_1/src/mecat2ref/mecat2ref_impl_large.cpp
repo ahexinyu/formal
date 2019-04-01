@@ -1451,7 +1451,7 @@ static void reference_map_reference(int threadint)
     int leftnum=8;//***********
     int p=0;int pp=0;//**********
     int cleave_num,read_len;
-    int mvalue[100000],flag_end;
+    int mvalue[2000],flag_end;
     long *leadarray,u_k,s_k,loc;
     int count1=0,i,j,k,templong,read_name;
     struct Back_List *database,*temp_spr,*temp_spr1;//
