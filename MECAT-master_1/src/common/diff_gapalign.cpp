@@ -243,7 +243,7 @@ void dw_in_one_direction(const char* query, const int query_size, const char* ta
 												  seq2,
 												  qblk,
 												  tblk);	  
-		/*Align(seq1,
+		Align(seq1,
 			  qblk,
 			  seq2,
 			  tblk,
@@ -266,7 +266,7 @@ void dw_in_one_direction(const char* query, const int query_size, const char* ta
 											acnt);
 		if (!trim) break;
 		
-		bool full_map = false;
+		/*bool full_map = false;
 		if (qblk - align->aln_q_e <= 20 || tblk - align->aln_t_e <= 20) full_map = true;
 
 		if (last_block || (!full_map)) {
