@@ -1587,8 +1587,15 @@ static void reference_map_reference(int threadint)
                  }
                  }*/
                 endnum=0;
+                int aaa=0;
                 read_len=strlen(onedata);
-                cleave_num=transnum_buchang(onedata,mvalue,&endnum,read_len,seed_len,BC);//切割
+                cleave_num=transnum_buchang(onedata,mvalue,&endnum,read_len,seed_len,BC);
+                for(int cu==;cu<cleave_num;cu++){
+                    if(mvalue[k]>=){
+                        aaa++;
+                    }
+                }
+                if(aaa<100)break;
                 j=0;
                 index_spr=index_list;
                 index_ss=index_score;
@@ -1826,7 +1833,7 @@ static void reference_map_reference(int threadint)
                 rev_database[bid].index = -1;
             }
             
-            if (naln == 0)
+            /*if (naln == 0)
             {
                 canidatenum=0;
                 for(ii=1; ii<=2; ii++)
@@ -1879,7 +1886,7 @@ static void reference_map_reference(int threadint)
                        }
                        }
                        }
-                       }*/
+                       }
                     
                     endnum=0;
                     read_len=strlen(onedata);
@@ -2020,34 +2027,7 @@ static void reference_map_reference(int threadint)
                         else canidate_temp.chain='R';
                         int *chang_loc;int QAQ;
                         int p=0,pp;
-                        //pp=filter_loc(canidate_loc,canidate_temp,chang_loc,canidatenum);//直接加进去
-                       // printf(" pp  is %d\n",pp);
-                       /* if(canidatenum<MAXC){
-                            canidatenum++;
-                            canidate_loc[canidatenum-1]=canidate_temp;
-                            sortdata(canidate_loc,canidatenum);
-                            printf("canidatenum  is %d\n",canidatenum);
-                        }*/
-                        /*else{
-                            if(pp==1){
-                                if(canidate_loc[canidatenum-1].score<canidate_temp.score){
-                                    canidate_loc[canidatenum-1]=canidate_temp;
-                                    sortdata(canidate_loc,canidatenum);
-                                    printf("here is sucuess\n");
-                                    canidatenum=MAXC;
-                                }
-                            }//不需要改的
-                            else{
-                                QAQ=*chang_loc;
-                                printf("QAQ is %d\n",QAQ);
-                                if(canidate_loc[QAQ].score<canidate_temp.score){
-                                    canidate_loc[QAQ]=canidate_temp;
-                                    printf("here is sucuess\n");
-                                    sortdata(canidate_loc,canidatenum);
-                                }
-                            }
-                        }*/
-                        //insert canidate position or delete this position
+                      
                         low=0;
                         high=canidatenum-1;
                         while(low<=high)
@@ -2070,7 +2050,7 @@ static void reference_map_reference(int threadint)
                 
                 naln = 0;
                 nresults = 0;
-               /* for(i=0; i<canidatenum; i++)
+                for(i=0; i<canidatenum; i++)
                 {
                     extend_candidate(canidate_loc[i],
                                      aligner,
@@ -2107,7 +2087,7 @@ static void reference_map_reference(int threadint)
                                      rev_database,
                                      ddfs_cutoff);
                 
-                output_results(alns, naln, results, nresults, num_output, refoutfile[threadint]);*/
+                output_results(alns, naln, results, nresults, num_output, refoutfile[threadint]);
                 
                 for (int t = 0; t < fnblk; ++t) {
                     int bid = fwd_index_list[t];
@@ -2120,7 +2100,8 @@ static void reference_map_reference(int threadint)
                     rev_database[bid].score = 0;
                     rev_database[bid].score2 = 0;
                     rev_database[bid].index = -1;
-                }
+                }*/
+        
             }
         }
     }
