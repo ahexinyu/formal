@@ -1453,7 +1453,7 @@ static void reference_map_reference(int threadint)
     int p=0;int pp=0;//**********
     int cleave_num,read_len;
     int mvalue[20000],flag_end;
-    long *leadarray,u_k,s_k,loc;
+    long *leadarray,u_k,s_k,loc;int aaa;
     int count1=0,i,j,k,templong,read_name;
     struct Back_List *database,*temp_spr,*temp_spr1;//
     int repeat_loc = 0,*index_list,*index_spr;
@@ -1533,7 +1533,7 @@ static void reference_map_reference(int threadint)
             read_len=refinfo[ref_i].reflen;
             strcpy(onedata1,refinfo[ref_i].ref_sequ);
             canidatenum=0;
-            for(ii=1; ii<=2; ii++)
+            for(ii=1; ii<=1; ii++)
             {
                 read_len=strlen(onedata1);
                 BC=5+(read_len/1000);//BC 是数量
@@ -1548,7 +1548,7 @@ static void reference_map_reference(int threadint)
                 
             
                 endnum=0;
-                int aaa=0;
+                aaa=0;
                 read_len=strlen(onedata);
                 cleave_num=transnum_buchang(onedata,mvalue,&endnum,read_len,seed_len,BC);
                 for(int cu==;cu<cleave_num;cu++){
@@ -1556,7 +1556,7 @@ static void reference_map_reference(int threadint)
                         aaa++;
                     }
                 }
-                if(aaa<100)break;
+                if(aaa<100)continue;
                 j=0;
                 index_spr=index_list;
                 index_ss=index_score;
@@ -1692,34 +1692,6 @@ static void reference_map_reference(int threadint)
                     if(ii==1)canidate_temp.chain='F';
                     else canidate_temp.chain='R';
                     //insert canidate position or delete this position
-                    int *chang_loc;
-                    int p=0,pp;
-                    //pp=filter_loc(canidate_loc,canidate_temp,chang_loc,canidatenum);//直接加进去
-                   /* if(canidatenum<MAXC){
-                        canidatenum++;
-                        canidate_loc[canidatenum-1]=canidate_temp;
-                        sortdata(canidate_loc,canidatenum);
-                        printf("canidatenum  is %d\n",canidatenum);
-                    }*/
-                    /*else{
-                        if(pp==1){
-                            if(canidate_loc[canidatenum-1].score<canidate_temp.score){
-                                canidate_loc[canidatenum-1]=canidate_temp;
-                                sortdata(canidate_loc,canidatenum);
-                                printf("here is sucuess\n");
-                                canidatenum=MAXC;
-                            }
-                        }//不需要改的
-                        else{
-                            QAQ=*chang_loc;
-                            printf("QAQ is %d\n",QAQ);
-                            if(canidate_loc[QAQ].score<canidate_temp.score){
-                                canidate_loc[QAQ]=canidate_temp;
-                                printf("here is sucuess\n");
-                                sortdata(canidate_loc,canidatenum);
-                            }
-                        }
-                    }*/
                     low=0;
                     high=canidatenum-1;
                     while(low<=high)
@@ -1794,10 +1766,10 @@ static void reference_map_reference(int threadint)
                 rev_database[bid].index = -1;
             }
             
-            /*if (naln == 0)
+            if (naln == 0)
             {
                 canidatenum=0;
-                for(ii=1; ii<=2; ii++)
+                for(ii=1; ii<=1; ii++)
                 {
                     read_len=strlen(onedata1);
                     BC=5;
@@ -1847,11 +1819,18 @@ static void reference_map_reference(int threadint)
                        }
                        }
                        }
-                       }
+                       }*/
                     
                     endnum=0;
                     read_len=strlen(onedata);
+                    aaa=0;
                     cleave_num=transnum_buchang(onedata,mvalue,&endnum,read_len,seed_len,BC);
+                    for(int cu==;cu<cleave_num;cu++){
+                        if(mvalue[k]>=){
+                            aaa++;
+                        }
+                    }
+                    if(aaa<100)continue;
                     j=0;
                     index_spr=index_list;
                     index_ss=index_score;
@@ -2011,7 +1990,7 @@ static void reference_map_reference(int threadint)
                 
                 naln = 0;
                 nresults = 0;
-                for(i=0; i<canidatenum; i++)
+                /*for(i=0; i<canidatenum; i++)
                 {
                     extend_candidate(canidate_loc[i],
                                      aligner,
@@ -2027,9 +2006,9 @@ static void reference_map_reference(int threadint)
                                      &naln,
                                      results,
                                      nresults);
-                }
+                }*/
                 
-                rescue_clipped_align(alns,
+               /* rescue_clipped_align(alns,
                                      naln,
                                      results,
                                      nresults,
@@ -2046,9 +2025,9 @@ static void reference_map_reference(int threadint)
                                      BC,
                                      fwd_database,
                                      rev_database,
-                                     ddfs_cutoff);
+                                     ddfs_cutoff);*/
                 
-                output_results(alns, naln, results, nresults, num_output, refoutfile[threadint]);
+                //output_results(alns, naln, results, nresults, num_output, refoutfile[threadint]);
                 
                 for (int t = 0; t < fnblk; ++t) {
                     int bid = fwd_index_list[t];
@@ -2063,7 +2042,7 @@ static void reference_map_reference(int threadint)
                     rev_database[bid].index = -1;
                 }
         
-            }*/
+            }
         }
     }
     delete aligner;
@@ -2076,9 +2055,7 @@ static void reference_map_reference(int threadint)
     delete[] aln_seqs;
     printf("check out\n");
 }
-static void map(char *sonedata,char *sonedata1,TempResult *a,TempResult *b,long length_read,int read_name,FILE *outfile){
-    
-}
+
 
 
 

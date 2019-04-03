@@ -302,7 +302,7 @@ DiffAligner::go(const char* query, const int qstart, const int qsize,
 						target + tstart - 1, tstart,
 						dynq, dynt, align, d_path, 
 						aln_path, &param, result, 0);
-	/*dw_in_one_direction(query + qstart, qsize - qstart,
+	dw_in_one_direction(query + qstart, qsize - qstart,
 						target + tstart, tsize - tstart,
 						dynq, dynt, align, d_path,
 						aln_path, &param, result, 1);
@@ -345,6 +345,6 @@ DiffAligner::go(const char* query, const int qstart, const int qsize,
 	result->out_store1[result->out_store_size] = '\0';
 	result->out_store2[result->out_store_size] = '\0';
 	
-	return result->out_store_size >= min_aln_size;*/
+	return result->out_store_size >= min_aln_size;
     return 0;
 }
