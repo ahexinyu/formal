@@ -1545,47 +1545,8 @@ static void reference_map_reference(int threadint)
                     database = fwd_database;
                     pnblk = &fnblk;
                 }
-                /*else if(ii==2){
-                 index_list = rev_index_list;
-                 index_score = rev_index_score;
-                 database = rev_database;
-                 pnblk = &rnblk;
-                 strcpy(onedata2,onedata1);
-                 onedata=onedata2;
-                 for(j=read_len-1,i=0; j>i; j--,i++)
-                 {
-                 FR=onedata[i];
-                 onedata[i]=onedata[j];
-                 onedata[j]=FR;
-                 }//将序列掉个?
-                 /* for(i=0; i<read_len; i++)
-                 {
-                 FR=onedata[i];
-                 switch(FR)
-                 {
-                 case 'A':
-                 {
-                 onedata[i]='T';
-                 break;
-                 }
-                 case 'T':
-                 {
-                 onedata[i]='A';
-                 break;
-                 }
-                 case 'C':
-                 {
-                 onedata[i]='G';
-                 break;
-                 }
-                 case 'G':
-                 {
-                 onedata[i]='C';
-                 break;
-                 }
-                 }
-                 }
-                 }*/
+                
+            
                 endnum=0;
                 int aaa=0;
                 read_len=strlen(onedata);
@@ -2100,9 +2061,9 @@ static void reference_map_reference(int threadint)
                     rev_database[bid].score = 0;
                     rev_database[bid].score2 = 0;
                     rev_database[bid].index = -1;
-                }*/
+                }
         
-            }
+            }*/
         }
     }
     delete aligner;
