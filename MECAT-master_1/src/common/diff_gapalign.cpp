@@ -275,7 +275,7 @@ void dw_in_one_direction(const char* query, const int query_size, const char* ta
 			acnt -=kTailMatchBP;
 		}
 		align->aln_str_size -= acnt;
-		/*if (right_extend) {
+		if (right_extend) {
 			memcpy(result->right_store1 + result->right_store_size, align->q_aln_str, align->aln_str_size);
 			memcpy(result->right_store2 + result->right_store_size, align->t_aln_str, align->aln_str_size);
 			result->right_store_size += align->aln_str_size;
@@ -286,7 +286,7 @@ void dw_in_one_direction(const char* query, const int query_size, const char* ta
 		}
 		
 		if (last_block || (!full_map)) break;
-		qidx += (align->aln_q_e - qcnt);
+		/*qidx += (align->aln_q_e - qcnt);
 		tidx += (align->aln_t_e - tcnt);*/
 	}
 }
