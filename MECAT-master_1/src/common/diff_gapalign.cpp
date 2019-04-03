@@ -286,8 +286,8 @@ void dw_in_one_direction(const char* query, const int query_size, const char* ta
 		}
 		
 		if (last_block || (!full_map)) break;
-		/*qidx += (align->aln_q_e - qcnt);
-		tidx += (align->aln_t_e - tcnt);*/
+		qidx += (align->aln_q_e - qcnt);
+		tidx += (align->aln_t_e - tcnt);
 	}
 }
 
