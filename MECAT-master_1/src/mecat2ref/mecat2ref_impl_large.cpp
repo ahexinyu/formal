@@ -1556,7 +1556,7 @@ static void reference_map_reference(int threadint)
                         aaa++;
                     }
                 }
-                if(aaa<100)continue;
+                if(aaa<150)continue;
                 j=0;
                 index_spr=index_list;
                 index_ss=index_score;
@@ -1830,7 +1830,7 @@ static void reference_map_reference(int threadint)
                             aaa++;
                         }
                     }
-                    if(aaa<100)continue;
+                    if(aaa<150)continue;
                     j=0;
                     index_spr=index_list;
                     index_ss=index_score;
