@@ -1732,7 +1732,7 @@ static void reference_map_reference(int threadint)
                                  nresults);
             }
             
-          /* rescue_clipped_align(alns,
+          rescue_clipped_align(alns,
                                  naln,
                                  results,
                                  nresults,
@@ -1751,7 +1751,7 @@ static void reference_map_reference(int threadint)
                                  rev_database,
                                  ddfs_cutoff);*/
             
-            //output_results(alns, naln, results, nresults, num_output, refoutfile[threadint]);
+            output_results(alns, naln, results, nresults, num_output, refoutfile[threadint]);
             
             for (int t = 0; t < fnblk; ++t) {
                 int bid = fwd_index_list[t];
@@ -1990,7 +1990,7 @@ static void reference_map_reference(int threadint)
                 
                 naln = 0;
                 nresults = 0;
-                /*for(i=0; i<canidatenum; i++)
+                for(i=0; i<canidatenum; i++)
                 {
                     extend_candidate(canidate_loc[i],
                                      aligner,
@@ -2006,9 +2006,9 @@ static void reference_map_reference(int threadint)
                                      &naln,
                                      results,
                                      nresults);
-                }*/
+                }
                 
-               /* rescue_clipped_align(alns,
+                rescue_clipped_align(alns,
                                      naln,
                                      results,
                                      nresults,
@@ -2025,9 +2025,9 @@ static void reference_map_reference(int threadint)
                                      BC,
                                      fwd_database,
                                      rev_database,
-                                     ddfs_cutoff);*/
+                                     ddfs_cutoff);
                 
-                //output_results(alns, naln, results, nresults, num_output, refoutfile[threadint]);
+                output_results(alns, naln, results, nresults, num_output, refoutfile[threadint]);
                 
                 for (int t = 0; t < fnblk; ++t) {
                     int bid = fwd_index_list[t];
