@@ -1749,7 +1749,7 @@ static void reference_map_reference(int threadint)
                                  BC,
                                  fwd_database,
                                  rev_database,
-                                 ddfs_cutoff);*/
+                                 ddfs_cutoff);
             
             output_results(alns, naln, results, nresults, num_output, refoutfile[threadint]);
             
