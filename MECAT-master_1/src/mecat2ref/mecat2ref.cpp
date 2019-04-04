@@ -671,7 +671,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
     TempResult *trslt=create_temp_result();
     char* trf_buffer = (char*)malloc(8192);
     
-    TempResult *refpptr[big_size];//这个100之后要改掉
+    TempResult *refpptr[big_size];
     FILE *thread_ref_file;int num_ref_results=0;
     TempResult *trslt1=create_temp_result();
     char* trf_buffer1 = (char*)malloc(8192);
