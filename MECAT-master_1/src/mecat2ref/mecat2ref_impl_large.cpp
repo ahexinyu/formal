@@ -2232,6 +2232,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         
     }
         printf("ref is sucuess\n");
+        fileflag=0;
    
 }
    
