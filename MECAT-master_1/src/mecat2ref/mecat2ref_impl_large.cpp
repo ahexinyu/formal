@@ -2114,7 +2114,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
 	MAXC = maxc;//num_candidate
 	TECH = tech;
 	num_output = noutput;
-    char tempstr[300],fastafile[300];
+    char tempstr[300],fastafile[300]; int RefFlag;
     char tempstr2[300];//******
     int corenum,readall,refall;//readall是readcount 的条数
     int fileflag,threadno,threadflag;
@@ -2185,15 +2185,11 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         //load_ref_f(ref_fastq);//************8
         if(readcount%PLL==0)terminalnum=readcount/PLL;
         else terminalnum=readcount/PLL+1;
-        if(REFcount%PLL==0)terminalnum2=REFcount/PLL;
-        else terminalnum2=REFcount/PLL+1;//***********
+        //***********
         if(readcount<=0)break;
-        if(REFcount<=0)break;
+        
         runnumber=0;
         runthreadnum=0;
-        runnumber2=0;
-        runthreadnum2=0;
-
         pthread_mutex_init(&mutilock,NULL);
         //creat thread
         if(readcount>0)
@@ -2201,7 +2197,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
             for(threadno=0; threadno<threadnum; threadno++)
             {
                 threadflag= pthread_create(&thread[threadno], NULL, multithread, NULL);//(multithread)
-                //printf("ddddddddd id %d\n",threadno);
+                
                 if(threadflag)
                 {
                     printf("ERROR; return code is %d\n", threadflag);
@@ -2214,27 +2210,35 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         }
 
         // reference_mapping(1);
-    printf("read is sucuess\n");
-    pthread_mutex_init(&mutilock2,NULL);
-    if(REFcount>0)
-    {
-        for(threadno=0; threadno<threadnum; threadno++)
-        {
-           threadflag= pthread_create(&thread2[threadno], NULL, multithread2, NULL);//(multithread)
-            if(threadflag)
-            {
-                printf("ERROR; return code is %d\n", threadflag);
-                return EXIT_FAILURE;
-            }
-        }
-        
-       for(threadno=0; threadno<threadnum; threadno++)pthread_join(thread2[threadno],NULL);
-        
-    }
-        printf("ref is sucuess\n");
-        fileflag=0;
+   
    
 }
+    RefFlag=1;
+    while(RefFlag){
+        if(REFcount%PLL==0)terminalnum2=REFcount/PLL;
+        else terminalnum2=REFcount/PLL+1;
+        if(REFcount<=0)break;
+        runnumber2=0;
+        runthreadnum2=0;
+        pthread_mutex_init(&mutilock2,NULL);
+        if(REFcount>0)
+        {
+            for(threadno=0; threadno<threadnum; threadno++)
+            {
+                threadflag= pthread_create(&thread2[threadno], NULL, multithread2, NULL);//(multithread)
+                if(threadflag)
+                {
+                    printf("ERROR; return code is %d\n", threadflag);
+                    return EXIT_FAILURE;
+                }
+            }
+            
+            for(threadno=0; threadno<threadnum; threadno++)pthread_join(thread2[threadno],NULL);
+            
+        }
+        RefFlag=0;
+    
+    }
    
     fclose(fastq);
     free(countin);//好像不能free。下面还要用
