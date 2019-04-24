@@ -597,7 +597,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
     int **result_database;int  pre_id,current_id;int kkk=0;int *point_arr;
     result_database=(int **)calloc(1000000,*sizeof(int*));
     for(int uul=0;uul<1000000;uul++){
-        result_database[uul]=int(*)calloc(40,sizeof(int));
+        result_database[uul]=(int*)calloc(40,sizeof(int));
     }
     pre_id=refpptr[0]->read_id;
     for(int i=0;i<num_ref_results;i++){
@@ -665,7 +665,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                             flag2=0;
                             break;
                         }//比对id 相同的情况下来判断是否合理
-                        judg=(pptr[j],refpptr[r_k]);
+                        judg=judge(pptr[j],refpptr[r_k]);
                         if(judg){
                             org_sta=pptr[j]->sb;
                             pptr[j]->sb=(pptr[j]->sb<refpptr[r_k]->sb)?pptr[j]->sb:refpptr[r_k]->sb;
@@ -710,6 +710,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
     free(up_file);
     free(out_buffer);
     free(trf_buffer1);
+    free(result_database);
     //free(refpptr);
     
 }
