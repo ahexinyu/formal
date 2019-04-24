@@ -561,7 +561,7 @@ extern int meap_ref_impl_large(int, int, int);
 //**********这部分是将第一次改和第二次改的结果做一次整合****************
 void polish_result(const char *workpath,int filecount,int refcount,char  *refoutfile){
     char path[200],path2[200];FILE *thread_file; FILE **up_file;int num_count=0;char buffer[1024];
-    char *trbuffer=(char *)malloc(8192);char tempstr[200];int temp1,temp2;
+    char *trbuffer=(char *)malloc(8192);char tempstr[200];int temp1,temp2;int r_k;
     int num_results=0;
     const int trsize=num_candidates + 6;
     int ref_trsize=refcount *5;
@@ -594,17 +594,20 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         fclose(thread_ref_file);
     }
     printf("num_ref_results is %d\n",num_ref_results);//到这里没问题
-    int **result_database;int  pre_id;current_id;int kkk=0;int *point_arr;
-    result_database=(int **)calloc((1000000)*sizeof(int*));
+    int **result_database;int  pre_id,current_id;int kkk=0;int *point_arr;
+    result_database=(int **)calloc(1000000,*sizeof(int*));
+    for(int uul=0;uul<1000000;uul++){
+        result_database[uul]=int(*)calloc(40,sizeof(int));
+    }
     pre_id=refpptr[0]->read_id;
-    for(int i=0;i<num_refsults;i++){
+    for(int i=0;i<num_ref_results;i++){
         current_id=refpptr[i]->read_id;
         if(pre_id==current_id){
             kkk++;
         }
         else{
             kkk=0;
-            pre_id=current_id
+            pre_id=current_id;
         }
         result_database[current_id][kkk]=i;
     }
