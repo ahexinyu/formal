@@ -584,7 +584,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
             copy_temp_result(trslt1,refpptr[num_ref_results]);
             num_ref_results++;
         }
-        printf("hehe  \n",i);
+        
         while(rok){
             rok=load_temp_result(trslt1, thread_ref_file);
             if(!rok)break;
@@ -595,7 +595,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
     }
     printf("num_ref_results is %d\n",num_ref_results);//到这里没问题
     int **result_database;int  pre_id,current_id;int kkk=0;int *point_arr;
-    result_database=(int **)calloc(1000000,*sizeof(int*));
+    result_database=(int **)calloc(1000000,sizeof(int*));
     for(int uul=0;uul<1000000;uul++){
         result_database[uul]=(int*)calloc(40,sizeof(int));
     }
