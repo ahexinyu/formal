@@ -838,11 +838,11 @@ static void reference_mapping(int threadint)
                         leadarray=databaseindex[mvalue[k]];//leadarry存的位置
                         for(i=0; i<count1; i++,leadarray++)
                         {
-                            templong=(*leadarray)/ZV;//位置信息，第几个block
-                            u_k=(*leadarray)%ZV;//zv为1000，U_K是偏移量
+                            templong=(*leadarray)/ZV;
+                            u_k=(*leadarray)%ZV;
                             if(templong>=0)
                             {
-                                temp_spr=database+templong;//temp_spr的类型是back_list。
+                                temp_spr=database+templong;
                                 if(temp_spr->score==0||temp_spr->seednum<k+1)
                                 {
                                     loc=++(temp_spr->score);

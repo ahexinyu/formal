@@ -254,7 +254,7 @@ output_temp_result2(TempResult* result, FILE* out,int sid)
 {
     fprintf(out, "%d\t%d\t%c\t%d\t%d\t%d\t%d\t%ld\t%ld\n",
             result->read_id,
-            sid;
+            sid,
             result->read_dir,
             result->vscore,
             result->qb,
