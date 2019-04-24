@@ -9,13 +9,13 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <dirent.h>
+#include "output.h"
+#include "../common/defs.h"
 #define RM 1000000
 #define big_size 1000000
 #define FM 1000000000
 #define MAXSTR 1000000000
 #define split_le 15000
-#include "output.h"
-#include "../common/defs.h"
 
 static const char* prog_name = NULL;
 static const int kDefaultNumCandidates = 10;
@@ -296,7 +296,7 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
     return (kk);
 
 }
-
+//*******更改reference文件格式****************
  int change_ref_fq(const char *filepath,const char *outpath){
     FILE *fp;FILE *ot;int ref_len;long i;
     char tempstr[200];char onedata[FM];char ch;char *fq,*oq;char buff1[1000], buff2[FM];
@@ -366,7 +366,7 @@ int firsttask(int argc, char *argv[])
 	if (flag == -1) { print_usage(); exit(1); }
 	 
     int readcount = chang_fastqfile(options->reads, options->wrk_dir);
-    int ref_count = change_ref_fq(options->reference,options->wrk_dir);
+    int ref_count = change_ref_fq(options->reference,options->wrk_dir);//*********
     char kkkkk[1024];
     sprintf(kkkkk, "config.txt");
     FILE* fileout = fopen(kkkkk, "w");
@@ -467,9 +467,9 @@ output_query_results(fastaindexinfo* chr_idx, const int num_chr, TempResult** pp
 		if (output_cnt == num_output) break;
 	}
 }
-int judge(TempResult *a,TempResult *b,int sid,int ref_sid){
+int judge(TempResult *a,TempResult *b){
     int r;
-    if(sid==ref_sid&&labs((a->sb-b->qb))<300&&labs(a->se-b->qe)<300){
+    if(labs((a->sb-b->qb))<300&&labs(a->se-b->qe)<300){
         if(labs(a->se-b->sb)<500||labs(a->sb-b->se)<500){
             r=1;
         }
@@ -555,111 +555,10 @@ int result_combine(int readcount, int filecount, char *workpath, char *outfile, 
 	return 0;
 }
 
-int result_combine2(int readcount, int filecount, char *workpath, char *outfile, char *fastaq, int main_argc, char* main_argv[])
-{
-    char path[1024], buffer[1024];
-    sprintf(path, "%s/chrindex.txt", workpath);
-    FILE* chr_idx_file = fopen(path, "r");
-    if (!chr_idx_file) { fprintf(stderr, "failed to open file %s for reading.\n", path); abort(); }
-    int num_chr = 0;
-    while(fgets(buffer, 1024, chr_idx_file)) ++num_chr;
-    --num_chr;
-    fastaindexinfo* chr_idx = (fastaindexinfo*)malloc(sizeof(fastaindexinfo) * num_chr);
-    fseek(chr_idx_file, 0L, SEEK_SET);
-    int i, flag;
-    for (i = 0; i < num_chr; ++i)
-    {
-        flag = fscanf(chr_idx_file, "%ld\t%s\t%ld\n", &chr_idx[i].chrstart, chr_idx[i].chrname, &chr_idx[i].chrsize);
-        assert(flag == 3);
-    }
-    fclose(chr_idx_file);
-    chr_idx_file = NULL;
-    
-    fprintf(stderr, "output file name: %s\n", outfile);
-    FILE* out = fopen(outfile, "w");
-    char* out_buffer = (char*)malloc(8192);
-    setvbuf(out, out_buffer, _IOFBF, 8192);
-    
-    if (output_format == FMT_SAM)
-    {
-        print_sam_header(out);
-        print_sam_references(chr_idx, num_chr, out);
-        print_sam_program(main_argc, main_argv, out);
-    }
-    
-    const int trsize = num_candidates + 6;
-    TempResult* pptr[trsize];
-    for (i = 0; i < trsize; ++i) pptr[i] = create_temp_result();
-    int num_results = 0;
-    TempResult* trslt = create_temp_result();
-    char* trf_buffer = (char*)malloc(8192);
-    for (i = 1; i <= filecount; ++i)
-    {
-        sprintf(path, "%s/ref%d.r", workpath, i);
-        FILE* thread_results_file = fopen(path, "r");
-        if (!thread_results_file) { fprintf(stderr, "failed to open reffile %s for reading.\n", path); abort(); }
-        setvbuf(thread_results_file, trf_buffer, _IOFBF, 8192);
-        num_results = 0;
-        int rok = load_temp_result(trslt, thread_results_file);
-        if (rok) { copy_temp_result(trslt, pptr[num_results]); ++num_results; }
-        int last_qid = pptr[0]->read_id;
-        while (rok)
-        {
-            rok = load_temp_result(trslt, thread_results_file);
-            if (!rok) break;
-            
-            if (trslt->read_id != last_qid)
-            {
-                output_query_results(chr_idx, num_chr, pptr, num_results, out);
-                num_results = 0;
-            }
-            
-            last_qid = trslt->read_id;
-            copy_temp_result(trslt, pptr[num_results]);
-            ++num_results;
-        }
-        if (num_results) output_query_results(chr_idx, num_chr, pptr, num_results, out);
-        
-        fclose(thread_results_file);
-    }
-    
-    for (i = 0; i < trsize; ++i) pptr[i] = destroy_temp_result(pptr[i]);
-    destroy_temp_result(trslt);
-    fclose(out);
-    free(out_buffer);
-    free(trf_buffer);
-    free(chr_idx);
-    
-    return 0;
-}
-
-/*int extract_ref(const char *workpath,int filecount,TempResult **refpptr,int refcount){//TempResult *refpptr[refcount]
-    char path[200];
-    FILE *thread_ref_file;int num_ref_results=0;
-    int trsize=refcount*5;
-    TempResult *trslt1=create_temp_result();
-    char* trf_buffer1 = (char*)malloc(8192);
-    for (int i = 0; i < trsize; ++i) refpptr[i] = create_temp_result();
-    for(int i=0;i<filecount;i++){
-        sprintf(path,"%s/ref%d.r",workpath,i);
-        thread_ref_file=fopen(path,"r");
-        setvbuf(thread_ref_file,trf_buffer1,_IOFBF,8192);
-        int rok=load_temp_result(trslt1, thread_ref_file);
-        if(rok){copy_temp_result(trslt1,refpptr[1]);++num_ref_results;}
-        while(rok){
-            rok=load_temp_result(trslt1, thread_ref_file);
-            if(!rok)break;
-            copy_temp_result(trslt1,refpptr[num_ref_results]);
-            ++num_ref_results;
-        }
-        fclose(thread_ref_file);
-    }
-    free(trf_buffer1);
-    return num_ref_results;
-}*/
 
 extern int meap_ref_impl_large(int, int, int);
-extern int small_meap(TempResult*,TempResult*,FILE*);
+
+//**********这部分是将第一次改和第二次改的结果做一次整合****************
 void polish_result(const char *workpath,int filecount,int refcount,char  *refoutfile){
     char path[200],path2[200];FILE *thread_file; FILE **up_file;int num_count=0;char buffer[1024];
     char *trbuffer=(char *)malloc(8192);char tempstr[200];int temp1,temp2;
@@ -671,7 +570,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
     TempResult *trslt=create_temp_result();
     char* trf_buffer = (char*)malloc(8192);
     
-    TempResult *refpptr[big_size];//这个100之后要改掉
+    TempResult *refpptr[big_size];
     FILE *thread_ref_file;int num_ref_results=0;
     TempResult *trslt1=create_temp_result();
     char* trf_buffer1 = (char*)malloc(8192);
@@ -681,9 +580,11 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         thread_ref_file=fopen(path,"r");
         setvbuf(thread_ref_file,trf_buffer1,_IOFBF,8192);
         int rok=load_temp_result(trslt1, thread_ref_file);
-        printf("rok is%d\n",rok);
-        if(rok){copy_temp_result(trslt1,refpptr[num_ref_results]);num_ref_results++;}
-        printf("hehe i ssucexed\n");
+        if(rok){
+            copy_temp_result(trslt1,refpptr[num_ref_results]);
+            num_ref_results++;
+        }
+        printf("hehe  \n",i);
         while(rok){
             rok=load_temp_result(trslt1, thread_ref_file);
             if(!rok)break;
@@ -693,6 +594,20 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         fclose(thread_ref_file);
     }
     printf("num_ref_results is %d\n",num_ref_results);//到这里没问题
+    int **result_database;int  pre_id;current_id;int kkk=0;int *point_arr;
+    result_database=(int **)calloc((1000000)*sizeof(int*));
+    pre_id=refpptr[0]->read_id;
+    for(int i=0;i<num_refsults;i++){
+        current_id=refpptr[i]->read_id;
+        if(pre_id==current_id){
+            kkk++;
+        }
+        else{
+            kkk=0;
+            pre_id=current_id
+        }
+        result_database[current_id][kkk]=i;
+    }
     sprintf(path2, "%s/chrindex.txt", workpath);
     FILE* chr_idx_file = fopen(path2, "r");
     if (!chr_idx_file) { fprintf(stderr, "failed to open file %s for reading.\n", path); abort(); }
@@ -729,7 +644,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         
         setvbuf(thread_file,trbuffer,_IOFBF,8192);
         num_results=0;int judg=0;
-        //先写long——read的
+        
         int rok=load_temp_result(trslt,thread_file);
         if(rok){copy_temp_result(trslt,pptr[num_results]);++num_results;}
         int last_id=pptr[0]->read_id;int formal_id;int formal_loc;int org_sta,org_end;
@@ -738,58 +653,52 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
             if(!rok)break;
             if(trslt->read_id!=last_id){//这是同一个read的比对写到文件里面
                 for(int j=0;j<num_results;j++){
-                    int sid = get_chr_id(chr_idx, num_chr, pptr[j]->sb);
-                    for(int i=0;i<num_ref_results;i++){
-                        formal_loc=(refpptr[i]->read_id)*split_le+refpptr[i]->qb;
-                        formal_id=get_chr_id(chr_idx, num_chr, formal_loc);
-                        if(sid!=formal_id&&i!=num_ref_results-1){flag2=1;continue;}//这边写进那个文件，不是最后这个文件
-                        else {
-                            judg=judge(pptr[j], refpptr[i],sid,formal_id);
+                    int sid = get_chr_id(chr_idx, num_chr, pptr[j]->sb);//read比对的第几个参考基因组
+                    int re_id=pptr[j]->sb/split_le;
+                    point_arr=result_database[re_id];
+                    for(int i=0;i<16;i++,point_arr++){
+                        r_k=*point_arr;
+                        if(r_k==0){
                             flag2=0;
-                            if(judg){
-                                org_sta=pptr[j]->sb;
-                                pptr[j]->sb=(pptr[j]->sb<refpptr[i]->sb)?pptr[j]->sb:refpptr[i]->sb;
-                                org_end=pptr[j]->se;
-                                pptr[j]->se=(pptr[j]->se>refpptr[i]->se)?pptr[j]->se:refpptr[i]->se;
-                                if(pptr[j]->qb-(org_sta-pptr[j]->sb)>=0){
-                                    pptr[j]->qb=pptr[j]->qb-(org_sta-pptr[j]->sb);
-                                }
-                                else{
-                                    temp1=pptr[j]->qb;
-                                    pptr[j]->sb=org_sta-temp1;
-                                    pptr[j]->qb=0;
-                                }
-                                if(pptr[j]->qe+(pptr[j]->sb-org_end)<pptr[j]->qs){
-                                    pptr[j]->qe=pptr[j]->qe+(pptr[j]->sb-org_end);
-                                }else{
-                                    temp2=pptr[j]->qe;
-                                    pptr[j]->qe=pptr[j]->qs;
-                                    pptr[j]->se=org_end+pptr[j]->qs-temp2;
-                                }
-                                output_temp_result2(pptr[j],out);//改过之后写一遍
-                            }//直接连了。不用判断了
-                            else{
-                                if(i==num_ref_results-1){
-                                    output_temp_result2(pptr[j],out);
-                                    break;//没改的
-                                }
-                                else{continue;}
+                            break;
+                        }//比对id 相同的情况下来判断是否合理
+                        judg=(pptr[j],refpptr[r_k]);
+                        if(judg){
+                            org_sta=pptr[j]->sb;
+                            pptr[j]->sb=(pptr[j]->sb<refpptr[r_k]->sb)?pptr[j]->sb:refpptr[r_k]->sb;
+                            org_end=pptr[j]->se;
+                            pptr[j]->se=(pptr[j]->se>refpptr[r_k]->se)?pptr[j]->se:refpptr[r_k]->se;
+                            if(pptr[j]->qb-(org_sta-pptr[j]->sb)>=0){
+                                pptr[j]->qb=pptr[j]->qb-(org_sta-pptr[j]->sb);
                             }
-                            
+                            else{
+                                temp1=pptr[j]->qb;
+                                pptr[j]->sb=org_sta-temp1;
+                                pptr[j]->qb=0;
+                            }
+                            if(pptr[j]->qe+(pptr[j]->sb-org_end)<pptr[j]->qs){
+                                pptr[j]->qe=pptr[j]->qe+(pptr[j]->sb-org_end);
+                            }else{
+                                temp2=pptr[j]->qe;
+                                pptr[j]->qe=pptr[j]->qs;
+                                pptr[j]->se=org_end+pptr[j]->qs-temp2;
+                            }
+                            output_temp_result2(pptr[j],out,sid);
                         }
-                        if(flag2&&i==num_ref_results-1){
-                            output_temp_result2(pptr[j],out);
-                        }//找不到的情况
+                        else{
+                            output_temp_result2(pptr[j],out,sid);
+                        }
+                        
                     }
+                    if(flag==0){ output_temp_result2(pptr[j],out,sid);}
                 }
                 num_results=0;
             }
             last_id = trslt->read_id;
             copy_temp_result(trslt, pptr[num_results]);
             ++num_results;
-            
         }
-        fclose(thread_file);
+                fclose(thread_file);
     }
     for(int i=0;i<trsize;++i)pptr[i]=destroy_temp_result(pptr[i]);
     for(int i=0;i<big_size;++i)refpptr[i]=destroy_temp_result(refpptr[i]);

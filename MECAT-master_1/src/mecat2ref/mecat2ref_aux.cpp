@@ -3,7 +3,7 @@
 #include <algorithm>
 #define CBLL 200
 using namespace std;
-
+/***考虑了相似度的问题***/
 int find_location(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,sim *sc,long start_loc)
 {
     int i,j,maxval=0,maxi,rep=0,lasti=0;long _loc[200];float list_sim[200];
@@ -16,7 +16,7 @@ int find_location(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_
     for(i=0;i<k;i++){_loc[i]=start_loc+t_loc[i];}
     int nn=0;
     for(i=0;i<SI;i++){
-        nn=(_loc[i]-12)/CBLL;
+        nn=_loc[i]/CBLL;
         list_sim[i]=(sc[nn].vote);
         t_score[i]=t_score[i]*list_sim[i];
     }
@@ -105,13 +105,13 @@ int find_location2(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep
         if(maxval<t_score[i])
         {
             maxval=t_score[i];
-            maxi=i;//最大值的位置
+            maxi=i;
             rep=0;
-        }//找出分数最高的
+        }
         else if(maxval==t_score[i])
-        {//分数一样高的
+        {
             rep++;
-            lasti=i;//次高的分数
+            lasti=i;
         }
     }
     for(i=0; i<4; i++)loc[i]=0;

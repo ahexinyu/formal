@@ -250,10 +250,11 @@ output_temp_result(TempResult* result, FILE* out)
 				 result->smap);
 }
 void
-output_temp_result2(TempResult* result, FILE* out)
+output_temp_result2(TempResult* result, FILE* out,int sid)
 {
-    fprintf(out, "%d\t%c\t%d\t%d\t%d\t%d\t%ld\t%ld\n",
+    fprintf(out, "%d\t%d\t%c\t%d\t%d\t%d\t%d\t%ld\t%ld\n",
             result->read_id,
+            sid;
             result->read_dir,
             result->vscore,
             result->qb,
@@ -296,6 +297,7 @@ destroy_temp_result(TempResult* result)
 	free(result);
 	return NULL;
 }
+
 
 void
 copy_temp_result(TempResult* src, TempResult* dst)

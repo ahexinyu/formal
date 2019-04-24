@@ -5,6 +5,8 @@
 #include "../common/xdrop_gapalign.h"
 
 #include <algorithm>
+#define FM  200000
+#define CBL 200
 using namespace std;
 
 static int MAXC = 0;// default MAXC 等于10
@@ -16,36 +18,34 @@ static const double ddfs_cutoff_nanopore = 0.1;
 static double ddfs_cutoff = ddfs_cutoff_pacbio;
 
 static pthread_t *thread;
-static pthread_t *thread2;
 static int threadnum=2;
 static FILE **outfile;
-static FILE **refoutfile;
 static pthread_mutex_t mutilock;
-static pthread_mutex_t mutilock2;
 static int runnumber=0,runthreadnum=0, readcount,terminalnum;
-static int runnumber2=0,runthreadnum2=0,terminalnum2;//*********
 static int *countin;
 static long **databaseindex,*allloc,seqcount,sumcount;
-static long **databaseindex1,*allloc1,seqcount1,sumcount1;
 static char *REFSEQ;
 static char *savework,workpath[300],fastqfile[300];
+static int runnumber2=0,runthreadnum2=0,terminalnum2;//*************
+static long **databaseindex1,*allloc1,seqcount1,sumcount1;
+static pthread_mutex_t mutilock2;
 static int *countin1;
+static FILE **refoutfile;
+static pthread_t *thread2;
 static int seed_len=13;
 static int index_count=67108864;
 static char *read_REFESQ;
 static char *save_work;
 static ReadFasta *readinfo;
-static int REFcount;//***********
-#define FM  200000
-#define CBL 200
+static int REFcount;
 float similarity=0;
 typedef struct REF_info{
     int refno;
     int reflen;
     char ref_sequ[15000];
-}REF_info;//*************
-REF_info *refinfo;//************
-char *ref_savework;//************
+}REF_info;
+REF_info *refinfo;
+char *ref_savework;
 int mavalue[2000];
 int similarity_count;
 int read_kmer;
@@ -54,34 +54,7 @@ typedef struct {
     char *read_string;
 }read_info;
 static sim *sc;
-static read_info *info;
-/*static int load_ref_f(FILE *fp){
-    int readlen,readno,sum=0,flag;
-    char *pre;
-    REFcount=0;
-    pre=ref_savework;
-    while((flag=fscanf(fp,"%d\t%d\t%s\n",&readno,&readlen,pre))!=EOF&&REFcount<SVM&&sum<MAXSTR)
-    {
-        refinfo[REFcount].ref_sequ=pre;
-        refinfo[REFcount].refno=readno;
-        readlen=strlen(pre);
-        refinfo[readcount].reflen=readlen;
-        sum=sum+readlen+1;
-        pre=pre+readlen+1;
-        REFcount++;
-    }
-    if(flag!=EOF)
-        
-    {
-        refinfo[REFcount].ref_sequ=pre;
-        refinfo[REFcount].refno=readno;
-        readlen=strlen(pre);
-        refinfo[REFcount].reflen=readlen;
-        REFcount++;
-        return(1);
-    }
-    else return(0);
-}*/
+static read_info *info;//*****************
 static long get_file_size(const char *path)
 {
     long filesize = -1;
@@ -144,11 +117,11 @@ static int transnum_buchang(char *seqm,int *value,int *endn,int len_str,int read
     }
     return(num);//extract_number
 }
-
+//****选择位置的时候考虑了相似度  此时block的长度为1000*******
 static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long templong)
-{//insert_loc(temp_spr,u_k,k+1,BC,sc,templong)
+{
     int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;int nn=0;int _loc;//在参考基因的位置
-    float list_sim[SI];float score_sim[SI];//加了相似度之后的分数
+    float list_sim[SI];float score_sim[SI];
     for(i=0; i<SM; i++)
     {
         list_loc[i]=spr->loczhi[i];
@@ -168,10 +141,11 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long te
     for(i=0;i<SI;i++){score_sim[i]=0;}
     for(i=0;i<SI;i++){
         _loc=(templong*ZV)+list_loc[i];
-        nn=(_loc-12)/CBL;
+        nn=_loc/CBL;
         list_sim[i]=(sc[nn].vote);
         score_sim[i]=list_score[i]/list_sim[i];
-        _loc=0;}//考虑相似度
+        _loc=0;
+    }//考虑相似度
     for(i=0; i<SI; i++)if(minval>score_sim[i])
         {
             minval=score_sim[i];
@@ -206,7 +180,7 @@ static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
     list_score[SM]=0;
     mini=-1;
     maxi=-1;
-    maxval=10;//SM 和SI
+    maxval=10;
     minval=10;
     for(i=0; i<SM; i++)for(j=i+1;j<SI; j++)if(list_seed[j]-list_seed[i]>0&&list_loc[j]-list_loc[i]>0&&fabs((list_loc[j]-list_loc[i])/((list_seed[j]-list_seed[i])*len)-1.0)<ddfs_cutoff)//计算DDF公式
     {
@@ -219,11 +193,11 @@ static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
         if(maxval<=list_score[i])
         {
             maxval=list_score[i];
-            maxi=i;//选出最大的。
+            maxi=i;
         }else if(minval>list_score[i])
         {
             minval=list_score[i];
-            mini=i;//选出16里面最小的
+            mini=i;
         }
     }
     if(maxi==-1)
@@ -246,8 +220,9 @@ static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
         spr->score--;
     }
 }
+//****选择位置的时候考虑了相似度  此时block的长度为2000*******
 static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len,long templong)
-{//insert_loc(temp_spr,u_k,k+1,BC,templong)
+{
     int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;int nn=0;int _loc;//在参考基因的位置
     float list_sim[SI];float score_sim[SI];
     for(i=0; i<SM; i++)
@@ -257,8 +232,8 @@ static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len,long t
         list_score[i]=0;
     }
     list_loc[SM]=loc;
-    list_seed[SM]=seedn;//seednumber
-    list_score[SM]=0;//SM 和SI 是20 和21
+    list_seed[SM]=seedn;
+    list_score[SM]=0;
     mini=-1;
     minval=10000;
     for(i=0; i<SM; i++)for(j=i+1; j<SI; j++)if(list_seed[j]-list_seed[i]>0&&list_loc[j]-list_loc[i]>0&&fabs((list_loc[j]-list_loc[i])/((list_seed[j]-list_seed[i])*len)-1.0)<ddfs_cutoff)
@@ -269,10 +244,9 @@ static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len,long t
     for(i=0;i<SI;i++){score_sim[i]=0;}
     for(i=0;i<SI;i++){
         _loc=(templong*ZVS)+list_loc[i];
-        
-        nn=(_loc-12)/CBL;
+        nn=_loc/CBL;//
         list_sim[i]=(sc[nn].vote);
-        score_sim[i]=list_score[i]/list_sim[i];}//考虑相似度
+        score_sim[i]=list_score[i]/list_sim[i];}
     for(i=0; i<SI; i++)if(minval>score_sim[i])
     {
         minval=score_sim[i];
@@ -293,40 +267,17 @@ static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len,long t
         spr->score--;//删掉最低一个
     }
 }
-void swapdata(candidate_save *a,candidate_save *b){
-    candidate_save temp;
-    temp=*a;
-    *a=*b;
-    *b=temp;
-}
-
-void sortdata(candidate_save *can,int num){
-    for (int i=0;i<num-1;i++)
-    {
-        
-        for(int j=0;j<num-i-1;j++)
-        {
-            if(can[j].score<can[j+1].score){
-                candidate_save temp;
-                temp=can[j];
-                can[j]=can[j+1];
-                can[j+1]=temp;
-            }
-        }
-    }
-}
-static void build_read_index(char *path, char *path1){//buildindex
+//********为read建立索引，因为后来要找reference的k_mer在长read中出现的次数
+static void build_read_index(char *path, char *path1){
     unsigned int eit,temp;long start;
     char tempstr[200];
-    printf(" path is %s",path);
     sprintf(tempstr, "%s/0.fq",path);
     int leftnum;
     leftnum=34-2*seed_len;
     FILE *fp;
     fp=fopen(tempstr,"r");
     char *seq;
-    int length=get_file_size(path1);//***read文件大小
-    printf(" read length is %d\n",length);
+    int length=get_file_size(path1);
     read_REFESQ=(char *)malloc((MAXSTR+RM)*sizeof(char));
     seq=read_REFESQ;
     
@@ -366,7 +317,7 @@ static void build_read_index(char *path, char *path1){//buildindex
     start=0;
     for(int i=0; i<seqcount1; i++)
     {
-        //printf("%c",seq[i]);
+        
         if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
         {
             eit=0;
@@ -379,7 +330,7 @@ static void build_read_index(char *path, char *path1){//buildindex
             eit=eit<<2;
             eit=eit+temp;
             start=start+1;
-            //printf("countin is %d\n",eit);
+            
             
         }
         else if(start>=seed_len-1)
@@ -388,7 +339,6 @@ static void build_read_index(char *path, char *path1){//buildindex
             eit=eit+temp;
             start=start+1;
             countin1[eit]=countin1[eit]+1;
-            //printf("countin is %d\n",eit);//存的是countin
             eit=eit<<leftnum;
             eit=eit>>leftnum;
             
@@ -423,7 +373,7 @@ static void build_read_index(char *path, char *path1){//buildindex
     start=0;
     for(int i=0; i<seqcount1; i++)
     {
-        //printf("%c\n",seq[i]);
+       
         if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
         {
             eit=0;
@@ -457,32 +407,11 @@ static void build_read_index(char *path, char *path1){//buildindex
         }
         
     }
-   // free(read_REFESQ);//****
+   
     free(info);
 }
 
-int filter_loc(candidate_save *a,candidate_save b,int *location,int num){
-    int i=1;int p=0;
-    float k;float x,y;
-    for(int j=0;j<num;j++){
-        if(a[j].loc2!=b.loc2){
-            x=fabs(a[j].loc1-b.loc1);
-            y=fabs(a[j].loc2-b.loc2);
-            printf("x is%f,y is%f",x,y);
-            k=x/y;
-            printf(" k is%f\n",k);
-            if(k<0.3){
-                *location=j;
-                i=0;
-            }
-        }
-        printf(" a[p].score is%d\n",a[j].score);
-        
-    }
-    printf(" p is%d\n",*location);
-    return i;
-}
-
+//*****改动过，建立index之后顺便找一找在longread出现的次数*******
 static void creat_ref_index(char *fastafile)
 {
     unsigned int eit,temp;
@@ -491,7 +420,7 @@ static void creat_ref_index(char *fastafile)
     FILE *fasta,*fastaindex;
     char *seq,ch,nameall[200];
     if(seed_len==14)indexcount=268435456;
-    else if(seed_len==13)indexcount=67108864;//2的26次方
+    else if(seed_len==13)indexcount=67108864;//4的13次方
     else if(seed_len==12)indexcount=16777216;
     else if(seed_len==11)indexcount=4194304;
     else if(seed_len==10)indexcount=1048576;
@@ -500,10 +429,7 @@ static void creat_ref_index(char *fastafile)
     else if(seed_len==7)indexcount=16384;
     else if(seed_len==6)indexcount=4096;
     leftnum=34-2*seed_len;
-    //sim *sc1;
-    //read reference seq
     length=get_file_size(fastafile);
-    printf("refernece length is %d",length);
     fasta=fopen(fastafile, "r");
     sprintf(nameall,"%s/chrindex.txt",workpath);
     fastaindex=fopen(nameall,"w");
@@ -537,24 +463,21 @@ static void creat_ref_index(char *fastafile)
     fclose(fastaindex);
     seqcount=count;
     similarity_count=(seqcount-12)/CBL+1;
-    printf("similarity_count is\n",similarity_count);
     sc=(sim *)malloc((similarity_count+10)*sizeof(sim));
-    printf("sim si sucess\n");
     for(int k=0;k<(similarity_count+10);k++){
         sc[k].k_count=0;
         sc[k].simm=0;
         sc[k].TF=0;
-        sc[k].LDF=0;//词频
+        sc[k].LDF=0;
         sc[k].r_count=0;
         sc[k].vote=0;
     }
-    //sc1=sc;
-    printf("%ld\n",seqcount);
-//printf("Constructing look-up table...\n");
+    
+   
     countin=(int *)malloc((indexcount)*sizeof(int));
     for(i=0; i<indexcount; i++)countin[i]=0;
- printf("2222 is suceess\n");
-// Count the number
+
+
     eit=0;
     start=0;
     for(i=0; i<seqcount; i++)
@@ -581,15 +504,12 @@ static void creat_ref_index(char *fastafile)
             countin[eit]=countin[eit]+1;
             eit=eit<<leftnum;
             eit=eit>>leftnum;
-            // printf("this is eit%d\n",eit);
+           
         }
-       
-        //printf("%c",seq[i]);
     }
-    printf("333 is suceess\n");
-  int nn=0;//表示区域
+    int nn=0;
 //Max_index
-    sumcount=sumvalue_x(countin,indexcount);//有效Index K_mer的数量
+    sumcount=sumvalue_x(countin,indexcount);
     count_value=sumcount;
     allloc=(long *)malloc(sumcount*sizeof(long));
     databaseindex=(long **)malloc((indexcount)*sizeof(long*));
@@ -606,9 +526,6 @@ static void creat_ref_index(char *fastafile)
         else databaseindex[i]=NULL;
        
     }
-
-    // printf("xiao");//10834098
- printf("444 is suceess\n");
 //constructing the look-up table
     eit=0;
     start=0;
@@ -626,7 +543,6 @@ static void creat_ref_index(char *fastafile)
             eit=eit<<2;
             eit=eit+temp;
             start=start+1;
-            //printf("eit2%d\n",eit);
         }
         else if(start>=seed_len-1)
         {
@@ -637,16 +553,15 @@ static void creat_ref_index(char *fastafile)
             if(databaseindex[eit]!=NULL)
             {
                 countin[eit]=countin[eit]+1;
-                databaseindex[eit][countin[eit]-1]=i+2-seed_len;//存的位置
+                databaseindex[eit][countin[eit]-1]=i+2-seed_len;
             }
             
-            nn=(i-12)/CBL;//按照200划分，
+            nn=(i-12)/CBL;
            if(countin1[eit]>0){
                 sc[nn].k_count=sc[nn].k_count+countin1[eit];//在long_read里面出现的次数
             }
             eit=eit<<leftnum;
             eit=eit>>leftnum;
-           // printf("%d\n",eit);
         }
     }
     int lel=0;
@@ -663,65 +578,27 @@ static void creat_ref_index(char *fastafile)
         }
         
     }
-    REFcount=REFcount-1;//把最后一个去掉
-    printf("555 is suceess\n");
+    REFcount=REFcount-1;
 }
-
+//********根据sim数据结构计算各个区域的相似度******
 static void get_vote(){
     int eit=0;
     int temp=0;
     int i=0;char *seq;char *readseq;
-    readseq=read_REFESQ;//sim *sc1;
+    readseq=read_REFESQ;
     seq=REFSEQ;
-    int start=0;//num 有关
+    int start=0;
     int leftnum=8;int nn=0;
     
     for(int j=0;j<similarity_count-1;j++){
         if(sc[j].k_count>0){
-            //printf("K-count is %f\n",sc[j].k_count);
             sc[j].LDF=log((read_kmer)/sc[j].k_count);
-            //printf("LDF is %f\n", sc[j].LDF);
             sc[j].vote=log(sc[j].LDF)/4;
         }
         else{
             sc[j].vote=1;
         }
     }
-    printf("here is sucuess");
-  /* for(i=0; i<seqcount; i++)
-    {
-        
-        if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
-        {
-            eit=0;
-            start=0;
-            continue;
-        }
-        temp=atcttrans(seq[i]);
-        if(start<seed_len-1)
-        {
-            eit=eit<<2;
-            eit=eit+temp;
-            start=start+1;
-        }
-        else if(start>=seed_len-1)
-        {
-            eit=eit<<2;
-            eit=eit+temp;
-            start=start+1;
-            nn=(i-12)/200;
-            if(countin[eit]>0){
-                //printf("%d\n",cpycount[eit]);
-                sc[nn].r_count=sc[nn].r_count+countin[eit];
-            } //在参考基因里出现的次数
-            eit=eit<<leftnum;
-            eit=eit>>leftnum;
-        }
-    }*/
-     printf("test is sucuess");
-   /*for(int j=0;j<similarity_count;j++){
-        printf("vote is %f\n",sc[j].vote);
-   }*/
     
 }
 int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,long start_loc)//绝了
@@ -737,13 +614,10 @@ int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep
     
     int nn=0;
     for(i=0;i<k;i++){
-        nn=(_loc[i]-12)/CBL;
-        //printf("nn is %d\n",nn);
+        nn=_loc[i]/CBL;
         list_sim[i]=(sc[nn].vote);
         t_score[i]=t_score[i]/list_sim[i];
     }
-    //printf("hhhhhhhhhhhhhhhhhhhhhh si sucesss\n");
-    
     for(i=0; i<k; i++)
     {
         if(maxval<t_score[i])
@@ -890,7 +764,7 @@ static void reference_mapping(int threadint)
             fileid=0;
             break;
         }
-        if(localnum==terminalnum-1)read_end=readcount;//小于1000条的样子。
+        if(localnum==terminalnum-1)read_end=readcount;
         else read_end=(localnum+1)*PLL;
         for(read_i=localnum*PLL; read_i<read_end; read_i++)
         {
@@ -961,7 +835,6 @@ static void reference_mapping(int threadint)
                 for(k=0; k<cleave_num; k++)if(mvalue[k]>=0)
                     {
                         count1=countin[mvalue[k]];
-                        //if(count1>20)continue;
                         leadarray=databaseindex[mvalue[k]];//leadarry存的位置
                         for(i=0; i<count1; i++,leadarray++)
                         {
@@ -969,18 +842,16 @@ static void reference_mapping(int threadint)
                             u_k=(*leadarray)%ZV;//zv为1000，U_K是偏移量
                             if(templong>=0)
                             {
-                                temp_spr=database+templong;//temp_spr的类型是back_list。   struct Back_List *database
+                                temp_spr=database+templong;//temp_spr的类型是back_list。
                                 if(temp_spr->score==0||temp_spr->seednum<k+1)
                                 {
                                     loc=++(temp_spr->score);
                                     if(loc<=SM)
                                     {
-                                        temp_spr->loczhi[loc-1]=u_k;//位置，block位置。绝了
-                                        //printf("temp_spr->loczhi[loc-1] is %d\n",u_k);
+                                        temp_spr->loczhi[loc-1]=u_k;
                                         temp_spr->seedno[loc-1]=k+1;
                                     }
-                                    else insert_loc(temp_spr,u_k,k+1,BC,templong);//删除分数最小的。保持在20个左右//
-                                    //else insert_loc2(temp_spr,u_k,k+1,BC);
+                                    else insert_loc(temp_spr,u_k,k+1,BC,templong);//删除分数最小的。保持在20个左右
                                     if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
                                     else s_k=temp_spr->score;
                                     if(endnum<s_k)endnum=s_k;
@@ -1250,7 +1121,6 @@ static void reference_mapping(int threadint)
                                             temp_spr->seedno[loc-1]=k+1;
                                         }
                                         else insert_loc3(temp_spr,u_k,k+1,BC,templong);
-                                        //else insert_loc2(temp_spr,u_k,k+1,BC);
                                         if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
                                         else s_k=temp_spr->score;
                                         if(endnum<s_k)endnum=s_k;
@@ -1443,19 +1313,19 @@ static void reference_mapping(int threadint)
     free(rev_index_list);
     free(rev_index_score);
 	delete[] aln_seqs;
-    printf("hehehhhhhhh is suceussu\n");
+   
 }
 static void reference_map_reference(int threadint)
 {
-    int  seedlenth=13;int rindexcount=67108864;//***********
-    int *table;static long **tableindex1,*tableallloc1,tablesumcount1;//***********
-    int leftnum=8;//***********
-    int p=0;int pp=0;//**********
+    int  seedlenth=13;int rindexcount=67108864;
+    int *table;static long **tableindex1,*tableallloc1,tablesumcount1;
+    int leftnum=8;
+    int p=0;int pp=0;
     int cleave_num,read_len;
     int mvalue[20000],flag_end;
     long *leadarray,u_k,s_k,loc;int aaa;
     int count1=0,i,j,k,templong,read_name;
-    struct Back_List *database,*temp_spr,*temp_spr1;//
+    struct Back_List *database,*temp_spr,*temp_spr1;
     int repeat_loc = 0,*index_list,*index_spr;
     long location_loc[4],left_length1,right_length1,left_length2,right_length2,loc_list,start_loc;
     short int *index_score,*index_ss;
@@ -2053,13 +1923,12 @@ static void reference_map_reference(int threadint)
     free(rev_index_list);
     free(rev_index_score);
     delete[] aln_seqs;
-    printf("check out\n");
 }
 
 
 
 
-
+//long read 的多线程跑
 static void* multithread(void* arg)
 {
     int localthreadno;
@@ -2070,6 +1939,7 @@ static void* multithread(void* arg)
     reference_mapping(localthreadno);
    	return NULL;
 }
+//ref的多线程跑
 static void* multithread2(void* arg)
 {
     int localthreadno2;
@@ -2144,7 +2014,6 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     fprintf(fp, "The Building read Index Time: %f sec\n", timeuse);
     //build read_long index
     gettimeofday(&tpstart, NULL);
-    printf("get time sis sucess\n");
     creat_ref_index(fastafile);
     printf("get ref_index sucess\n");
     gettimeofday(&tpend, NULL);
@@ -2160,7 +2029,6 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
     ref_savework=(char *)malloc((MAXSTR+RM)*sizeof(char));//********
     readinfo=(ReadFasta*)malloc((SVM+2)*sizeof(ReadFasta));
-    //refinfo=(REF_info*)malloc((RVM)*sizeof(REF_info));//*********
     thread=(pthread_t*)malloc(threadnum*sizeof(pthread_t));
     thread2=(pthread_t*)malloc(threadnum*sizeof(pthread_t));
     outfile=(FILE **)malloc(threadnum*sizeof(FILE *));
