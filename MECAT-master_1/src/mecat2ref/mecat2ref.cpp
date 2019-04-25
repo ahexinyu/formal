@@ -687,9 +687,11 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                 pptr[j]->se=org_end+pptr[j]->qs-temp2;
                             }
                             output_temp_result2(pptr[j],out,sid);
+                            break;
                         }
                         else{
-                            output_temp_result2(pptr[j],out,sid);
+                            if(judg==0&&*(point_arr+1)==0){output_temp_result2(pptr[j],out,sid);}
+                            
                         }
                         
                     }
