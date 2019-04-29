@@ -581,17 +581,24 @@ static void creat_ref_index(char *fastafile)
 static void get_vote(){
     int eit=0;
     int temp=0;
-    int i=0;char *seq;char *readseq;
+    int i=0,j=0;char *seq;char *readseq;
     readseq=read_REFESQ;
     seq=REFSEQ;
     int start=0;
-    int leftnum=8;int nn=0;
+    int leftnum=8;int nn=0;int total_count=0;int ave_count;int  deviation;
+    for( j=0;j<similarity_count;j++){
+        total_count=total_count+sc[j].k_count;
+    }
+    ave_count=total_count/similarity_count;
+    printf("ave_count is%d\n",ave_count);
+    for( j=0;j<similarity_count;j++){
+        deviation=(sc[j].k_count-ave_count)/similarity_count;
+        printf(" deviation is %d\n",deviation);
+    }
     
-    for(int j=0;j<similarity_count-1;j++){
+    for( j=0;j<similarity_count;j++){
         if(sc[j].k_count>0){
-            printf("k_count is%d\n",sc[j].k_count);
             sc[j].LDF=log((read_kmer)/sc[j].k_count);
-            printf("LDF is %d\n",sc[j].LDF);
             sc[j].vote=log(sc[j].LDF)/4;
         }
         else{
