@@ -589,9 +589,9 @@ static void get_vote(){
     
     for(int j=0;j<similarity_count-1;j++){
         if(sc[j].k_count>0){
-            printf("k_count is%d\n",k_count);
+            printf("k_count is%d\n",sc[j].k_count);
             sc[j].LDF=log((read_kmer)/sc[j].k_count);
-            printf("LDF is %d\n",LDF);
+            printf("LDF is %d\n",sc[j].LDF);
             sc[j].vote=log(sc[j].LDF)/4;
         }
         else{
