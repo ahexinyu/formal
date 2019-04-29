@@ -304,10 +304,10 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
     char refname[200];
     sprintf(tempstr,"%s/ref.fq",outpath);
     ot=fopen(tempstr,"w");
-     fq = (char *)malloc(1000000000);
-     setvbuf(fp, fq, _IOFBF, 1000000000);
-     oq = (char *)malloc(1000000000);
-     setvbuf(ot, oq, _IOFBF, 1000000000);
+    fq = (char *)malloc(1000000000);
+    setvbuf(fp, fq, _IOFBF, 1000000000);
+    oq = (char *)malloc(1000000000);
+    setvbuf(ot, oq, _IOFBF, 1000000000);
     int num_read_items;
     ch=getc(fp);int kk=0;
     if(ch=='>')
@@ -469,8 +469,11 @@ output_query_results(fastaindexinfo* chr_idx, const int num_chr, TempResult** pp
 }
 int judge(TempResult *a,TempResult *b){
     int r;
-    if(labs((a->sb-b->qb))<300&&labs(a->se-b->qe)<300){
-        if(labs(a->se-b->sb)<500||labs(a->sb-b->se)<500){
+    int ref_start,ref_end;
+    ref_start=(b->read_id)*split_le+b->qb;
+    ref_end=(b->read_id)*split_le+b->qe;
+    if(labs((a->sb-ref_start))<500&&labs(a->se-ref_end)<500){
+        if(labs(a->se-b->se)<800||labs(a->sb-b->sb)<800){
             r=1;
         }
     }
@@ -852,7 +855,7 @@ int main(int argc, char *argv[])
     sprintf(tempstr1,"%s/ref.fq",saved);
     result_combine(readcount, corenum, saved, outfile,tempstr, argc, argv);
     //result_combine2(refcount, corenum, saved, refoutfile,tempstr1, argc, argv);
-    polish_result(saved,corenum,refcount,refoutfile);
+    //polish_result(saved,corenum,refcount,refoutfile);
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;

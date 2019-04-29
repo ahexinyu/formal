@@ -462,14 +462,11 @@ static void creat_ref_index(char *fastafile)
     seq[count+1]='\0';
     fclose(fastaindex);
     seqcount=count;
-    similarity_count=(seqcount-12)/CBL+1;
+    similarity_count=seqcount/CBL+1;
     sc=(sim *)malloc((similarity_count+10)*sizeof(sim));
     for(int k=0;k<(similarity_count+10);k++){
         sc[k].k_count=0;
-        sc[k].simm=0;
-        sc[k].TF=0;
         sc[k].LDF=0;
-        sc[k].r_count=0;
         sc[k].vote=0;
     }
     
@@ -556,7 +553,7 @@ static void creat_ref_index(char *fastafile)
                 databaseindex[eit][countin[eit]-1]=i+2-seed_len;
             }
             
-            nn=(i-12)/CBL;
+            nn=(i+2-seed_len)/CBL;
            if(countin1[eit]>0){
                 sc[nn].k_count=sc[nn].k_count+countin1[eit];//在long_read里面出现的次数
             }
@@ -592,7 +589,9 @@ static void get_vote(){
     
     for(int j=0;j<similarity_count-1;j++){
         if(sc[j].k_count>0){
+            printf("k_count is%d\n",k_count);
             sc[j].LDF=log((read_kmer)/sc[j].k_count);
+            printf("LDF is %d\n",LDF);
             sc[j].vote=log(sc[j].LDF)/4;
         }
         else{
@@ -871,7 +870,7 @@ static void reference_mapping(int threadint)
 				*pnblk = j;
                 cc1=j;//index 数
                 
-                for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>6)//short int *index_score,*index_ss;
+                for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>6)
                     {
                         temp_spr=database+*index_spr;
                         if(temp_spr->score==0)continue;
@@ -879,18 +878,16 @@ static void reference_mapping(int threadint)
                         if(*index_spr>0)loc=(temp_spr-1)->score;
                         else loc=0;
                         start_loc=(*index_spr)*ZVL;
-                        //printf("start_loc is %d",start_loc);
                         if(*index_spr>0)
                         {
                             loc=(temp_spr-1)->score;
-                            if(loc>0)start_loc=(*index_spr-1)*ZVL;//记录位置的。
+                            if(loc>0)start_loc=(*index_spr-1)*ZVL;
                         }
                         else loc=0;
                         if(loc==0)for(j=0,u_k=0; j<s_k&&j<SM; j++)
                             {
                                 temp_list[u_k]=temp_spr->loczhi[j];
                                 temp_seedn[u_k]=temp_spr->seedno[j];
-                                //printf("temp_list[u_k] is %d",temp_list[u_k]);
                                 u_k++;
                             }
                         else
@@ -900,8 +897,7 @@ static void reference_mapping(int threadint)
                             temp_spr1=temp_spr-1;
                             for(j=0; j<k&&j<SM; j++)
                             {
-                                temp_list[u_k]=temp_spr1->loczhi[j];//int temp_list,temp_seedn类型
-                                //printf("temp_list[u_k] is %d",temp_list[u_k]);
+                                temp_list[u_k]=temp_spr1->loczhi[j];
                                 temp_seedn[u_k]=temp_spr1->seedno[j];
                                 u_k++;
                             }
@@ -913,7 +909,6 @@ static void reference_mapping(int threadint)
                             }
                         }
                        flag_end=find_location3(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,start_loc);
-                        //flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
                         if(flag_end==0)continue;
                         if(temp_score[repeat_loc]<6)continue;
                         canidate_temp.score=temp_score[repeat_loc];
@@ -2026,7 +2021,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     printf("get vote sucess");
     gettimeofday(&tpstart, NULL);
 
-    savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
+    /*savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
     ref_savework=(char *)malloc((MAXSTR+RM)*sizeof(char));//********
     readinfo=(ReadFasta*)malloc((SVM+2)*sizeof(ReadFasta));
     thread=(pthread_t*)malloc(threadnum*sizeof(pthread_t));
@@ -2134,6 +2129,6 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     free(savework);
     free(save_work);
     free(thread);
-    free(thread2);
+    free(thread2);*/
     return 0;
 }

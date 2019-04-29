@@ -95,11 +95,8 @@ typedef struct
 } candidate_save;
 
 typedef struct{
-    double simm;//相似度
     int k_count;//long_read出现的次数
     float LDF;
-    float TF;
-    float vote;
-    int r_count;//参考基因里出现的次数，这部分不需要考虑
+    float vote;//参考基因里出现的次数，这部分不需要考虑
 } sim;
 #endif // MEAP_REF_DEFS_H
