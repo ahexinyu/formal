@@ -585,10 +585,12 @@ static void get_vote(){
     readseq=read_REFESQ;
     seq=REFSEQ;
     int start=0;
-    int leftnum=8;int nn=0;int total_count=0;int ave_count;int  deviation;
+    int leftnum=8;int nn=0;int total_count=0;int ave_count=0;int  deviation;
     for( j=0;j<similarity_count;j++){
         total_count=total_count+sc[j].k_count;
+        
     }
+    printf("total is %d\n",total_count);
     ave_count=total_count/similarity_count;
     printf("ave_count is%d\n",ave_count);
     for( j=0;j<similarity_count;j++){
