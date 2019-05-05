@@ -587,6 +587,7 @@ static void get_vote(){
     int start=0;
     int leftnum=8;int nn=0;int total_count=0;int ave_count=0;int  deviation;
     for( j=0;j<similarity_count;j++){
+        printf("k_count is %d\n",sc[j].k_count)
         total_count=total_count+sc[j].k_count;
         
     }
