@@ -590,12 +590,11 @@ static void get_vote(){
         total_count=total_count+sc[j].k_count;
         
     }
-    printf("total is %d\n",total_count);
     ave_count=total_count/similarity_count;
     printf("ave_count is%d\n",ave_count);
     for( j=0;j<similarity_count;j++){
         deviation=(sc[j].k_count-ave_count)/similarity_count;
-        //printf(" deviation is %d\n",deviation);
+        printf(" deviation is %d\n",deviation);
     }
     
     for( j=0;j<similarity_count;j++){
