@@ -1,9 +1,9 @@
 #include "mecat2ref_defs.h"
 #include "output.h"
 #include "mecat2ref_aux.h"
+#include "math.h"
 #include "../common/diff_gapalign.h"
 #include "../common/xdrop_gapalign.h"
-
 #include <algorithm>
 #define FM  200000
 #define CBL 200
@@ -593,7 +593,7 @@ static void get_vote(){
     ave_count=total_count/similarity_count;
     printf("ave_count is%d\n",ave_count);
     for( j=0;j<similarity_count;j++){
-        deviation=(sc[j].k_count-ave_count)/similarity_count;
+        deviation=pow((sc[j].k_count-ave_count),2)/similarity_count;
         printf(" deviation is %d\n",deviation);
     }
     
