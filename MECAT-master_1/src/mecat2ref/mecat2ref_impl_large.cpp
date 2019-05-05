@@ -594,11 +594,11 @@ static void get_vote(){
     printf("ave_count is% lf\n",ave_count);
     for( j=0;j<similarity_count;j++){
         deviation=sc[j].k_count/ave_count;
-        //deviation=sqrt(pow((sc[j].k_count-ave_count),2)/similarity_count);//方差
-        printf(" deviation is %lf\n",deviation);
+        sc[j].vote=deviation//deviation=sqrt(pow((sc[j].k_count-ave_count),2)/similarity_count);//方差
+        
     }
     
-    for( j=0;j<similarity_count;j++){
+    /*for( j=0;j<similarity_count;j++){
         if(sc[j].k_count>0){
             sc[j].LDF=log((read_kmer)/sc[j].k_count);
             sc[j].vote=log(sc[j].LDF)/4;
@@ -606,7 +606,7 @@ static void get_vote(){
         else{
             sc[j].vote=1;
         }
-    }
+    }*/
     
 }
 int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,long start_loc)//绝了
@@ -2030,7 +2030,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     printf("get vote sucess");
     gettimeofday(&tpstart, NULL);
 
-    /*savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
+    savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
     ref_savework=(char *)malloc((MAXSTR+RM)*sizeof(char));//********
     readinfo=(ReadFasta*)malloc((SVM+2)*sizeof(ReadFasta));
     thread=(pthread_t*)malloc(threadnum*sizeof(pthread_t));
@@ -2138,6 +2138,6 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     free(savework);
     free(save_work);
     free(thread);
-    free(thread2);*/
+    free(thread2);
     return 0;
 }
