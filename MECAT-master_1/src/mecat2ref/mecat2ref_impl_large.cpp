@@ -585,7 +585,7 @@ static void get_vote(){
     readseq=read_REFESQ;
     seq=REFSEQ;
     int start=0;
-    int leftnum=8;int nn=0;long total_count=0;int ave_count=0;float deviation;
+    int leftnum=8;int nn=0;long total_count=0;float ave_count=0;float deviation;
     for( j=0;j<similarity_count;j++){
         total_count=total_count+sc[j].k_count;
         
