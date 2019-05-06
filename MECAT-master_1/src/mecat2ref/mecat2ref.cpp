@@ -653,13 +653,15 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         
         int rok=load_temp_result(trslt,thread_file);
         if(rok){copy_temp_result(trslt,pptr[num_results]);++num_results;}
-        int last_id=pptr[0]->read_id;int formal_id;int formal_loc;int org_sta,org_end;
+        int last_id=pptr[0]->read_id;int formal_id;int formal_loc;int org_sta,org_end,org_ref_start,org_ref_end;int ref_sid;
         while(rok){
             rok=load_temp_result(trslt, thread_file);
             if(!rok)break;
             if(trslt->read_id!=last_id){//这是同一个read的比对写到文件里面
                 for(int j=0;j<num_results;j++){
                     int sid = get_chr_id(chr_idx, num_chr, pptr[j]->sb);//read比对的第几个参考基因组
+                    org_sta=pptr[j]->sb-chr_idx[sid].chrstart;
+                    org_end=pptr[j]->se-chr_idx[sid].chrstart;
                     int re_id=pptr[j]->sb/split_le;
                     point_arr=result_database[re_id];
                     for(int i=0;i<16;i++,point_arr++){
@@ -669,11 +671,12 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                             break;
                         }//比对id 相同的情况下来判断是否合理
                         judg=judge(pptr[j],refpptr[r_k]);
+                        ref_sid= get_chr_id(chr_idx, num_chr, refpptr[r_k]->sb);
                         if(judg){
-                            org_sta=pptr[j]->sb;
-                            pptr[j]->sb=(pptr[j]->sb<refpptr[r_k]->sb)?pptr[j]->sb:refpptr[r_k]->sb;
-                            org_end=pptr[j]->se;
-                            pptr[j]->se=(pptr[j]->se>refpptr[r_k]->se)?pptr[j]->se:refpptr[r_k]->se;
+                            org_ref_start=refpptr[r_k]->sb-chr_idx[r_k].chrstart;
+                            pptr[j]->sb=(org_sta<org_ref_star)?org_sta:org_ref_star;
+                            org_ref_end=refpptr[r_k]->se-chr_idx[r_k].chrstart;
+                            pptr[j]->se=(org_end>org_ref_end)?org_end:org_ref_end;
                             if(pptr[j]->qb-(org_sta-pptr[j]->sb)>=0){
                                 pptr[j]->qb=pptr[j]->qb-(org_sta-pptr[j]->sb);
                             }
@@ -693,12 +696,18 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                             break;
                         }
                         else{
+                            pptr[j]->sb=org_sta;
+                            pptr[j]->sb=org_end;
                             if(judg==0&&*(point_arr+1)==0){output_temp_result2(pptr[j],out,sid);}
                             
                         }
                         
                     }
-                    if(flag==0){ output_temp_result2(pptr[j],out,sid);}
+                    if(flag2==0){
+                        pptr[j]->sb=org_sta;
+                        pptr[j]->sb=org_end;
+                        output_temp_result2(pptr[j],out,sid);
+                        flag2=1;}
                 }
                 num_results=0;
             }
