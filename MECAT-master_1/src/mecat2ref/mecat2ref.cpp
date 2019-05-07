@@ -699,7 +699,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         }
                         else{
                             pptr[j]->sb=org_sta;
-                            pptr[j]->sb=org_end;
+                            pptr[j]->se=org_end;
                             if(judg==0&&*(point_arr+1)==0){output_temp_result2(pptr[j],out,sid);}//
                             
                         }
@@ -707,7 +707,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                     }
                     if(flag2==0){
                         pptr[j]->sb=org_sta;
-                        pptr[j]->sb=org_end;
+                        pptr[j]->se=org_end;
                         output_temp_result2(pptr[j],out,sid);
                         flag2=1;}
                 }
