@@ -699,7 +699,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         else{
                             pptr[j]->sb=org_sta;
                             pptr[j]->sb=org_end;
-                            if(judg==0){output_temp_result2(pptr[j],out,sid);}//&&*(point_arr+1)==0
+                            if(judg==0&&*(point_arr+1)==0){output_temp_result2(pptr[j],out,sid);}//
                             
                         }
                         
