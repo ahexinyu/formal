@@ -250,9 +250,9 @@ output_temp_result(TempResult* result, FILE* out)
 				 result->smap);
 }
 void
-output_temp_result2(TempResult* result, FILE* out,int sid)
+output_temp_result2(TempResult* result, FILE* out,int sid,int size)
 {
-    fprintf(out, "%d\t%d\t%c\t%d\t%d\t%d\t%d\t%ld\t%ld\n",
+    fprintf(out, "%d\t%d\t%c\t%d\t%d\t%d\t%d\t%ld\t%ld\t%d\n",
             result->read_id,
             sid,
             result->read_dir,
@@ -261,7 +261,8 @@ output_temp_result2(TempResult* result, FILE* out,int sid)
             result->qe,
             result->qs,
             result->sb,
-            result->se);
+            result->se,
+            size);
 }
 int
 load_temp_result(TempResult* result, FILE* in)

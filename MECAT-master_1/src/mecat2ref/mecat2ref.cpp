@@ -653,14 +653,15 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         
         int rok=load_temp_result(trslt,thread_file);
         if(rok){copy_temp_result(trslt,pptr[num_results]);++num_results;}
-        int last_id=pptr[0]->read_id;int formal_id;int formal_loc;int org_sta,org_end,org_ref_start,org_ref_end;int ref_sid;
+        int last_id=pptr[0]->read_id;int formal_id;int formal_loc;int org_sta,org_end,org_ref_start,org_ref_end;int ref_sid;int ref_size;
         printf("here is success\n");
         while(rok){
             rok=load_temp_result(trslt, thread_file);
             if(!rok)break;
             if(trslt->read_id!=last_id){//这是同一个read的比对写到文件里面
                 for(int j=0;j<num_results;j++){
-                    int sid = get_chr_id(chr_idx, num_chr, pptr[j]->sb);//read比对的第几个参考基因组
+                    int sid = get_chr_id(chr_idx, num_chr, pptr[j]->sb);
+                    ref_size=chr_idx[sid].chrsize;//read比对的第几个参考基因组
                     org_sta=pptr[j]->sb-chr_idx[sid].chrstart;
                     org_end=pptr[j]->se-chr_idx[sid].chrstart;
                     int re_id=pptr[j]->sb/split_le;
@@ -694,13 +695,13 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                 pptr[j]->qe=pptr[j]->qs;
                                 pptr[j]->se=org_end+pptr[j]->qs-temp2;
                             }
-                            output_temp_result2(pptr[j],out,sid);
+                            output_temp_result2(pptr[j],out,sid,ref_size);
                             break;
                         }
                         else{
                             pptr[j]->sb=org_sta;
                             pptr[j]->se=org_end;
-                            if(judg==0&&*(point_arr+1)==0){output_temp_result2(pptr[j],out,sid);}//
+                            if(judg==0&&*(point_arr+1)==0){output_temp_result2(pptr[j],out,sid,ref_size);}//
                             
                         }
                         
@@ -708,7 +709,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                     if(flag2==0){
                         pptr[j]->sb=org_sta;
                         pptr[j]->se=org_end;
-                        output_temp_result2(pptr[j],out,sid);
+                        output_temp_result2(pptr[j],out,sid,ref_size);
                         flag2=1;}
                 }
                 num_results=0;
