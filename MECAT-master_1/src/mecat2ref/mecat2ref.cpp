@@ -664,6 +664,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                     org_sta=pptr[j]->sb-chr_idx[sid].chrstart;
                     org_end=pptr[j]->se-chr_idx[sid].chrstart;
                     int re_id=pptr[j]->sb/split_le;
+                    if(re_id<0)break;
                     point_arr=result_database[re_id];
                     for(int i=0;i<16;i++,point_arr++){
                         r_k=*point_arr;
