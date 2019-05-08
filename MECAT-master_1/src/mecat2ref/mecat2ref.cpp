@@ -678,9 +678,9 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         if(judg){
                             org_ref_start=refpptr[r_k]->sb-chr_idx[ref_sid].chrstart;
                             pptr[j]->sb=(org_sta<org_ref_start)?org_sta:org_ref_start;
-                          /*  org_ref_end=refpptr[r_k]->se-chr_idx[ref_sid].chrstart;
-                            pptr[j]->se=(org_end>org_ref_end)?org_end:org_ref_end;*/
-                            /*if(pptr[j]->qb-(org_sta-pptr[j]->sb)>=0){
+                           org_ref_end=refpptr[r_k]->se-chr_idx[ref_sid].chrstart;
+                            pptr[j]->se=(org_end>org_ref_end)?org_end:org_ref_end;
+                            if(pptr[j]->qb-(org_sta-pptr[j]->sb)>=0){
                                 pptr[j]->qb=pptr[j]->qb-(org_sta-pptr[j]->sb);
                             }
                             else{
@@ -695,15 +695,15 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                 pptr[j]->qe=pptr[j]->qs;
                                 pptr[j]->se=org_end+pptr[j]->qs-temp2;
                             }
-                            output_temp_result2(pptr[j],out,sid,ref_size);*/
+                            output_temp_result2(pptr[j],out,sid,ref_size);
                         }
-                        /*else{
+                        else{
                             if(judg==0&&*(point_arr+1)==0){
                                 pptr[j]->sb=org_sta;
                                 pptr[j]->se=org_end;
                                 output_temp_result2(pptr[j],out,sid,ref_size);}//
                             
-                        }*/
+                        }
                         
                         
                         }
