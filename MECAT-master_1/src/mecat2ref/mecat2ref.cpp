@@ -678,8 +678,8 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         if(judg){
                             org_ref_start=refpptr[r_k]->sb-chr_idx[r_k].chrstart;
                             pptr[j]->sb=(org_sta<org_ref_start)?org_sta:org_ref_start;
-                            org_ref_end=refpptr[r_k]->se-chr_idx[r_k].chrstart;
-                            pptr[j]->se=(org_end>org_ref_end)?org_end:org_ref_end;
+                          /*  org_ref_end=refpptr[r_k]->se-chr_idx[r_k].chrstart;
+                            pptr[j]->se=(org_end>org_ref_end)?org_end:org_ref_end;*/
                             /*if(pptr[j]->qb-(org_sta-pptr[j]->sb)>=0){
                                 pptr[j]->qb=pptr[j]->qb-(org_sta-pptr[j]->sb);
                             }
