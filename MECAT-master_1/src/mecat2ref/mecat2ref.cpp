@@ -695,18 +695,18 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                 pptr[j]->qe=pptr[j]->qs;
                                 pptr[j]->se=org_end+pptr[j]->qs-temp2;
                             }
-                            output_temp_result2(pptr[j],out,sid,ref_size);
+                            output_temp_result2(pptr[j],out,sid,ref_size);*/
                         }
-                        else{
+                        /*else{
                             if(judg==0&&*(point_arr+1)==0){
                                 pptr[j]->sb=org_sta;
                                 pptr[j]->se=org_end;
                                 output_temp_result2(pptr[j],out,sid,ref_size);}//
                             
-                        }
+                        }*/
                         
-                             */
-                    }
+                             
+                        }
                     if(flag2==0){
                         pptr[j]->sb=org_sta;
                         pptr[j]->se=org_end;
