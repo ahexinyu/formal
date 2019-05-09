@@ -654,7 +654,6 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         int rok=load_temp_result(trslt,thread_file);
         if(rok){copy_temp_result(trslt,pptr[num_results]);++num_results;}
         int last_id=pptr[0]->read_id;int formal_id;int formal_loc;int org_sta,org_end,org_ref_start,org_ref_end;int ref_sid;int ref_size;
-        printf("here is success\n");
         while(rok){
             rok=load_temp_result(trslt, thread_file);
             if(!rok)break;
@@ -678,7 +677,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         if(judg){
                             org_ref_start=refpptr[r_k]->sb-chr_idx[ref_sid].chrstart;
                             pptr[j]->sb=(org_sta<org_ref_start)?org_sta:org_ref_start;
-                           org_ref_end=refpptr[r_k]->se-chr_idx[ref_sid].chrstart;
+                            org_ref_end=refpptr[r_k]->se-chr_idx[ref_sid].chrstart;
                             pptr[j]->se=(org_end>org_ref_end)?org_end:org_ref_end;
                             if(pptr[j]->qb-(org_sta-pptr[j]->sb)>=0){
                                 pptr[j]->qb=pptr[j]->qb-(org_sta-pptr[j]->sb);

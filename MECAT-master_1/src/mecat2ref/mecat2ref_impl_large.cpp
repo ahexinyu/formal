@@ -1401,7 +1401,6 @@ static void reference_map_reference(int threadint)
         }
         if(localnum==terminalnum2-1)read_end=REFcount;//read 条数***********  read_end=readcount
         else read_end=(localnum+1)*PLL;
-        printf("chou\n");
         for(ref_i=localnum*PLL; ref_i<read_end; ref_i++)
         {
             
@@ -2002,17 +2001,12 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     fp=fopen("config.txt","r");
     assert(fscanf(fp,"%s\n%s\n%s\n%s\n%s\n%d %d\n%d\n",workpath,fastafile,fastqfile,tempstr,tempstr2,&corenum,&readall,&refall) == 8);//********
      printf("read config is sucess\n");//*********workpath是config的路径
-    printf("fastqfile is %s\n",fastqfile);
     fclose(fp);//FASTA是参考基因组文件
     threadnum=corenum;
-    printf("corenum is %d\n",threadnum);
     //building reference index
     gettimeofday(&tpstart, NULL);
     seed_len=13;
-    printf("build_read_index pre is sucess\n");
-    printf("workpath is %s\n",workpath);
     build_read_index(workpath,fastqfile);//******
-    printf("build_read_index sucess\n");
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
@@ -2021,7 +2015,6 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     //build read_long index
     gettimeofday(&tpstart, NULL);
     creat_ref_index(fastafile);
-    printf("get ref_index sucess\n");
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
@@ -2029,7 +2022,6 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     fprintf(fp, "The Building  Reference  Index Time: %f sec\n", timeuse);
     fclose(fp);
     get_vote();
-    printf("get vote sucess");
     gettimeofday(&tpstart, NULL);
 
     savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
