@@ -670,7 +670,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         r_k=*point_arr;
                         if(r_k==0){
                             flag2=1;
-                            continue;
+                             break;
                         }//比对id 相同的情况下来判断是否合理
                         judg=judge(pptr[j],refpptr[r_k]);
                         ref_sid= get_chr_id(chr_idx, num_chr, refpptr[r_k]->sb);
@@ -700,7 +700,8 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                             if(judg==0&&*(point_arr+1)==0){
                                 pptr[j]->sb=org_sta;
                                 pptr[j]->se=org_end;
-                                output_temp_result2(pptr[j],out,sid,ref_size);}//
+                                output_temp_result2(pptr[j],out,sid,ref_size);
+                                break;}//
                             }
                     }
                     if(flag2==1){
