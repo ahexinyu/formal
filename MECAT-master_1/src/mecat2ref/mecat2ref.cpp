@@ -669,8 +669,8 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                     for(int i=0;i<16;i++,point_arr++){
                         r_k=*point_arr;
                         if(r_k==0){
-                            flag2=0;
-                            break;
+                            flag2=1;
+                            continue;
                         }//比对id 相同的情况下来判断是否合理
                         judg=judge(pptr[j],refpptr[r_k]);
                         ref_sid= get_chr_id(chr_idx, num_chr, refpptr[r_k]->sb);
@@ -701,16 +701,13 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                 pptr[j]->sb=org_sta;
                                 pptr[j]->se=org_end;
                                 output_temp_result2(pptr[j],out,sid,ref_size);}//
-                            
-                        }
-                        
-                        
-                        }
-                    if(flag2==0){
+                            }
+                    }
+                    if(flag2==1){
                         pptr[j]->sb=org_sta;
                         pptr[j]->se=org_end;
                         output_temp_result2(pptr[j],out,sid,ref_size);
-                        flag2=1;
+                        flag2=0;
                         }
                 }
                 num_results=0;
@@ -719,7 +716,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
             copy_temp_result(trslt, pptr[num_results]);
             ++num_results;
         }
-                fclose(thread_file);
+            fclose(thread_file);
     }
     for(int i=0;i<trsize;++i)pptr[i]=destroy_temp_result(pptr[i]);
     for(int i=0;i<big_size;++i)refpptr[i]=destroy_temp_result(refpptr[i]);
