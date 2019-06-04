@@ -565,7 +565,7 @@ extern int meap_ref_impl_large(int, int, int);
 void polish_result(const char *workpath,int filecount,int refcount,char  *refoutfile){
     char path[200],path2[200];FILE *thread_file; FILE **up_file;int num_count=0;char buffer[1024];
     char *trbuffer=(char *)malloc(8192);char tempstr[200];int temp1,temp2;int r_k;
-    int num_results=0;
+    int num_results=0;char ref_name[200];
     const int trsize=num_candidates + 6;
     int ref_trsize=refcount *5;
     TempResult *pptr[trsize];
@@ -660,6 +660,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
             if(trslt->read_id!=last_id){//这是同一个read的比对写到文件里面
                 for(int j=0;j<num_results;j++){
                     int sid = get_chr_id(chr_idx, num_chr, pptr[j]->sb);
+                    ref_name=chr_idx[sid].chrname;
                     ref_size=chr_idx[sid].chrsize;//read比对的第几个参考基因组
                     org_sta=pptr[j]->sb-chr_idx[sid].chrstart;
                     org_end=pptr[j]->se-chr_idx[sid].chrstart;
@@ -694,20 +695,20 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                 pptr[j]->qe=pptr[j]->qs;
                                 pptr[j]->se=org_end+pptr[j]->qs-temp2;
                             }
-                            output_temp_result2(pptr[j],out,sid,ref_size);
+                            output_temp_result2(pptr[j],out,ref_name,ref_size);
                         }
                         else{
                             if(judg==0&&*(point_arr+1)==0){
                                 pptr[j]->sb=org_sta;
                                 pptr[j]->se=org_end;
-                                output_temp_result2(pptr[j],out,sid,ref_size);
+                                output_temp_result2(pptr[j],out,ref_name,ref_size);
                                 break;}//
                             }
                     }
                     if(flag2==1){
                         pptr[j]->sb=org_sta;
                         pptr[j]->se=org_end;
-                        output_temp_result2(pptr[j],out,sid,ref_size);
+                        output_temp_result2(pptr[j],out,ref_name,ref_size);
                         flag2=0;
                         }
                 }

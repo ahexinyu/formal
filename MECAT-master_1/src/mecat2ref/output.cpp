@@ -250,9 +250,9 @@ output_temp_result(TempResult* result, FILE* out)
 				 result->smap);
 }
 void
-output_temp_result2(TempResult* result, FILE* out,int sid,int size)
+output_temp_result2(TempResult* result, FILE* out,char *sid,int size)
 {
-    fprintf(out, "%d\t%d\t%c\t%d\t%d\t%d\t%d\t%ld\t%ld\t%d\n",
+    fprintf(out, "%d\t%s\t%c\t%d\t%d\t%d\t%d\t%ld\t%ld\t%d\n",
             result->read_id,
             sid,
             result->read_dir,
