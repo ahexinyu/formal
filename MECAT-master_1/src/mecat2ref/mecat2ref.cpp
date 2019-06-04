@@ -565,7 +565,7 @@ extern int meap_ref_impl_large(int, int, int);
 void polish_result(const char *workpath,int filecount,int refcount,char  *refoutfile){
     char path[200],path2[200];FILE *thread_file; FILE **up_file;int num_count=0;char buffer[1024];
     char *trbuffer=(char *)malloc(8192);char tempstr[200];int temp1,temp2;int r_k;
-    int num_results=0;char ref_name[200];
+    int num_results=0;char ref_name[64];
     const int trsize=num_candidates + 6;
     int ref_trsize=refcount *5;
     TempResult *pptr[trsize];
