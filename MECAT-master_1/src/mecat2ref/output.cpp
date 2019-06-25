@@ -252,13 +252,20 @@ output_temp_result(TempResult* result, FILE* out)
 void
 output_temp_result2(TempResult* result, FILE* out,char *sid,int size)
 {
+    char dir=='F';
+    int qb=result->qb,qe=result->qe;
+    if (result->read_dir=='R') {
+        dir='R';
+        qb=result->qs-result->qe;
+        qe=result->qs-result->qb;
+    }
     fprintf(out, "%d\t%s\t%c\t%d\t%d\t%d\t%d\t%ld\t%ld\t%d\n",
             result->read_id,
             sid,
-            result->read_dir,
+            dir,
             result->vscore,
-            result->qb,
-            result->qe,
+            qb,
+            qe,
             result->qs,
             result->sb,
             result->se,
