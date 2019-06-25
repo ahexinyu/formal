@@ -472,6 +472,10 @@ int judge(TempResult *a,TempResult *b){
     int ref_start,ref_end;
     ref_start=(b->read_id)*split_le+b->qb;
     ref_end=(b->read_id)*split_le+b->qe;
+    if (a->read_id=2) {
+        printf("refstart is%d\nrefend%\n ",ref_start,refend);
+        printf("a->sb%d\n",a->sb);
+    }
     if(labs((a->sb-ref_start))<500&&labs(a->se-ref_end)<500){
         if(labs(a->se-b->sb)>1000||labs(a->sb-b->se)>1000){
             r=1;
@@ -614,7 +618,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         }
         result_database[current_id][kkk]=i;
     }
-    printf("database is%d\n",result_database[10][2]);
+    //printf("database is%d\n",result_database[10][2]);
     sprintf(path2, "%s/chrindex.txt", workpath);
     FILE* chr_idx_file = fopen(path2, "r");
     if (!chr_idx_file) { fprintf(stderr, "failed to open file %s for reading.\n", path); abort(); }
