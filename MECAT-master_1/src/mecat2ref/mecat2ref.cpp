@@ -472,10 +472,10 @@ int judge(TempResult *a,TempResult *b){
     int ref_start,ref_end;
     ref_start=(b->read_id)*split_le+b->qb;
     ref_end=(b->read_id)*split_le+b->qe;
-    /*if (a->read_id==2) {
-        printf("refstart is%d\nrefend%d\n ",ref_start,ref_end);
-        printf("a->sb%d\n",a->sb);
-    }*/
+    if (a->read_id==2) {
+        
+        printf("a->sb%d\n",a->qb);
+    }
     if(labs((a->sb-ref_start))<500&&labs(a->se-ref_end)<500){
         if(labs(a->se-b->sb)>1000||labs(a->sb-b->se)>1000){
             r=1;
