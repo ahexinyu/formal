@@ -614,6 +614,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         }
         result_database[current_id][kkk]=i;
     }
+    printf("database is%d\n",result_database[10][2]);
     sprintf(path2, "%s/chrindex.txt", workpath);
     FILE* chr_idx_file = fopen(path2, "r");
     if (!chr_idx_file) { fprintf(stderr, "failed to open file %s for reading.\n", path); abort(); }
