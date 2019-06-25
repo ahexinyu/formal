@@ -252,7 +252,7 @@ output_temp_result(TempResult* result, FILE* out)
 void
 output_temp_result2(TempResult* result, FILE* out,char *sid,int size)
 {
-    char dir=='F';
+    char dir='F';
     int qb=result->qb,qe=result->qe;
     if (result->read_dir=='R') {
         dir='R';
