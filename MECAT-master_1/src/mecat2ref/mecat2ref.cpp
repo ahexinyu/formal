@@ -472,10 +472,10 @@ int judge(TempResult *a,TempResult *b){
     int ref_start,ref_end;
     ref_start=(b->read_id)*split_le+b->qb;
     ref_end=(b->read_id)*split_le+b->qe;
-    if (a->read_id==2) {
+    /*if (a->read_id==2) {
         printf("refstart is%d\nrefend%d\n ",ref_start,ref_end);
         printf("a->sb%d\n",a->sb);
-    }
+    }*/
     if(labs((a->sb-ref_start))<500&&labs(a->se-ref_end)<500){
         if(labs(a->se-b->sb)>1000||labs(a->sb-b->se)>1000){
             r=1;
@@ -680,6 +680,9 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                              break;
                         }//比对id 相同的情况下来判断是否合理
                         judg=judge(pptr[j],refpptr[r_k]);
+                        if (pptr[j]->read_id==2) {
+                            printf("judg is %d\n",judg);
+                        }
                         ref_sid= get_chr_id(chr_idx, num_chr, refpptr[r_k]->sb);
                         if(judg){
                             for(int k=0;k<num_results;k++){
@@ -709,9 +712,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                         output_temp_result2(pptr[j],out,ref_name2,ref_size2);
                                     }
                                 }//在前面
-                                
                             }
-                            
                         }
                         else{
                             if(judg==0&&*(point_arr+1)==0){
