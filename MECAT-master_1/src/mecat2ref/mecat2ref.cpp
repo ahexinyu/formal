@@ -472,10 +472,7 @@ int judge(TempResult *a,TempResult *b){
     int ref_start,ref_end;
     ref_start=(b->read_id)*split_le+b->qb;
     ref_end=(b->read_id)*split_le+b->qe;
-    if (a->read_id==2) {
-        
-        printf("a->sb%d\n",a->qb);
-    }
+    
     if(labs((a->sb-ref_start))<500&&labs(a->se-ref_end)<500){
         if(labs(a->se-b->sb)>1000||labs(a->sb-b->se)>1000){
             r=1;
@@ -680,12 +677,17 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                              break;
                         }//比对id 相同的情况下来判断是否合理
                         judg=judge(pptr[j],refpptr[r_k]);
-                        if (pptr[j]->read_id==2) {
-                            printf("judg is %d\n",judg);
-                        }
                         ref_sid= get_chr_id(chr_idx, num_chr, refpptr[r_k]->sb);
-                        if(judg){
-                            for(int k=0;k<num_results;k++){
+                        if(1){
+                            for (int k=0; k<num_results; k++) {
+                                sid2=get_chr_id(chr_idx, num_chr, pptr[k]->sb);
+                                if (sid1==sid2) {
+                                    pptr[j]->sb=org_sta;
+                                    pptr[j]->se=org_end;
+                                    output_temp_result2(pptr[j],out,ref_name,ref_size);
+                                }
+                            }
+                            /*for(int k=0;k<num_results;k++){
                                 if (labs(pptr[k]->qb-pptr[j]->qe)<200) {
                                     if(labs(pptr[k]->sb-refpptr[r_k]->qe)<200){
                                         pptr[j]->qe=pptr[k]->qe;
@@ -712,22 +714,22 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                         output_temp_result2(pptr[j],out,ref_name2,ref_size2);
                                     }
                                 }//在前面
-                            }
+                            }*/
                         }
-                        else{
+                        /*else{
                             if(judg==0&&*(point_arr+1)==0){
                                 pptr[j]->sb=org_sta;
                                 pptr[j]->se=org_end;
                                 output_temp_result2(pptr[j],out,ref_name,ref_size);
                                 break;}//
-                        }
+                        }*/
                     }
-                    if(flag2==1){
+                    /*if(flag2==1){
                         pptr[j]->sb=org_sta;
                         pptr[j]->se=org_end;
                         output_temp_result2(pptr[j],out,ref_name,ref_size);
                         flag2=0;
-                    }
+                    }*/
                 }
                 num_results=0;
             }
