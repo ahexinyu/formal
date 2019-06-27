@@ -678,18 +678,22 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         }//比对id 相同的情况下来判断是否合理
                         judg=judge(pptr[j],refpptr[r_k]);
                         ref_sid= get_chr_id(chr_idx, num_chr, refpptr[r_k]->sb);
-                        if(1){
-                            for (int k=0; k<num_results; k++) {
+                        if(judg){
+                            /*for (int k=0; k<num_results; k++) {
                                 sid2=get_chr_id(chr_idx, num_chr, pptr[k]->sb);
-                                if (sid==sid2&&pptr[j]->qb!=pptr[k]->qb&&labs(pptr[j]->sb-pptr[k]->se)>2000) {
-                                    if(labs(pptr[j]->qe-pptr[k]->qb)<500||labs(pptr[k]->qe-pptr[j]->qb)<500){pptr[j]->sb=org_sta;
-                                            pptr[j]->se=org_end;
-                                            output_temp_result2(pptr[j],out,ref_name,ref_size);
-                                            break;}
-                                    
-                                }
-                            }
-                            /*for(int k=0;k<num_results;k++){
+                                if (sid==sid2&&labs(pptr[k]->qb-pptr[j]->qe)<500) {
+                                    if(labs(pptr[k]->sb-pptr[j]->se)>1000||labs(pptr[k]->se-pptr[j]->sb)>1000){
+                                        pptr[j]->sb=pptr[j]->sb-chr_idx[sid].chrstart;
+                                        pptr[j]->se=pptr[j]->se-chr_idx[sid].chrstart;
+                                        pptr[k]->sb=pptr[k]->sb-chr_idx[sid].chrstart;
+                                        pptr[k]->se=pptr[k]->se-chr_idx[sid].chrstart;
+                                        output_temp_result2(pptr[j],out,ref_name,ref_size);
+                                        output_temp_result2(pptr[k],out,ref_name,ref_size);
+                                    }
+                                }//在后面
+                                if(sid==sid2&&){}//在前面
+                            }*/
+                            for(int k=0;k<num_results;k++){
                                 if (labs(pptr[k]->qb-pptr[j]->qe)<200) {
                                     if(labs(pptr[k]->sb-refpptr[r_k]->qe)<200){
                                         pptr[j]->qe=pptr[k]->qe;
@@ -716,22 +720,22 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                         output_temp_result2(pptr[j],out,ref_name2,ref_size2);
                                     }
                                 }//在前面
-                            }*/
+                            }
                         }
-                        /*else{
+                        else{
                             if(judg==0&&*(point_arr+1)==0){
                                 pptr[j]->sb=org_sta;
                                 pptr[j]->se=org_end;
                                 output_temp_result2(pptr[j],out,ref_name,ref_size);
                                 break;}//
-                        }*/
+                        }
                     }
-                    /*if(flag2==1){
+                    if(flag2==1){
                         pptr[j]->sb=org_sta;
                         pptr[j]->se=org_end;
                         output_temp_result2(pptr[j],out,ref_name,ref_size);
                         flag2=0;
-                    }*/
+                    }
                 }
                 num_results=0;
             }
