@@ -681,7 +681,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         if(1){
                             for (int k=0; k<num_results; k++) {
                                 sid2=get_chr_id(chr_idx, num_chr, pptr[k]->sb);
-                                if (sid==sid2) {
+                                if (sid==sid2&&pptr[j]->qb!=pptr[k]->qb) {
                                     pptr[j]->sb=org_sta;
                                     pptr[j]->se=org_end;
                                     output_temp_result2(pptr[j],out,ref_name,ref_size);
