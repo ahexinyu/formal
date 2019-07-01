@@ -657,7 +657,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         if(rok){copy_temp_result(trslt,pptr[num_results]);++num_results;}
         int last_id=pptr[0]->read_id;int formal_id;int formal_loc;int org_sta,org_end,org_ref_start,org_ref_end;int ref_sid;
         int max=-1,min=1000;int maxi;int mini;int or_sta;
-        int ref_size2;
+        int ref_size;
         while(rok){
             rok=load_temp_result(trslt, thread_file);
             if(!rok)break;
