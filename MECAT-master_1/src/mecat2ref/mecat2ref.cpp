@@ -686,8 +686,8 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                     int sid = get_chr_id(chr_idx, num_chr, pptr[k]->sb);
                     ref_name=chr_idx[sid].chrname;
                     ref_size=chr_idx[sid].chrsize;//read比对的第几个参考基因组
-                    org_sta=pptr[k]->sb-chr_idx[sid].chrstart;
-                    org_end=pptr[k]->se-chr_idx[sid].chrstart;
+                    pptr[k]->sb=pptr[k]->sb-chr_idx[sid].chrstart;
+                    pptr[k]->se=pptr[k]->se-chr_idx[sid].chrstart;
                     output_temp_result2(pptr[k],out,ref_name,ref_size);
                 }
                 num_results=0;
