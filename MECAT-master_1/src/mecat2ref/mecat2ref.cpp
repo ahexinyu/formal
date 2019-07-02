@@ -474,9 +474,9 @@ int judge(TempResult *a,TempResult *b){
     ref_end=(b->read_id)*split_le+b->qe;
     
     if(labs((a->sb-ref_start))<500&&labs(a->se-ref_end)<500){
-        if(labs(a->se-b->sb)>1000||labs(a->sb-b->se)>1000){
+        /*if(labs(a->se-b->sb)>1000||labs(a->sb-b->se)>1000){
             r=1;
-        }
+        }*/
     }
     else{r=0;}
     return r;
@@ -655,8 +655,8 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         
         int rok=load_temp_result(trslt,thread_file);
         if(rok){copy_temp_result(trslt,pptr[num_results]);++num_results;}
-        int last_id=pptr[0]->read_id;int formal_id;int formal_loc;int org_sta,org_end,org_ref_start,org_ref_end;int ref_sid;
-        int max=-1,min=1000;int maxi;int mini;int or_sta;
+        int last_id=pptr[0]->read_id;int formal_id;int formal_loc;int org_sta,org_end,org_ref_start,org_ref_end;int ref_sid;int temp_sb,temp_se;
+        int max=-1,min=1000;int maxi;int mini;int or_sta,or_end;
         int ref_size;
         while(rok){
             rok=load_temp_result(trslt, thread_file);
@@ -672,16 +672,33 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         mini=i;
                     }
                 }
-                if((pptr[maxi]->se+1000)<(pptr[mini]->sb)){
+                
+                if((pptr[maxi]->se+1000)<(pptr[mini]->sb)||(pptr[mini]->se+1000)<(pptr[maxi]->sb)){
+                    or_sta=pptr[mini]->sb;//还是在总长这里
+                    or_end=pptr[mini]->se;
+                    temp_sb=pptr[maxi]->sb+pptr[mini]->qb-pptr[maxi]->qb;
+                    temp_se=pptr[mini]->sb+pptr[mini]->se-or_sta;
+                    ref_sid=or_sta/split_le;
+                    point_arr=result_database[ref_sid];
+                    for(int i=0;i<16;i++){
+                        r_k=*point_arr;
+                        if(r_k==0){
+                            break;
+                        }
+                        judg=judge(pptr[mini],ref_pptr[r_k]);
+                        if(judg){
+                            if(labs(temp_sb-ref_pptr[r_k]->sb)<500&&labs(temp_se->ref_pptr[r_k]->se)<500){
+                                pptr[mini]->sb=temp_sb;
+                                pptr[mini]->se=temp_se;
+                            }
+                        }
+                    }
+                }
+                /*if((pptr[mini]->se+1000)<(pptr[maxi]->sb)){
                     or_sta=pptr[mini]->sb;
                     pptr[mini]->sb=pptr[maxi]->sb+pptr[mini]->qb-pptr[maxi]->qb;
                     pptr[mini]->se=pptr[mini]->sb+pptr[mini]->se-or_sta;
-                }
-                if((pptr[mini]->se+1000)<(pptr[maxi]->sb)){
-                    or_sta=pptr[mini]->sb;
-                    pptr[mini]->sb=pptr[maxi]->sb+pptr[mini]->qb-pptr[maxi]->qb;
-                    pptr[mini]->se=pptr[mini]->sb+pptr[mini]->se-or_sta;
-                }
+                }*/
                 for(int k=0;k<num_results;k++){
                     int sid = get_chr_id(chr_idx, num_chr, pptr[k]->sb);
                     ref_name=chr_idx[sid].chrname;
