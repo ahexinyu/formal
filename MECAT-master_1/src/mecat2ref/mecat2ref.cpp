@@ -687,7 +687,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         }
                         judg=judge(pptr[mini],refpptr[r_k]);
                         if(judg){
-                            if(labs(temp_sb-refpptr[r_k]->sb)<500&&labs(temp_se-refpptr[r_k]->se)<500){
+                            if(labs(temp_sb-refpptr[r_k]->sb)<2000&&labs(temp_se-refpptr[r_k]->se)<2000){
                                 pptr[mini]->sb=temp_sb;
                                 pptr[mini]->se=temp_se;
                             }
