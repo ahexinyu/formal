@@ -473,7 +473,7 @@ int judge(TempResult *a,TempResult *b){
     ref_start=(b->read_id)*split_le+b->qb;
     ref_end=(b->read_id)*split_le+b->qe;
     
-    if(labs((a->sb-ref_start))<20000&&labs(a->se-ref_end)<20000){
+    if(labs((a->sb-ref_start))<20000){//&&labs(a->se-ref_end)<20000){
         /*if(labs(a->se-b->sb)>1000||labs(a->sb-b->se)>1000){
             r=1;
         }*/
