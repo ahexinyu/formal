@@ -672,25 +672,26 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         mini=i;
                     }
                 }
-                
-                if((pptr[maxi]->se+1000)<(pptr[mini]->sb)||(pptr[mini]->se+1000)<(pptr[maxi]->sb)){
-                    or_sta=pptr[mini]->sb;//还是在总长这里
-                    or_end=pptr[mini]->se;
-                    temp_sb=pptr[maxi]->sb+pptr[mini]->qb-pptr[maxi]->qb;
-                    temp_se=pptr[mini]->sb+pptr[mini]->se-or_sta;
-                    ref_sid=or_sta/split_le;
-                    point_arr=result_database[ref_sid];
-                    for(int i=0;i<16;i++){
-                        r_k=*point_arr;
-                        if(r_k==0){
-                            break;
-                        }
-                        judg=judge(pptr[mini],refpptr[r_k]);
-                        if(judg){
-                            printf("1\n");
-                            if(labs(temp_sb-refpptr[r_k]->sb)<2000&&labs(temp_se-refpptr[r_k]->se)<2000){
-                                pptr[mini]->sb=temp_sb;
-                                pptr[mini]->se=temp_se;
+                for(int j=0;j<num_results;j++){
+                    if((pptr[maxi]->se+1000)<(pptr[j]->sb)||(pptr[j]->se+1000)<(pptr[maxi]->sb)){
+                        or_sta=pptr[j]->sb;//还是在总长这里
+                        or_end=pptr[j]->se;
+                        temp_sb=pptr[maxi]->sb+pptr[j]->qb-pptr[maxi]->qb;
+                        temp_se=pptr[j]->sb+pptr[j]->se-or_sta;
+                        ref_sid=or_sta/split_le;
+                        point_arr=result_database[ref_sid];
+                        for(int i=0;i<16;i++){
+                            r_k=*point_arr;
+                            if(r_k==0){
+                                break;
+                            }
+                            judg=judge(pptr[j],refpptr[r_k]);
+                            if(judg){
+                                printf("1\n");
+                                if(labs(temp_sb-refpptr[r_k]->sb)<2000&&labs(temp_se-refpptr[r_k]->se)<2000){
+                                    pptr[j]->sb=temp_sb;
+                                    pptr[j]->se=temp_se;
+                                }
                             }
                         }
                     }
