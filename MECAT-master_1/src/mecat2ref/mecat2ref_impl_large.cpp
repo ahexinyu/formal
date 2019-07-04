@@ -1425,7 +1425,7 @@ static void reference_map_reference(int threadint)
             
                 endnum=0;
                 aaa=0;
-                read_len=strlen(onedata);
+                read_len=split_len;
                 cleave_num=transnum_buchang(onedata,mvalue,&endnum,read_len,seed_len,BC);
                 for(int cu=0;cu<cleave_num;cu++){
                     if(mvalue[cu]>=0){
