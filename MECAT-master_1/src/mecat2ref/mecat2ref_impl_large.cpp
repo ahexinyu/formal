@@ -565,9 +565,9 @@ static void creat_ref_index(char *fastafile)
     int lel=0;
     REFcount=0;
     for(int p=0;p<seqcount;p++){
-        if(lel<split_len-1){
-            refinfo[REFcount].ref_sequ[lel]=seq[p];
+        if(lel<split_len){
             lel++;
+            refinfo[REFcount].ref_sequ[lel-1]=seq[p];
         }
         else{
             lel=0;
