@@ -15,6 +15,7 @@ static int REFTECH=TECH_NANOPORE;
 static int num_output = MAXC;
 static const double ddfs_cutoff_pacbio = 0.25;
 static const double ddfs_cutoff_nanopore = 0.1;
+static const double ddfs_cutoff2=0.5
 static double ddfs_cutoff = ddfs_cutoff_pacbio;
 
 static pthread_t *thread;
@@ -182,7 +183,7 @@ static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
     maxi=-1;
     maxval=10;
     minval=10;
-    for(i=0; i<SM; i++)for(j=i+1;j<SI; j++)if(list_seed[j]-list_seed[i]>0&&list_loc[j]-list_loc[i]>0&&fabs((list_loc[j]-list_loc[i])/((list_seed[j]-list_seed[i])*len)-1.0)<ddfs_cutoff)//计算DDF公式
+    for(i=0; i<SM; i++)for(j=i+1;j<SI; j++)if(list_seed[j]-list_seed[i]>0&&list_loc[j]-list_loc[i]>0&&fabs((list_loc[j]-list_loc[i])/((list_seed[j]-list_seed[i])*len)-1.0)<ddfs_cutoff2)//计算DDF公式
     {
         
         list_score[i]++;
@@ -554,7 +555,7 @@ static void creat_ref_index(char *fastafile)
             }
             
             nn=(i+2-seed_len)/CBL;
-           if(countin1[eit]>0){
+            if(countin1[eit]>0){
                 sc[nn].k_count=sc[nn].k_count+countin1[eit];//在long_read里面出现的次数
             }
             eit=eit<<leftnum;
@@ -564,7 +565,7 @@ static void creat_ref_index(char *fastafile)
     int lel=0;
     REFcount=0;
     for(int p=0;p<seqcount;p++){
-        if(lel<split_len){
+        if(lel<split_len-1){
             refinfo[REFcount].ref_sequ[lel]=seq[p];
             lel++;
         }
@@ -1475,7 +1476,7 @@ static void reference_map_reference(int threadint)
                 }
                 *pnblk = j;
                 cc1=j;
-                for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>6)
+                for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>4)
                 {
                     temp_spr=database+*index_spr;
                     if(temp_spr->score==0)continue;
@@ -1513,7 +1514,7 @@ static void reference_map_reference(int threadint)
                             u_k++;
                         }
                     }
-                    flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
+                    flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff2);
                     if(flag_end==0)continue;
                     if(temp_score[repeat_loc]<6)continue;
                     canidate_temp.score=temp_score[repeat_loc];
@@ -1556,7 +1557,7 @@ static void reference_map_reference(int threadint)
                     {
                         start_loc=u_k*ZVL;
                         int scnt = min((int)temp_spr1->score, SM);
-                        for(j=0,s_k=0; j < scnt; j++)if(fabs((start_loc+temp_spr1->loczhi[j]-loc_list)/((temp_spr1->seedno[j]-loc_seed)*BC*1.0)-1.0)<ddfs_cutoff)
+                        for(j=0,s_k=0; j < scnt; j++)if(fabs((start_loc+temp_spr1->loczhi[j]-loc_list)/((temp_spr1->seedno[j]-loc_seed)*BC*1.0)-1.0)<ddfs_cutoff2)
                         {
                             seedcount++;
                             s_k++;
@@ -1624,7 +1625,7 @@ static void reference_map_reference(int threadint)
                                  BC,
                                  fwd_database,
                                  rev_database,
-                                 ddfs_cutoff);
+                                 ddfs_cutoff2);
             
             output_results(alns, naln, results, nresults, num_output, refoutfile[threadint]);
             
@@ -1749,7 +1750,7 @@ static void reference_map_reference(int threadint)
                     }
                     *pnblk = j;
                     cc1=j;
-                    for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>4)
+                    for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>3)
                     {
                         temp_spr=database+*index_spr;
                         if(temp_spr->score==0)continue;
@@ -1787,7 +1788,7 @@ static void reference_map_reference(int threadint)
                                 u_k++;
                             }
                         }
-                        flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
+                        flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff2);
                         if(flag_end==0)continue;
                         if(temp_score[repeat_loc]<6)continue;
                         canidate_temp.score=temp_score[repeat_loc];
@@ -1818,7 +1819,7 @@ static void reference_map_reference(int threadint)
                         {
                             start_loc=u_k*ZVSL;
                             int scnt = min((int)temp_spr1->score, SM);
-                            for(j=0,s_k=0; j < scnt; j++)if(fabs((loc_list-start_loc-temp_spr1->loczhi[j])/((loc_seed-temp_spr1->seedno[j])*BC*1.0)-1.0)<ddfs_cutoff)
+                            for(j=0,s_k=0; j < scnt; j++)if(fabs((loc_list-start_loc-temp_spr1->loczhi[j])/((loc_seed-temp_spr1->seedno[j])*BC*1.0)-1.0)<ddfs_cutoff2)
                             {
                                 seedcount++;
                                 s_k++;
@@ -1830,7 +1831,7 @@ static void reference_map_reference(int threadint)
                         {
                             start_loc=u_k*ZVSL;
                             int scnt = min((int)temp_spr1->score, SM);
-                            for(j=0,s_k=0; j < scnt; j++)if(fabs((start_loc+temp_spr1->loczhi[j]-loc_list)/((temp_spr1->seedno[j]-loc_seed)*BC*1.0)-1.0)<ddfs_cutoff)
+                            for(j=0,s_k=0; j < scnt; j++)if(fabs((start_loc+temp_spr1->loczhi[j]-loc_list)/((temp_spr1->seedno[j]-loc_seed)*BC*1.0)-1.0)<ddfs_cutoff2)
                             {
                                 seedcount++;
                                 s_k++;
@@ -1900,7 +1901,7 @@ static void reference_map_reference(int threadint)
                                      BC,
                                      fwd_database,
                                      rev_database,
-                                     ddfs_cutoff);
+                                     ddfs_cutoff2);
                 
                 output_results(alns, naln, results, nresults, num_output, refoutfile[threadint]);
                 
