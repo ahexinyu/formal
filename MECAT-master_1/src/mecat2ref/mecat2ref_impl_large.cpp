@@ -852,7 +852,7 @@ static void reference_mapping(int threadint)
                                         temp_spr->loczhi[loc-1]=u_k;
                                         temp_spr->seedno[loc-1]=k+1;
                                     }
-                                    else insert_loc2(temp_spr,u_k,k+1,BC,templong);//删除分数最小的。保持在20个左右 原来是1
+                                    else insert_loc2(temp_spr,u_k,k+1,BC);//删除分数最小的。保持在20个左右 原来是1 //insert_loc(temp_spr,u_k,k+1,BC,templong);
                                     if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
                                     else s_k=temp_spr->score;
                                     if(endnum<s_k)endnum=s_k;
@@ -1118,7 +1118,7 @@ static void reference_mapping(int threadint)
                                             temp_spr->loczhi[loc-1]=u_k;
                                             temp_spr->seedno[loc-1]=k+1;
                                         }
-                                        else insert_loc2(temp_spr,u_k,k+1,BC,templong);//原来是3
+                                        else insert_loc2(temp_spr,u_k,k+1,BC);//原来是3 insert_loc3(temp_spr,u_k,k+1,BC,templong);
                                         if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
                                         else s_k=temp_spr->score;
                                         if(endnum<s_k)endnum=s_k;
