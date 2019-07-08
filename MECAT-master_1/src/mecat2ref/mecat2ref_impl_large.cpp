@@ -169,7 +169,7 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long te
 }
 static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
 {
-    int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini,maxi;int maxval;
+    int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;
     for(i=0; i<SM; i++)
     {
         list_loc[i]=spr->loczhi[i];
@@ -180,40 +180,25 @@ static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
     list_seed[SM]=seedn;
     list_score[SM]=0;
     mini=-1;
-    maxi=-1;
-    maxval=10;
-    minval=10;
-    for(i=0; i<SM; i++)for(j=i+1;j<SI; j++)if(list_seed[j]-list_seed[i]>0&&list_loc[j]-list_loc[i]>0&&fabs((list_loc[j]-list_loc[i])/((list_seed[j]-list_seed[i])*len)-1.0)<ddfs_cutoff2)//计算DDF公式
+    minval=10000;
+    for(i=0; i<SM; i++)for(j=i+1; j<SI; j++)if(list_seed[j]-list_seed[i]>0&&list_loc[j]-list_loc[i]>0&&fabs((list_loc[j]-list_loc[i])/((list_seed[j]-list_seed[i])*len)-1.0)<ddfs_cutoff)
     {
-        
         list_score[i]++;
         list_score[j]++;
     }
-    for(i=0; i<SI; i++)
+    for(i=0; i<SI; i++)if(minval>list_score[i])
     {
-        if(maxval<=list_score[i])
-        {
-            maxval=list_score[i];
-            maxi=i;
-        }else if(minval>list_score[i])
-        {
-            minval=list_score[i];
-            mini=i;
-        }
+        minval=list_score[i];
+        mini=i;
     }
-    if(maxi==-1)
+    if(minval==SM)
+    {
+        spr->loczhi[SM-1]=loc;
+        spr->seedno[SM-1]=seedn;
+    }
+    else if(minval<SM&&mini<SM)
     {
         for(i=mini; i<SM; i++)
-        {
-            spr->loczhi[i]=list_loc[i+1];
-            spr->seedno[i]=list_seed[i+1];
-        }
-        spr->score--;
-        
-    }
-    else
-    {
-        for(i=maxi; i<SM; i++)
         {
             spr->loczhi[i]=list_loc[i+1];
             spr->seedno[i]=list_seed[i+1];
