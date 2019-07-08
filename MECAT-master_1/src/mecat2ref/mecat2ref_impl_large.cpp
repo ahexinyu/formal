@@ -119,7 +119,7 @@ static int transnum_buchang(char *seqm,int *value,int *endn,int len_str,int read
     return(num);//extract_number
 }
 //****选择位置的时候考虑了相似度  此时block的长度为1000*******
-static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long templong)
+/*static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long templong)
 {
     int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;int nn=0;int _loc;//在参考基因的位置
     float list_sim[SI];float score_sim[SI];
@@ -166,7 +166,7 @@ static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long te
         }
         spr->score--;//删掉最低一个
     }
-}
+}*/
 static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
 {
     int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;
@@ -207,7 +207,7 @@ static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
     }
 }
 //****选择位置的时候考虑了相似度  此时block的长度为2000*******
-static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len,long templong)
+/*static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len,long templong)
 {
     int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;int nn=0;int _loc;//在参考基因的位置
     float list_sim[SI];float score_sim[SI];
@@ -252,7 +252,7 @@ static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len,long t
         }
         spr->score--;//删掉最低一个
     }
-}
+}*/
 //********为read建立索引，因为后来要找reference的k_mer在长read中出现的次数
 static void build_read_index(char *path, char *path1){
     unsigned int eit,temp;long start;
@@ -1929,7 +1929,7 @@ static void* multithread2(void* arg)
     localthreadno2=runthreadnum2;
     runthreadnum2++;
     pthread_mutex_unlock(&mutilock2);
-    reference_map_reference(localthreadno2);
+   // reference_map_reference(localthreadno2);
     return NULL;
 }
 static int load_fastq(FILE *fq)
