@@ -704,7 +704,7 @@ static void creat_ref_index(char *fastafile)
     }
 }
 //********根据sim数据结构计算各个区域的相似度******
-static void get_vote(){
+/*static void get_vote(){
     int eit=0;
     int temp=0;
     int i=0,j=0;char *seq;char *readseq;
@@ -726,7 +726,7 @@ static void get_vote(){
     
     
     
-}
+}*/
 int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,long start_loc)//绝了
 {
     int i,j,maxval=0,maxi,rep=0,lasti=0;long _loc[200];float list_sim[200];
