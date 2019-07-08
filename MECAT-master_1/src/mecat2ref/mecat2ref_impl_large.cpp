@@ -15,7 +15,7 @@ static int REFTECH=TECH_NANOPORE;
 static int num_output = MAXC;
 static const double ddfs_cutoff_pacbio = 0.25;
 static const double ddfs_cutoff_nanopore = 0.1;
-static const double ddfs_cutoff2=0.5;
+//static const double ddfs_cutoff2=0.5;
 static double ddfs_cutoff = ddfs_cutoff_pacbio;
 
 static pthread_t *thread;
