@@ -398,7 +398,7 @@ static void build_read_index(char *path, char *path1){
 }
 
 //*****改动过，建立index之后顺便找一找在longread出现的次数*******
-static void creat_ref_index(char *fastafile)
+/*static void creat_ref_index(char *fastafile)
 {
     unsigned int eit,temp;
     int  indexcount=0,leftnum=0;
@@ -562,6 +562,146 @@ static void creat_ref_index(char *fastafile)
         
     }
     REFcount=REFcount-1;
+}*/
+
+static void creat_ref_index(char *fastafile)
+{
+    unsigned int eit,temp;
+    int  indexcount=0,leftnum=0;
+    long length,count,i,start, rsize = 0;
+    FILE *fasta,*fastaindex;
+    char *seq,ch,nameall[200];
+    //
+    if(seed_len==14)indexcount=268435456;
+    else if(seed_len==13)indexcount=67108864;
+    else if(seed_len==12)indexcount=16777216;
+    else if(seed_len==11)indexcount=4194304;
+    else if(seed_len==10)indexcount=1048576;
+    else if(seed_len==9)indexcount=262144;
+    else if(seed_len==8)indexcount=65536;
+    else if(seed_len==7)indexcount=16384;
+    else if(seed_len==6)indexcount=4096;
+    leftnum=34-2*seed_len;
+    //read reference seq
+    length=get_file_size(fastafile);
+    fasta=fopen(fastafile, "r");
+    sprintf(nameall,"%s/chrindex.txt",workpath);
+    fastaindex=fopen(nameall,"w");
+    
+    REFSEQ=(char *)malloc((length+1000)*sizeof(char));
+    seq=REFSEQ;
+    for (ch=getc(fasta),count=0; ch!=EOF; ch=getc(fasta))
+    {
+        if(ch=='>')
+        {
+            assert(fscanf(fasta,"%[^\n]s",nameall) == 1);
+            if (rsize) fprintf(fastaindex, "%ld\n", rsize);
+            rsize = 0;
+            for(i=0;i<strlen(nameall);i++)if(nameall[i]==' '||nameall[i]=='\t')break;
+            nameall[i]='\0';
+            fprintf(fastaindex,"%ld\t%s\t",count,nameall);
+        }
+        else if(ch!='\n'&&ch!='\r')
+        {
+            if(ch>'Z')ch=toupper(ch);
+            seq[count]=ch;
+            count=count+1;
+            ++rsize;
+        }
+    }
+    fclose(fasta);
+    fprintf(fastaindex, "%ld\n", rsize);
+    fprintf(fastaindex,"%ld\t%s\n",count,"FileEnd");
+    seq[count]='\0';
+    fclose(fastaindex);
+    seqcount=count;
+    printf("%ld\n",seqcount);
+    //printf("Constructing look-up table...\n");
+    countin=(int *)malloc((indexcount)*sizeof(int));
+    for(i=0; i<indexcount; i++)countin[i]=0;
+    
+    // Count the number
+    eit=0;
+    start=0;
+    for(i=0; i<seqcount; i++)
+    {
+        if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
+        {
+            eit=0;
+            start=0;
+            continue;
+        }
+        temp=atcttrans(seq[i]);
+        if(start<seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+        }
+        else if(start>=seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+            countin[eit]=countin[eit]+1;
+            eit=eit<<leftnum;
+            eit=eit>>leftnum;
+        }
+    }
+    
+    
+    //Max_index
+    sumcount=sumvalue_x(countin,indexcount);
+    allloc=(long *)malloc(sumcount*sizeof(long));
+    databaseindex=(long **)malloc((indexcount)*sizeof(long*));
+    //allocate memory
+    sumcount=0;
+    for(i=0; i<indexcount; i++)
+    {
+        if(countin[i]>0)
+        {
+            databaseindex[i]=allloc+sumcount;
+            sumcount=sumcount+countin[i];
+            countin[i]=0;
+        }
+        else databaseindex[i]=NULL;
+    }
+    
+    // printf("xiao");//10834098
+    
+    //constructing the look-up table
+    eit=0;
+    start=0;
+    for(i=0; i<seqcount; i++)
+    {
+        if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
+        {
+            eit=0;
+            start=0;
+            continue;
+        }
+        temp=atcttrans(seq[i]);
+        if(start<seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+        }
+        else if(start>=seed_len-1)
+        {
+            eit=eit<<2;
+            eit=eit+temp;
+            start=start+1;
+            
+            if(databaseindex[eit]!=NULL)
+            {
+                countin[eit]=countin[eit]+1;
+                databaseindex[eit][countin[eit]-1]=i+2-seed_len;
+            }
+            eit=eit<<leftnum;
+            eit=eit>>leftnum;
+        }
+    }
 }
 //********根据sim数据结构计算各个区域的相似度******
 static void get_vote(){
@@ -1490,7 +1630,7 @@ static void reference_map_reference(int threadint)
                             u_k++;
                         }
                     }
-                    flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff2);
+                    flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
                     if(flag_end==0)continue;
                     if(temp_score[repeat_loc]<6)continue;
                     canidate_temp.score=temp_score[repeat_loc];
@@ -1764,7 +1904,7 @@ static void reference_map_reference(int threadint)
                                 u_k++;
                             }
                         }
-                        flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff2);
+                        flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
                         if(flag_end==0)continue;
                         if(temp_score[repeat_loc]<6)continue;
                         canidate_temp.score=temp_score[repeat_loc];
