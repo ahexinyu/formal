@@ -11,7 +11,7 @@ using namespace std;
 
 static int MAXC = 0;// default MAXC 等于10
 static int TECH = TECH_PACBIO;
-static int REFTECH=TECH_NANOPORE;
+//static int REFTECH=TECH_NANOPORE;
 static int num_output = MAXC;
 static const double ddfs_cutoff_pacbio = 0.25;
 static const double ddfs_cutoff_nanopore = 0.1;
@@ -870,9 +870,9 @@ static void reference_mapping(int threadint)
 	vector<char> qstr;
 	vector<char> tstr;
 	GapAligner* aligner = NULL;
-	if (REFTECH == TECH_PACBIO) {
+	if (TECH == TECH_PACBIO) {
 		aligner = new DiffAligner(0);
-	} else if (REFTECH == TECH_NANOPORE) {
+	} else if (TECH == TECH_NANOPORE) {
 		aligner = new XdropAligner(0);
 	} else {
 		ERROR("TECH must be either %d or %d", TECH_PACBIO, TECH_NANOPORE);
@@ -2138,7 +2138,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     //fp = fopen("config.txt", "a");
     fprintf(fp, "The Building  Reference  Index Time: %f sec\n", timeuse);
     fclose(fp);
-    //get_vote();
+    get_vote();
     gettimeofday(&tpstart, NULL);
 
     savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
