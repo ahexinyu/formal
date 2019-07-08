@@ -727,7 +727,7 @@ static void creat_ref_index(char *fastafile)
     
     
 }*/
-int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,long start_loc)//绝了
+/*int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,long start_loc)//绝了
 {
     int i,j,maxval=0,maxi,rep=0,lasti=0;long _loc[200];float list_sim[200];
     for(i=0; i<k; i++){t_score[i]=0;_loc[i]=0;list_sim[i]=0;}
@@ -811,7 +811,7 @@ int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep
         return(1);
     }
     else return(0);
-}
+}*/
 
 
 static void reference_mapping(int threadint)
@@ -2138,7 +2138,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     //fp = fopen("config.txt", "a");
     fprintf(fp, "The Building  Reference  Index Time: %f sec\n", timeuse);
     fclose(fp);
-    get_vote();
+    //get_vote();
     gettimeofday(&tpstart, NULL);
 
     savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
