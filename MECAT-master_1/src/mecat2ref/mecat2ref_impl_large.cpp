@@ -11,7 +11,7 @@ using namespace std;
 
 static int MAXC = 0;// default MAXC 等于10
 static int TECH = TECH_PACBIO;
-//static int REFTECH=TECH_NANOPORE;
+//static int =TECH_NANOPORE;
 static int num_output = MAXC;
 static const double ddfs_cutoff_pacbio = 0.25;
 static const double ddfs_cutoff_nanopore = 0.1;
@@ -398,7 +398,7 @@ static void build_read_index(char *path, char *path1){
 }
 
 //*****改动过，建立index之后顺便找一找在longread出现的次数*******
-/*static void creat_ref_index(char *fastafile)
+static void creat_ref_index(char *fastafile)
 {
     unsigned int eit,temp;
     int  indexcount=0,leftnum=0;
@@ -562,9 +562,9 @@ static void build_read_index(char *path, char *path1){
         
     }
     REFcount=REFcount-1;
-}*/
+}
 
-static void creat_ref_index(char *fastafile)
+/*static void creat_ref_index(char *fastafile)
 {
     unsigned int eit,temp;
     int  indexcount=0,leftnum=0;
@@ -702,9 +702,9 @@ static void creat_ref_index(char *fastafile)
             eit=eit>>leftnum;
         }
     }
-}
+}*/
 //********根据sim数据结构计算各个区域的相似度******
-/*static void get_vote(){
+static void get_vote(){
     int eit=0;
     int temp=0;
     int i=0,j=0;char *seq;char *readseq;
@@ -726,7 +726,7 @@ static void creat_ref_index(char *fastafile)
     
     
     
-}*/
+}
 /*int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,long start_loc)//绝了
 {
     int i,j,maxval=0,maxi,rep=0,lasti=0;long _loc[200];float list_sim[200];
