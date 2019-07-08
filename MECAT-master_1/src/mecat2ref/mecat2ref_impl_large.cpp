@@ -1935,7 +1935,7 @@ static void reference_map_reference(int threadint)
                         {
                             start_loc=u_k*ZVSL;
                             int scnt = min((int)temp_spr1->score, SM);
-                            for(j=0,s_k=0; j < scnt; j++)if(fabs((loc_list-start_loc-temp_spr1->loczhi[j])/((loc_seed-temp_spr1->seedno[j])*BC*1.0)-1.0)<ddfs_cutoff2)
+                            for(j=0,s_k=0; j < scnt; j++)if(fabs((loc_list-start_loc-temp_spr1->loczhi[j])/((loc_seed-temp_spr1->seedno[j])*BC*1.0)-1.0)<ddfs_cutoff)
                             {
                                 seedcount++;
                                 s_k++;
@@ -1947,7 +1947,7 @@ static void reference_map_reference(int threadint)
                         {
                             start_loc=u_k*ZVSL;
                             int scnt = min((int)temp_spr1->score, SM);
-                            for(j=0,s_k=0; j < scnt; j++)if(fabs((start_loc+temp_spr1->loczhi[j]-loc_list)/((temp_spr1->seedno[j]-loc_seed)*BC*1.0)-1.0)<ddfs_cutoff2)
+                            for(j=0,s_k=0; j < scnt; j++)if(fabs((start_loc+temp_spr1->loczhi[j]-loc_list)/((temp_spr1->seedno[j]-loc_seed)*BC*1.0)-1.0)<ddfs_cutoff)
                             {
                                 seedcount++;
                                 s_k++;
