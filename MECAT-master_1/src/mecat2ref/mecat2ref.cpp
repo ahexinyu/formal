@@ -371,9 +371,10 @@ int firsttask(int argc, char *argv[])
 	if (flag == -1) { print_usage(); exit(1); }
 	  printf("uuuuuuuuu\n");
     const char *a = options->reads;
-    const char *b options->wrk_dir;
-    const char *c options->reference;
-    const char *d options->wrk_dir;
+    const char *b = options->wrk_dir;
+    const char *c = options->reference;
+    const char *d = options->wrk_dir;
+    printf("%s\n%s\n%s\n%s\n", a, b, c, d);
     printf("pppppp\n");
     int readcount = chang_fastqfile(options->reads, options->wrk_dir);
     printf("iiiiii\n");
