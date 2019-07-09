@@ -2022,7 +2022,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     ref_fastq=fopen(tempstr2,"r");//***********
     //multi process thread
     fileflag=1;
-    while(fileflag)
+  /*while(fileflag)
     {
         fileflag=load_fastq(fastq);
         //load_ref_f(ref_fastq);//************8
@@ -2055,8 +2055,8 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         // reference_mapping(1);
    
    
-}
-    RefFlag=1;
+}*/
+  /*  RefFlag=1;
     while(RefFlag){
         if(REFcount%PLL==0)terminalnum2=REFcount/PLL;
         else terminalnum2=REFcount/PLL+1;
@@ -2109,6 +2109,6 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     free(savework);
     free(save_work);
     free(thread);
-    free(thread2);
+    free(thread2);*/
     return 0;
 }

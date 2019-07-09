@@ -862,7 +862,7 @@ int main(int argc, char *argv[])
     timeuse /= 1000000;
     sprintf(tempstr,"%s/0.fq",saved);
     sprintf(tempstr1,"%s/ref.fq",saved);
-    result_combine(readcount, corenum, saved, outfile,tempstr, argc, argv);
+    //result_combine(readcount, corenum, saved, outfile,tempstr, argc, argv);
     //result_combine2(refcount, corenum, saved, refoutfile,tempstr1, argc, argv);
     polish_result(saved,corenum,refcount,refoutfile);
     gettimeofday(&tpend, NULL);
