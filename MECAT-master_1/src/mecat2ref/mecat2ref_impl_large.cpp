@@ -11,7 +11,7 @@ using namespace std;
 
 static int MAXC = 0;// default MAXC 等于10
 static int TECH = TECH_PACBIO;
-static int REFTECH=TECH_NANOPORE;
+//static int REFTECH=TECH_NANOPORE;
 static int num_output = MAXC;
 static const double ddfs_cutoff_pacbio = 0.25;
 static const double ddfs_cutoff_nanopore = 0.1;
@@ -584,15 +584,7 @@ static void get_vote(){
     }
     
     
-    /*for( j=0;j<similarity_count;j++){
-        if(sc[j].k_count>0){
-            sc[j].LDF=log((read_kmer)/sc[j].k_count);
-            sc[j].vote=log(sc[j].LDF)/4;
-        }
-        else{
-            sc[j].vote=1;
-        }
-    }*/
+  
     
     
 }
@@ -1926,7 +1918,7 @@ static void* multithread(void* arg)
     localthreadno=runthreadnum;
     runthreadnum++;
     pthread_mutex_unlock(&mutilock);
-    reference_mapping(localthreadno);
+   // reference_mapping(localthreadno);
    	return NULL;
 }
 //ref的多线程跑
