@@ -11,7 +11,7 @@ using namespace std;
 
 static int MAXC = 0;// default MAXC 等于10
 static int TECH = TECH_PACBIO;
-//static int REFTECH=TECH_NANOPORE;
+static int REFTECH=TECH_NANOPORE;
 static int num_output = MAXC;
 static const double ddfs_cutoff_pacbio = 0.25;
 static const double ddfs_cutoff_nanopore = 0.1;
