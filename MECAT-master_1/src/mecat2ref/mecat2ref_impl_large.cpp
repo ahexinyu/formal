@@ -1235,6 +1235,7 @@ static void reference_mapping(int threadint)
                 
 				naln = 0;
 				nresults = 0;
+                printf("%d\n",canidate_loc[0]);
                 for(i=0; i<canidatenum; i++)
                 {
 					extend_candidate(canidate_loc[i], 
