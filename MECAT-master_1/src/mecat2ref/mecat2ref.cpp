@@ -370,11 +370,8 @@ int firsttask(int argc, char *argv[])
 	int flag = param_read_t(argc, argv, options);
 	if (flag == -1) { print_usage(); exit(1); }
 	  printf("uuuuuuuuu\n");
-    const char *a = options->reads;
-    const char *b = options->wrk_dir;
-    const char *c = options->reference;
-    const char *d = options->wrk_dir;
-    printf("%s\n%s\n%s\n%s\n", a, b, c, d);
+    
+    //  printf("%s\n%s\n%s\n%s\n", a, b, c, d);
     printf("pppppp\n");
     int readcount = chang_fastqfile(options->reads, options->wrk_dir);
     printf("iiiiii\n");
@@ -847,7 +844,7 @@ int main(int argc, char *argv[])
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
     fid1 = fopen("config.txt", "r");
-	const char* read_results = NULL;
+	/*const char* read_results = NULL;
     read_results = fgets(saved, 150, fid1);
 	assert(read_results);
     saved[strlen(saved) - 1] = '\0';
@@ -886,7 +883,7 @@ int main(int argc, char *argv[])
     fprintf(fid2, "The total Time : %f sec\n", timeuse);
     fclose(fid2);
     sprintf(cmd, "cp -r config.txt \"%s.config\"", outfile);
-    sprintf(cmd, "cp -r config.txt \"%s.config\"", refoutfile);
+    sprintf(cmd, "cp -r config.txt \"%s.config\"", refoutfile);*/
     __run_system(cmd);
     
 	
