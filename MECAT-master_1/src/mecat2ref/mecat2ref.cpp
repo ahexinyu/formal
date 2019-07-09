@@ -367,9 +367,11 @@ int firsttask(int argc, char *argv[])
    
 	int flag = param_read_t(argc, argv, options);
 	if (flag == -1) { print_usage(); exit(1); }
-	 
+	  printf("uuuuuuuuu\n");
     int readcount = chang_fastqfile(options->reads, options->wrk_dir);
+    printf("iiiiii\n");
     int ref_count = change_ref_fq(options->reference,options->wrk_dir);//*********
+    printf("qqqqqqqqq\n");
     char kkkkk[1024];
     sprintf(kkkkk, "config.txt");
     FILE* fileout = fopen(kkkkk, "w");
