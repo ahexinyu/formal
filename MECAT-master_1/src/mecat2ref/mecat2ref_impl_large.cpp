@@ -739,9 +739,9 @@ static void reference_mapping(int threadint)
 	vector<char> qstr;
 	vector<char> tstr;
 	GapAligner* aligner = NULL;
-	if (REFTECH == TECH_PACBIO) {
+	if (TECH == TECH_PACBIO) {
 		aligner = new DiffAligner(0);
-	} else if (REFTECH == TECH_NANOPORE) {
+	} else if (TECH == TECH_NANOPORE) {
 		aligner = new XdropAligner(0);
 	} else {
 		ERROR("TECH must be either %d or %d", TECH_PACBIO, TECH_NANOPORE);
