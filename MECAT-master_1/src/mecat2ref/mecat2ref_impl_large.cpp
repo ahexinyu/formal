@@ -916,6 +916,7 @@ static void reference_mapping(int threadint)
                         else num2=right_length1;
                         seedcount=0;
                         canidate_temp.loc1=location_loc[0];
+                        printf("canidate_temp is %d\n",location_loc[0]);
                         canidate_temp.num1=num1;
                         canidate_temp.loc2=location_loc[1];
                         canidate_temp.num2=num2;
@@ -970,7 +971,7 @@ static void reference_mapping(int threadint)
 
 			naln = 0;
 			nresults = 0;
-            printf("canidate_loc is %d\n",canidate_loc[0]);
+            
             for(i=0; i<canidatenum; i++)
             {
 				extend_candidate(canidate_loc[i], 
@@ -1236,7 +1237,7 @@ static void reference_mapping(int threadint)
                 
 				naln = 0;
 				nresults = 0;
-                 printf("canidate_loc2 is %d\n",canidate_loc[0]);
+                
                 for(i=0; i<canidatenum; i++)
                 {
 					extend_candidate(canidate_loc[i], 
