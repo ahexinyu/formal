@@ -298,14 +298,14 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
 }
 //*******更改reference文件格式****************
  int change_ref_fq(const char *filepath,const char *outpath){
-     printf("0\n");
+     
     FILE *fp;FILE *ot;int ref_len;long i;
     char tempstr[200];char *onedata;char ch;char *fq,*oq;char buff1[1000], *buff2;
     fp=fopen(filepath,"r");
     char refname[200];
     sprintf(tempstr,"%s/ref.fq",outpath);
     ot=fopen(tempstr,"w");
-     printf("0.1\n");
+     
      onedata=(char *)malloc(10000000);
      buff2=(char *)malloc(10000000);
     fq = (char *)malloc(100000000);
@@ -314,7 +314,7 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
     setvbuf(ot, oq, _IOFBF, 100000000);
     int num_read_items;
     ch=getc(fp);int kk=0;
-     printf("1\n");
+     
     if(ch=='>')
     {
         kk=0;
@@ -371,14 +371,11 @@ int firsttask(int argc, char *argv[])
    
 	int flag = param_read_t(argc, argv, options);
 	if (flag == -1) { print_usage(); exit(1); }
-	  printf("uuuuuuuuu\n");
-    
-    //  printf("%s\n%s\n%s\n%s\n", a, b, c, d);
-    printf("pppppp\n");
+  
     int readcount = chang_fastqfile(options->reads, options->wrk_dir);
-    printf("iiiiii\n");
+    
     int ref_count = change_ref_fq(options->reference,options->wrk_dir);//*********
-    printf("qqqqqqqqq\n");
+    
     char kkkkk[1024];
     sprintf(kkkkk, "config.txt");
     FILE* fileout = fopen(kkkkk, "w");
