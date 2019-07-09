@@ -2001,7 +2001,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     get_vote();
     gettimeofday(&tpstart, NULL);
 
-    savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
+    /*savework=(char *)malloc((MAXSTR+RM)*sizeof(char));
     ref_savework=(char *)malloc((MAXSTR+RM)*sizeof(char));//********
     readinfo=(ReadFasta*)malloc((SVM+2)*sizeof(ReadFasta));
     thread=(pthread_t*)malloc(threadnum*sizeof(pthread_t));
@@ -2021,7 +2021,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     fastq=fopen(tempstr,"r");
     ref_fastq=fopen(tempstr2,"r");//***********
     //multi process thread
-    fileflag=1;
+    fileflag=1;*/
   /*while(fileflag)
     {
         fileflag=load_fastq(fastq);
