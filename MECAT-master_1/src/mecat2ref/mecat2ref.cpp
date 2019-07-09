@@ -298,12 +298,14 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
 }
 //*******更改reference文件格式****************
  int change_ref_fq(const char *filepath,const char *outpath){
+     printf("0\n");
     FILE *fp;FILE *ot;int ref_len;long i;
     char tempstr[200];char onedata[FM];char ch;char *fq,*oq;char buff1[1000], buff2[FM];
     fp=fopen(filepath,"r");
     char refname[200];
     sprintf(tempstr,"%s/ref.fq",outpath);
     ot=fopen(tempstr,"w");
+     printf("0.1\n");
     fq = (char *)malloc(1000000000);
     setvbuf(fp, fq, _IOFBF, 1000000000);
     oq = (char *)malloc(1000000000);
