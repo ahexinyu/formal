@@ -5,7 +5,7 @@
 #include "../common/diff_gapalign.h"
 #include "../common/xdrop_gapalign.h"
 #include <algorithm>
-#define FM  200000
+#define FM  100000
 #define CBL 200
 using namespace std;
 
