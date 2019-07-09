@@ -11,9 +11,9 @@
 #include <dirent.h>
 #include "output.h"
 #include "../common/defs.h"
-#define RM 1000000
+#define RM 100000
 #define big_size 1000000
-#define FM 7000000
+#define FM 1000000
 #define MAXSTR 1000000000
 #define split_le 15000
 
@@ -300,16 +300,18 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
  int change_ref_fq(const char *filepath,const char *outpath){
      printf("0\n");
     FILE *fp;FILE *ot;int ref_len;long i;
-    char tempstr[200];char onedata[FM];char ch;char *fq,*oq;char buff1[1000], buff2[FM];
+    char tempstr[200];char *onedata;char ch;char *fq,*oq;char buff1[1000], *buff2;
     fp=fopen(filepath,"r");
     char refname[200];
     sprintf(tempstr,"%s/ref.fq",outpath);
     ot=fopen(tempstr,"w");
      printf("0.1\n");
-    fq = (char *)malloc(1000000000);
-    setvbuf(fp, fq, _IOFBF, 1000000000);
-    oq = (char *)malloc(1000000000);
-    setvbuf(ot, oq, _IOFBF, 1000000000);
+     onedata=(char *)mallox(10000000);
+     buff2=(char *)mallox(10000000);
+    fq = (char *)malloc(100000000);
+    setvbuf(fp, fq, _IOFBF, 100000000);
+    oq = (char *)malloc(100000000);
+    setvbuf(ot, oq, _IOFBF, 100000000);
     int num_read_items;
     ch=getc(fp);int kk=0;
      printf("1\n");
