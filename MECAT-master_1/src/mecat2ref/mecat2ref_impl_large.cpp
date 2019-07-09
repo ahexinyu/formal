@@ -1922,7 +1922,7 @@ static void* multithread(void* arg)
     localthreadno=runthreadnum;
     runthreadnum++;
     pthread_mutex_unlock(&mutilock);
-   // reference_mapping(localthreadno);
+    reference_mapping(localthreadno);
    	return NULL;
 }
 //ref的多线程跑
