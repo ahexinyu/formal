@@ -306,8 +306,8 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
     sprintf(tempstr,"%s/ref.fq",outpath);
     ot=fopen(tempstr,"w");
      printf("0.1\n");
-     onedata=(char *)mallox(10000000);
-     buff2=(char *)mallox(10000000);
+     onedata=(char *)malloc(10000000);
+     buff2=(char *)malloc(10000000);
     fq = (char *)malloc(100000000);
     setvbuf(fp, fq, _IOFBF, 100000000);
     oq = (char *)malloc(100000000);
