@@ -15,7 +15,6 @@ static int REFTECH=TECH_NANOPORE;
 static int num_output = MAXC;
 static const double ddfs_cutoff_pacbio = 0.25;
 static const double ddfs_cutoff_nanopore = 0.1;
-//static const double ddfs_cutoff2=0.5;
 static double ddfs_cutoff = ddfs_cutoff_pacbio;
 
 static pthread_t *thread;
@@ -119,7 +118,7 @@ static int transnum_buchang(char *seqm,int *value,int *endn,int len_str,int read
     return(num);//extract_number
 }
 //****选择位置的时候考虑了相似度  此时block的长度为1000*******
-/*static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long templong)
+static void insert_loc(struct Back_List *spr,int loc,int seedn,float len,long templong)
 {
     int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;int nn=0;int _loc;//在参考基因的位置
     float list_sim[SI];float score_sim[SI];
@@ -166,7 +165,7 @@ static int transnum_buchang(char *seqm,int *value,int *endn,int len_str,int read
         }
         spr->score--;//删掉最低一个
     }
-}*/
+}
 static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
 {
     int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;
@@ -207,7 +206,7 @@ static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
     }
 }
 //****选择位置的时候考虑了相似度  此时block的长度为2000*******
-/*static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len,long templong)
+static void insert_loc3(struct Back_List *spr,int loc,int seedn,float len,long templong)
 {
     int list_loc[SI],list_score[SI],list_seed[SI],i,j,minval,mini;int nn=0;int _loc;//在参考基因的位置
     float list_sim[SI];float score_sim[SI];
@@ -252,7 +251,7 @@ static void insert_loc2(struct Back_List *spr,int loc,int seedn,float len)
         }
         spr->score--;//删掉最低一个
     }
-}*/
+}
 //********为read建立索引，因为后来要找reference的k_mer在长read中出现的次数
 static void build_read_index(char *path, char *path1){
     unsigned int eit,temp;long start;
@@ -540,7 +539,7 @@ static void creat_ref_index(char *fastafile)
             }
             
             nn=(i+2-seed_len)/CBL;
-            if(countin1[eit]>0){
+           if(countin1[eit]>0){
                 sc[nn].k_count=sc[nn].k_count+countin1[eit];//在long_read里面出现的次数
             }
             eit=eit<<leftnum;
@@ -551,8 +550,8 @@ static void creat_ref_index(char *fastafile)
     REFcount=0;
     for(int p=0;p<seqcount;p++){
         if(lel<split_len){
+            refinfo[REFcount].ref_sequ[lel]=seq[p];
             lel++;
-            refinfo[REFcount].ref_sequ[lel-1]=seq[p];
         }
         else{
             lel=0;
@@ -563,146 +562,6 @@ static void creat_ref_index(char *fastafile)
     }
     REFcount=REFcount-1;
 }
-
-/*static void creat_ref_index(char *fastafile)
-{
-    unsigned int eit,temp;
-    int  indexcount=0,leftnum=0;
-    long length,count,i,start, rsize = 0;
-    FILE *fasta,*fastaindex;
-    char *seq,ch,nameall[200];
-    //
-    if(seed_len==14)indexcount=268435456;
-    else if(seed_len==13)indexcount=67108864;
-    else if(seed_len==12)indexcount=16777216;
-    else if(seed_len==11)indexcount=4194304;
-    else if(seed_len==10)indexcount=1048576;
-    else if(seed_len==9)indexcount=262144;
-    else if(seed_len==8)indexcount=65536;
-    else if(seed_len==7)indexcount=16384;
-    else if(seed_len==6)indexcount=4096;
-    leftnum=34-2*seed_len;
-    //read reference seq
-    length=get_file_size(fastafile);
-    fasta=fopen(fastafile, "r");
-    sprintf(nameall,"%s/chrindex.txt",workpath);
-    fastaindex=fopen(nameall,"w");
-    
-    REFSEQ=(char *)malloc((length+1000)*sizeof(char));
-    seq=REFSEQ;
-    for (ch=getc(fasta),count=0; ch!=EOF; ch=getc(fasta))
-    {
-        if(ch=='>')
-        {
-            assert(fscanf(fasta,"%[^\n]s",nameall) == 1);
-            if (rsize) fprintf(fastaindex, "%ld\n", rsize);
-            rsize = 0;
-            for(i=0;i<strlen(nameall);i++)if(nameall[i]==' '||nameall[i]=='\t')break;
-            nameall[i]='\0';
-            fprintf(fastaindex,"%ld\t%s\t",count,nameall);
-        }
-        else if(ch!='\n'&&ch!='\r')
-        {
-            if(ch>'Z')ch=toupper(ch);
-            seq[count]=ch;
-            count=count+1;
-            ++rsize;
-        }
-    }
-    fclose(fasta);
-    fprintf(fastaindex, "%ld\n", rsize);
-    fprintf(fastaindex,"%ld\t%s\n",count,"FileEnd");
-    seq[count]='\0';
-    fclose(fastaindex);
-    seqcount=count;
-    printf("%ld\n",seqcount);
-    //printf("Constructing look-up table...\n");
-    countin=(int *)malloc((indexcount)*sizeof(int));
-    for(i=0; i<indexcount; i++)countin[i]=0;
-    
-    // Count the number
-    eit=0;
-    start=0;
-    for(i=0; i<seqcount; i++)
-    {
-        if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
-        {
-            eit=0;
-            start=0;
-            continue;
-        }
-        temp=atcttrans(seq[i]);
-        if(start<seed_len-1)
-        {
-            eit=eit<<2;
-            eit=eit+temp;
-            start=start+1;
-        }
-        else if(start>=seed_len-1)
-        {
-            eit=eit<<2;
-            eit=eit+temp;
-            start=start+1;
-            countin[eit]=countin[eit]+1;
-            eit=eit<<leftnum;
-            eit=eit>>leftnum;
-        }
-    }
-    
-    
-    //Max_index
-    sumcount=sumvalue_x(countin,indexcount);
-    allloc=(long *)malloc(sumcount*sizeof(long));
-    databaseindex=(long **)malloc((indexcount)*sizeof(long*));
-    //allocate memory
-    sumcount=0;
-    for(i=0; i<indexcount; i++)
-    {
-        if(countin[i]>0)
-        {
-            databaseindex[i]=allloc+sumcount;
-            sumcount=sumcount+countin[i];
-            countin[i]=0;
-        }
-        else databaseindex[i]=NULL;
-    }
-    
-    // printf("xiao");//10834098
-    
-    //constructing the look-up table
-    eit=0;
-    start=0;
-    for(i=0; i<seqcount; i++)
-    {
-        if(seq[i]=='N'||(temp=atcttrans(seq[i]))==4)
-        {
-            eit=0;
-            start=0;
-            continue;
-        }
-        temp=atcttrans(seq[i]);
-        if(start<seed_len-1)
-        {
-            eit=eit<<2;
-            eit=eit+temp;
-            start=start+1;
-        }
-        else if(start>=seed_len-1)
-        {
-            eit=eit<<2;
-            eit=eit+temp;
-            start=start+1;
-            
-            if(databaseindex[eit]!=NULL)
-            {
-                countin[eit]=countin[eit]+1;
-                databaseindex[eit][countin[eit]-1]=i+2-seed_len;
-            }
-            eit=eit<<leftnum;
-            eit=eit>>leftnum;
-        }
-    }
-}*/
 //********根据sim数据结构计算各个区域的相似度******
 static void get_vote(){
     int eit=0;
@@ -720,14 +579,24 @@ static void get_vote(){
     printf("ave_count is% lf\n",ave_count);
     for( j=0;j<similarity_count;j++){
         deviation=sc[j].k_count/ave_count;
-        //sc[j].vote=deviation;
-        sc[j].vote=1;
+        sc[j].vote=deviation;//deviation=sqrt(pow((sc[j].k_count-ave_count),2)/similarity_count);//方差
+        
     }
     
     
+    /*for( j=0;j<similarity_count;j++){
+        if(sc[j].k_count>0){
+            sc[j].LDF=log((read_kmer)/sc[j].k_count);
+            sc[j].vote=log(sc[j].LDF)/4;
+        }
+        else{
+            sc[j].vote=1;
+        }
+    }*/
+    
     
 }
-/*int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,long start_loc)//绝了
+int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,long start_loc)//绝了
 {
     int i,j,maxval=0,maxi,rep=0,lasti=0;long _loc[200];float list_sim[200];
     for(i=0; i<k; i++){t_score[i]=0;_loc[i]=0;list_sim[i]=0;}
@@ -811,7 +680,7 @@ static void get_vote(){
         return(1);
     }
     else return(0);
-}*/
+}
 
 
 static void reference_mapping(int threadint)
@@ -977,7 +846,7 @@ static void reference_mapping(int threadint)
                                         temp_spr->loczhi[loc-1]=u_k;
                                         temp_spr->seedno[loc-1]=k+1;
                                     }
-                                    else insert_loc2(temp_spr,u_k,k+1,BC);//删除分数最小的。保持在20个左右 原来是1 //insert_loc(temp_spr,u_k,k+1,BC,templong);
+                                    else insert_loc(temp_spr,u_k,k+1,BC,templong);//删除分数最小的。保持在20个左右
                                     if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
                                     else s_k=temp_spr->score;
                                     if(endnum<s_k)endnum=s_k;
@@ -1035,8 +904,7 @@ static void reference_mapping(int threadint)
                                 u_k++;
                             }
                         }
-                       //flag_end=find_location3(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,start_loc);
-                        flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
+                       flag_end=find_location3(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,start_loc);
                         if(flag_end==0)continue;
                         if(temp_score[repeat_loc]<6)continue;
                         canidate_temp.score=temp_score[repeat_loc];
@@ -1243,7 +1111,7 @@ static void reference_mapping(int threadint)
                                             temp_spr->loczhi[loc-1]=u_k;
                                             temp_spr->seedno[loc-1]=k+1;
                                         }
-                                        else insert_loc2(temp_spr,u_k,k+1,BC);//原来是3 insert_loc3(temp_spr,u_k,k+1,BC,templong);
+                                        else insert_loc3(temp_spr,u_k,k+1,BC,templong);
                                         if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
                                         else s_k=temp_spr->score;
                                         if(endnum<s_k)endnum=s_k;
@@ -1300,8 +1168,8 @@ static void reference_mapping(int threadint)
                                     u_k++;
                                 }
                             }
-                            //flag_end=find_location3(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,start_loc);
-                           flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
+                            flag_end=find_location3(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,start_loc);
+                          /// flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
                             if(flag_end==0)continue;
                             if(temp_score[repeat_loc]<6)continue;
                             canidate_temp.score=temp_score[repeat_loc];
@@ -1541,7 +1409,7 @@ static void reference_map_reference(int threadint)
             
                 endnum=0;
                 aaa=0;
-                read_len=split_len;
+                read_len=strlen(onedata);
                 cleave_num=transnum_buchang(onedata,mvalue,&endnum,read_len,seed_len,BC);
                 for(int cu=0;cu<cleave_num;cu++){
                     if(mvalue[cu]>=0){
@@ -1592,7 +1460,7 @@ static void reference_map_reference(int threadint)
                 }
                 *pnblk = j;
                 cc1=j;
-                for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>4)
+                for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>6)
                 {
                     temp_spr=database+*index_spr;
                     if(temp_spr->score==0)continue;
@@ -1866,7 +1734,7 @@ static void reference_map_reference(int threadint)
                     }
                     *pnblk = j;
                     cc1=j;
-                    for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>3)
+                    for(i=0,index_spr=index_list,index_ss=index_score; i<cc1; i++,index_spr++,index_ss++)if(*index_ss>4)
                     {
                         temp_spr=database+*index_spr;
                         if(temp_spr->score==0)continue;
@@ -2069,7 +1937,7 @@ static void* multithread2(void* arg)
     localthreadno2=runthreadnum2;
     runthreadnum2++;
     pthread_mutex_unlock(&mutilock2);
-   // reference_map_reference(localthreadno2);
+    reference_map_reference(localthreadno2);
     return NULL;
 }
 static int load_fastq(FILE *fq)
