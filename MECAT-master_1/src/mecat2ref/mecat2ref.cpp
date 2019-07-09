@@ -310,6 +310,7 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
     setvbuf(ot, oq, _IOFBF, 1000000000);
     int num_read_items;
     ch=getc(fp);int kk=0;
+     printf("1\n");
     if(ch=='>')
     {
         kk=0;
@@ -336,6 +337,7 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
         }
         onedata[ref_len]='\0';
         fprintf(ot, "%d\t\%d\t%s\n", kk-1,ref_len,onedata);
+        printf("2\n");
     }
     else
     {
@@ -345,6 +347,7 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
             ref_len=strlen(onedata);
             fprintf(ot, "%d\t%d\t%s\n", ++kk,ref_len,onedata);
         }
+        printf("3\n");
     }
     
     fclose(fp);
