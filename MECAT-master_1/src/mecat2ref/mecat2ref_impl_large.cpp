@@ -971,7 +971,7 @@ static void reference_mapping(int threadint)
 
 			naln = 0;
 			nresults = 0;
-            printf("canidate_loc is",canidate_loc[0].loc1);
+            printf("canidate_loc is%d\n",canidate_loc[0].loc1);
             for(i=0; i<canidatenum; i++)
             {
 				extend_candidate(canidate_loc[i], 
