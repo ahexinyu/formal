@@ -2064,7 +2064,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
    
 }
    RefFlag=1;
-    while(RefFlag){
+    /*while(RefFlag){
         if(REFcount%PLL==0)terminalnum2=REFcount/PLL;
         else terminalnum2=REFcount/PLL+1;
         if(REFcount<=0)break;
@@ -2089,6 +2089,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         RefFlag=0;
     
     }
+     */
    
     fclose(fastq);
     free(countin);//好像不能free。下面还要用
