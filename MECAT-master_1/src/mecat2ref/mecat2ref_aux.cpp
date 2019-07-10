@@ -189,6 +189,7 @@ extract_sequences(const char* raw_ref,
 	
 	const char* rs = raw_ref + ref_start - left_ref_size;
 	const char* re = raw_ref + ref_start + right_ref_size;
+    
 	tstr.clear();
 	for (const char* r = rs; r != re; ++r) {
 		u1_t c = *r;
@@ -248,7 +249,7 @@ bool extend_candidate(candidate_save& can,
 		r.se = ref_start - left_ref_size + aligner->target_end();
 		strcpy(r.qmap, aligner->query_mapped_string());
 		strcpy(r.smap, aligner->target_mapped_string());
-        printf("begin is%d\n",r.sb);
+        
 		if (alns) {
 			alns[*naln].qoff = r.qb;
 			alns[*naln].qend = r.qe;
