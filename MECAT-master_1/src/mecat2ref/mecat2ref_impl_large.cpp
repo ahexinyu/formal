@@ -1515,7 +1515,7 @@ static void reference_map_reference(int threadint)
                     canidate_temp.loc1=location_loc[0];
                     canidate_temp.num1=num1;
                     canidate_temp.loc2=location_loc[1];
-                    
+                    printf("location_loc[1] is %d\n",location_loc[1]);
                     canidate_temp.num2=num2;
                     canidate_temp.left1=left_length1;
                     canidate_temp.left2=left_length2;
@@ -1571,7 +1571,7 @@ static void reference_map_reference(int threadint)
             
             naln = 0;
             nresults = 0;
-            printf("canidate_temp.loc2 is %d\n",canidate_loc[0].loc2);
+            
             for(i=0; i<canidatenum; i++)
             {
                 extend_candidate(canidate_loc[i],
