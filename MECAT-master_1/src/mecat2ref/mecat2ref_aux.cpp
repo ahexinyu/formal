@@ -248,7 +248,7 @@ bool extend_candidate(candidate_save& can,
 		r.se = ref_start - left_ref_size + aligner->target_end();
 		strcpy(r.qmap, aligner->query_mapped_string());
 		strcpy(r.smap, aligner->target_mapped_string());
-        printf("begin is%d\n",r.qb);
+        printf("begin is%d\n",r.sb);
 		if (alns) {
 			alns[*naln].qoff = r.qb;
 			alns[*naln].qend = r.qe;
