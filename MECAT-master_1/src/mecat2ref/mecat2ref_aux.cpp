@@ -235,13 +235,7 @@ bool extend_candidate(candidate_save& can,
 					  right_ref_size, 
 					  qstr, 
 					  tstr);
-    if(qstr.data()==NULL){printf("1\n");}
-    if(tstr.data()==NULL){printf("2\n");}
-    if(read_start<0){printf("3\n");}
-    if(read_len<=0){printf("4\n");}
-    if(tstr.size()<=0){printf("5\n");}
-    if(left_ref_size<0){printf("6\n");}
-    if(aligner==NULL){printf("7\n");}
+    
 	if (aligner->go(qstr.data(), read_start, read_len, tstr.data(), left_ref_size, tstr.size(), 1000)) {
 		TempResult& r = trv[ntr++];
 		r.read_id = read_name;
@@ -254,7 +248,7 @@ bool extend_candidate(candidate_save& can,
 		r.se = ref_start - left_ref_size + aligner->target_end();
 		strcpy(r.qmap, aligner->query_mapped_string());
 		strcpy(r.smap, aligner->target_mapped_string());
-
+        printf("begin is%d\n",r.qb);
 		if (alns) {
 			alns[*naln].qoff = r.qb;
 			alns[*naln].qend = r.qe;
