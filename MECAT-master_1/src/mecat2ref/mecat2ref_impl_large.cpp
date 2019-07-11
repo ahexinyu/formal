@@ -1009,9 +1009,9 @@ static void reference_mapping(int threadint)
 								  fwd_database, 
 								  rev_database,
 								  ddfs_cutoff);
-			  printf("alns is%d\n",alns[0].qoff);
+			 // printf("alns is%d\n",alns[0].qoff);
 			output_results(alns, naln, results, nresults, num_output, outfile[threadint]);
-			
+			printf("alns is%d\n",alns[0].qoff);
 			for (int t = 0; t < fnblk; ++t) {
 				int bid = fwd_index_list[t];
 				fwd_database[bid].score = 0;
