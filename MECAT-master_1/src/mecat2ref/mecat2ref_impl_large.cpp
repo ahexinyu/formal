@@ -990,7 +990,7 @@ static void reference_mapping(int threadint)
 								 results,
 								 nresults);
             }
-            printf("alns is%d\n",alns[0].qoff);
+           // printf("alns is%d\n",alns[0].qoff);
 			rescue_clipped_align(alns, 
 								  naln, 
 								  results,
@@ -1009,7 +1009,7 @@ static void reference_mapping(int threadint)
 								  fwd_database, 
 								  rev_database,
 								  ddfs_cutoff);
-			
+			  printf("alns is%d\n",alns[0].qoff);
 			output_results(alns, naln, results, nresults, num_output, outfile[threadint]);
 			
 			for (int t = 0; t < fnblk; ++t) {
