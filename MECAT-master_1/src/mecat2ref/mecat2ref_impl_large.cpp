@@ -579,8 +579,8 @@ static void get_vote(){
     printf("ave_count is% lf\n",ave_count);
     for( j=0;j<similarity_count;j++){
         deviation=sc[j].k_count/ave_count;
-       // sc[j].vote=deviation;//deviation=sqrt(pow((sc[j].k_count-ave_count),2)/similarity_count);//方差
-        sc[j].vote=1;
+       sc[j].vote=deviation;//deviation=sqrt(pow((sc[j].k_count-ave_count),2)/similarity_count);//方差
+       // sc[j].vote=1;
     }
     
     
@@ -838,7 +838,8 @@ static void reference_mapping(int threadint)
                                         temp_spr->loczhi[loc-1]=u_k;
                                         temp_spr->seedno[loc-1]=k+1;
                                     }
-                                    else insert_loc2(temp_spr,u_k,k+1,BC);//删除分数最小的。insert_loc(temp_spr,u_k,k+1,BC,templong);
+                                    //else insert_loc2(temp_spr,u_k,k+1,BC);//删除分数最小的。insert_loc(temp_spr,u_k,k+1,BC,templong);
+                                    else insert_loc(temp_spr,u_k,k+1,BC,templong);
                                     if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
                                     else s_k=temp_spr->score;
                                     if(endnum<s_k)endnum=s_k;
@@ -896,8 +897,8 @@ static void reference_mapping(int threadint)
                                 u_k++;
                             }
                         }
-                       //flag_end=find_location3(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,start_loc);
-                        flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
+                       flag_end=find_location3(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,start_loc);
+                        //flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
                         if(flag_end==0)continue;
                         if(temp_score[repeat_loc]<6)continue;
                         canidate_temp.score=temp_score[repeat_loc];
@@ -1011,7 +1012,7 @@ static void reference_mapping(int threadint)
 								  ddfs_cutoff);
 			 // printf("alns is%d\n",alns[0].qoff);
 			output_results(alns, naln, results, nresults, num_output, outfile[threadint]);
-			printf("alns is%d\n",alns[0].qoff);
+			//printf("alns is%d\n",alns[0].qoff);
 			for (int t = 0; t < fnblk; ++t) {
 				int bid = fwd_index_list[t];
 				fwd_database[bid].score = 0;
@@ -1107,7 +1108,8 @@ static void reference_mapping(int threadint)
                                             temp_spr->loczhi[loc-1]=u_k;
                                             temp_spr->seedno[loc-1]=k+1;
                                         }
-                                        else insert_loc2(temp_spr,u_k,k+1,BC);//insert_loc3(temp_spr,u_k,k+1,BC,templong);
+                                        //else insert_loc2(temp_spr,u_k,k+1,BC);//
+                                         else insert_loc3(temp_spr,u_k,k+1,BC,templong);
                                         if(templong>0)s_k=temp_spr->score+(temp_spr-1)->score;
                                         else s_k=temp_spr->score;
                                         if(endnum<s_k)endnum=s_k;
@@ -1164,8 +1166,8 @@ static void reference_mapping(int threadint)
                                     u_k++;
                                 }
                             }
-                            //flag_end=find_location3(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,start_loc);
-                            flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
+                            flag_end=find_location3(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,start_loc);
+                            //flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
                             if(flag_end==0)continue;
                             if(temp_score[repeat_loc]<6)continue;
                             canidate_temp.score=temp_score[repeat_loc];
