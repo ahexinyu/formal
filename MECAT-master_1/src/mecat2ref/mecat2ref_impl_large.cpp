@@ -579,7 +579,7 @@ static void get_vote(){
     printf("ave_count is% lf\n",ave_count);
     for( j=0;j<similarity_count;j++){
         if (ave_count==0){
-            sc[j].vote=deviation;
+            sc[j].vote=1;
         }
         else{
             deviation=sc[j].k_count/ave_count;
