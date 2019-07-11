@@ -236,7 +236,7 @@ bool extend_candidate(candidate_save& can,
 					  right_ref_size, 
 					  qstr, 
 					  tstr);
-    printf("read_start is%d\n",read_start);
+    //printf("read_start is%d\n",read_start);
 	if (aligner->go(qstr.data(), read_start, read_len, tstr.data(), left_ref_size, tstr.size(), 1000)) {
 		TempResult& r = trv[ntr++];
 		r.read_id = read_name;

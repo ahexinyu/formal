@@ -972,7 +972,7 @@ static void reference_mapping(int threadint)
 
 			naln = 0;
 			nresults = 0;
-            printf("canidate_loc is%d\n",canidate_loc[0].loc1);
+           // printf("canidate_loc is%d\n",canidate_loc[0].loc1);
             for(i=0; i<canidatenum; i++)
             {
 				extend_candidate(canidate_loc[i], 
@@ -990,7 +990,7 @@ static void reference_mapping(int threadint)
 								 results,
 								 nresults);
             }
-			
+            printf("alns is%d\n",alns[0].qoff);
 			rescue_clipped_align(alns, 
 								  naln, 
 								  results,
@@ -1866,6 +1866,7 @@ static void reference_map_reference(int threadint)
                                      results,
                                      nresults);
                 }
+                
                 
                 rescue_clipped_align(alns,
                                      naln,
