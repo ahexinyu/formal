@@ -734,7 +734,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                 }
                             }
                         }
-                        test("test2\n");
+                       printf ("test2\n");
                         out_pptr[p_num]=pptr[mini];
                         p_num++;
                     }
