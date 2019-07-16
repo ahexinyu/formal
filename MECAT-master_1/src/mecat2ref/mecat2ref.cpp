@@ -476,20 +476,7 @@ output_query_results(fastaindexinfo* chr_idx, const int num_chr, TempResult** pp
 		if (output_cnt == num_output) break;
 	}
 }
-int judge(TempResult *a,TempResult *b){
-    int r;
-    int ref_start,ref_end;
-    ref_start=(b->read_id)*split_le+b->qb;
-    ref_end=(b->read_id)*split_le+b->qe;
-    
-    if(labs((a->sb-ref_start))<20000){//&&labs(a->se-ref_end)<20000){
-        /*if(labs(a->se-b->sb)>1000||labs(a->sb-b->se)>1000){
-            r=1;
-        }*/
-    }
-    else{r=0;}
-    return r;
-}
+
 int result_combine(int readcount, int filecount, char *workpath, char *outfile, char *fastaq, int main_argc, char* main_argv[])
 {
 	char path[1024], buffer[1024];
@@ -571,6 +558,26 @@ int result_combine(int readcount, int filecount, char *workpath, char *outfile, 
 
 extern int meap_ref_impl_large(int, int, int);
 
+
+int delete_mini_result(TempResult **pptr,TempResult **out_pptr,int lenA, int lenB){
+    int ndelcount;
+    bool bsame=false;
+    int j;
+    for(int i=0;i<lenA;i++){
+        bsame=false;
+        for (int k=0;k<lenB;k++){
+            if(pptr[i]==out_pptr[k]){
+                ndelcount++;
+                bsame=true;
+                break;
+            }
+        }
+        if( false==bsame){
+            pptr[j++]==pptr[i];
+        }
+    }
+    return lenA-ndelcount;
+}
 //**********这部分是将第一次改和第二次改的结果做一次整合****************
 void polish_result(const char *workpath,int filecount,int refcount,char  *refoutfile){
     char path[200],path2[200];FILE *thread_file; FILE **up_file;int num_count=0;char buffer[1024];
@@ -579,7 +586,12 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
     const int trsize=num_candidates + 6;
     int ref_trsize=refcount *5;
     TempResult *pptr[trsize];
-    for (int i = 0; i < trsize; ++i) pptr[i] = create_temp_result();
+    TempResult *out_pptr[trsize];
+    //TempResult *Temp_pptr[trsize];
+    for (int i = 0; i < trsize; ++i) {
+        pptr[i] = create_temp_result();
+        out_pptr[i] = create_temp_result();
+    }
     TempResult *trslt=create_temp_result();
     char* trf_buffer = (char*)malloc(8192);
     
@@ -665,66 +677,79 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         int rok=load_temp_result(trslt,thread_file);
         if(rok){copy_temp_result(trslt,pptr[num_results]);++num_results;}
         int last_id=pptr[0]->read_id;int formal_id;int formal_loc;int org_sta,org_end,org_ref_start,org_ref_end;int ref_sid;int temp_sb,temp_se;
-        int max=-1,min=1000;int maxi;int mini;int or_sta,or_end;
+        int maxi;int or_sta,or_end;int *vote;int *mark;int mini=-1;int mini_vote=-1;int p_num=0;
+        vote=(int *)malloc(16*sizeof(int));
+        mark=(int *)malloc(16*sizeof(int));
+        for(int i=0;i<16;i++){
+            vote[i]=0;
+            mark[i]=0;
+        }
         int ref_size;
         while(rok){
             rok=load_temp_result(trslt, thread_file);
             if(!rok)break;
             if(trslt->read_id!=last_id){//这是同一个read的比对写到文件里面
                 for(int i=0;i<num_results;i++){
-                    if(pptr[i]->vscore>max){
-                        max=pptr[i]->vscore;
-                        maxi=i;
-                    }
-                    if(pptr[i]->vscore<min){
-                        min=pptr[i]->vscore;
-                        mini=i;
-                    }
-                }
-                for(int j=0;j<num_results;j++){
-                    if((pptr[maxi]->se+1000)<(pptr[j]->sb)||(pptr[j]->se+1000)<(pptr[maxi]->sb)){
-                        or_sta=pptr[j]->sb;//还是在总长这里
-                        or_end=pptr[j]->se;
-                        temp_sb=pptr[maxi]->sb+pptr[j]->qb-pptr[maxi]->qb;
-                        temp_se=pptr[j]->sb+pptr[j]->se-or_sta;
-                        ref_sid=or_sta/split_le;
-                        point_arr=result_database[ref_sid];
-                        for(int i=0;i<16;i++){
-                            r_k=*point_arr;
-                            if(r_k==0){
-                                break;
-                            }
-                            judg=judge(pptr[j],refpptr[r_k]);
-                            if(judg){
-                                printf("1\n");
-                                if(labs(temp_sb-refpptr[r_k]->sb)<2000&&labs(temp_se-refpptr[r_k]->se)<2000){
-                                    pptr[j]->sb=temp_sb;
-                                    pptr[j]->se=temp_se;
+                    for(int j=i+1;j<num_results;j++){
+                        int sid=get_chr_id(chr_idx, num_chr, pptr[i]->sb);
+                        ref_sid2=get_chr_id(chr_idx, num_chr, pptr[j]->sb);
+                        if(sid==ref_sid2){
+                            if (labs(pptr[j]->qb-pptr[i]->qb)>1000&&labs(pptr[i]->qe-pptr[j]->qe)>1000) {
+                                if (fabs((pptr[i]->qb-pptr[j]->qb)/(pptr[i]->sb-pptr[j]->sb)-1)<0.9) {
+                                    vote[i]=vote[i]+1;
+                                    mark[i]=1;
                                 }
                             }
                         }
                     }
                 }
-                /*if((pptr[mini]->se+1000)<(pptr[maxi]->sb)){
-                    or_sta=pptr[mini]->sb;
-                    pptr[mini]->sb=pptr[maxi]->sb+pptr[mini]->qb-pptr[maxi]->qb;
-                    pptr[mini]->se=pptr[mini]->sb+pptr[mini]->se-or_sta;
-                }*/
+            }
+            
                 for(int k=0;k<num_results;k++){
-                    int sid = get_chr_id(chr_idx, num_chr, pptr[k]->sb);
-                    ref_name=chr_idx[sid].chrname;
-                    ref_size=chr_idx[sid].chrsize;//read比对的第几个参考基因组
-                    pptr[k]->sb=pptr[k]->sb-chr_idx[sid].chrstart;
-                    pptr[k]->se=pptr[k]->se-chr_idx[sid].chrstart;
-                    output_temp_result2(pptr[k],out,ref_name,ref_size);
+                    if (mark[k]==1){
+                        mini_vote=vote[k];
+                        mini=k;
+                        for(int p=k+1;p<num_results;p++){
+                            int sid=get_chr_id(chr_idx, num_chr, pptr[k]->sb);
+                            ref_sid2=get_chr_id(chr_idx, num_chr, pptr[p]->sb);
+                            ref_sid2=get_chr_id(chr_idx, num_chr, pptr[p]->sb);
+                            if(sid==ref_sid2){
+                                mark[p]==2;
+                                if(labs(pptr[p]->qb-pptr[k]->qb)<1000){
+                                    if(mini_vote<vote[p]){
+                                        mini=k;
+                                    }
+                                    if (vote[k]==vote[p]) {
+                                        if(pptr[k]->vscore<pptr[k]->vscore){
+                                            mini=k;
+                                        }
+                                        else{
+                                            mini=p;
+                                        }
+                                    }
+                                    if(vote[k]>vote[p]){
+                                        mini=p;
+                                        mini_vote=vote[p];
+                                    }
+                                }
+                            }
+                        }
+                        out_pptr[p_num]=pptr[mini];
+                        p_num++;
+                    }
                 }
+                //两个数组去重
+            delete_mini_result(pptr,out_pptr,num_results,p_num);
+            output_query_results(chr_idx, num_chr, pptr, num_results, out);//shuchu
                 num_results=0;
+            
             }
             
             last_id = trslt->read_id;
             copy_temp_result(trslt, pptr[num_results]);
             ++num_results;
         }
+            if (num_results) output_query_results(chr_idx, num_chr, pptr, num_results, out);
             fclose(thread_file);
     }
     for(int i=0;i<trsize;++i)pptr[i]=destroy_temp_result(pptr[i]);
