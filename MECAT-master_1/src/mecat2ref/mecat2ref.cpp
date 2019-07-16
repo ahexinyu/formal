@@ -734,13 +734,13 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                 }
                             }
                         }
-                       printf ("test2\n");
+                       
                         out_pptr[p_num]=pptr[mini];
                         p_num++;
                     }
                 }
                 //两个数组去重
-            delete_mini_result(pptr,out_pptr,num_results,p_num);
+            //delete_mini_result(pptr,out_pptr,num_results,p_num);
             output_query_results(chr_idx, num_chr, pptr, num_results, out);//shuchu
                 num_results=0;
             
