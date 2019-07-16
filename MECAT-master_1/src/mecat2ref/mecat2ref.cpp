@@ -740,8 +740,8 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                     }
                 }
                 //两个数组去重
-            //delete_mini_result(pptr,out_pptr,num_results,p_num);
-            output_query_results(chr_idx, num_chr, pptr, num_results, out);//shuchu
+            int new_num=delete_mini_result(pptr,out_pptr,num_results,p_num);
+            output_query_results(chr_idx, num_chr, pptr, new_num, out);//shuchu
                 num_results=0;
             
             }
