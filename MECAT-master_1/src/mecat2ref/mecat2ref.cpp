@@ -705,7 +705,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                     }
                 }
             
-            
+            printf("test2\n");
                 for(int k=0;k<num_results;k++){
                     if (mark[k]==1){
                         mini_vote=vote[k];
