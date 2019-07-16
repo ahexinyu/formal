@@ -684,6 +684,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
             vote[i]=0;
             mark[i]=0;
         }
+        printf("test\n");
         int ref_size;
         while(rok){
             rok=load_temp_result(trslt, thread_file);
