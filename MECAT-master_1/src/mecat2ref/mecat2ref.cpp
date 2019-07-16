@@ -572,7 +572,7 @@ int delete_mini_result(TempResult **pptr,TempResult **out_pptr,int lenA, int len
                 break;
             }
         }
-        if( false==bsame){
+        if(false==bsame){
             pptr[j++]==pptr[i];
         }
     }
@@ -703,7 +703,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         }
                     }
                 }
-            }
+            
             
                 for(int k=0;k<num_results;k++){
                     if (mark[k]==1){
