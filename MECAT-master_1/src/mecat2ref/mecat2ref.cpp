@@ -696,9 +696,11 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         ref_sid2=get_chr_id(chr_idx, num_chr, pptr[j]->sb);
                         if(sid==ref_sid2){
                             if (labs(pptr[j]->qb-pptr[i]->qb)>1000&&labs(pptr[i]->qe-pptr[j]->qe)>1000) {
-                                if (fabs((pptr[i]->qb-pptr[j]->qb)/(pptr[i]->sb-pptr[j]->sb)-1)<0.9) {
+                                if(pptr[i]->sb!=pptr[j]->sb){
+                                if (fabs((pptr[i]->qb-pptr[j]->qb)/(pptr[i]->sb-pptr[j]->sb)-1)<0.9) {//这边有个非法运算
                                     vote[i]=vote[i]+1;
                                     mark[i]=1;
+                                }
                                 }
                             }
                         }
