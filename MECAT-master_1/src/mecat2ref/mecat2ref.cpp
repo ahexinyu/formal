@@ -718,10 +718,10 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                             if(sid==ref_sid2){
                                 mark[p]==2;
                                 if(labs(pptr[p]->qb-pptr[k]->qb)<1000){
-                                    /*if(mini_vote<vote[p]){
+                                    if(mini_vote<vote[p]){
                                         mini=k;
                                     }
-                                    if (vote[k]==vote[p]) {
+                                    if (mini_vote==vote[p]) {
                                         if(pptr[k]->vscore<pptr[k]->vscore){
                                             mini=k;
                                         }
@@ -729,10 +729,10 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                             mini=p;
                                         }
                                     }
-                                    if(vote[k]>vote[p]){
+                                    if(mini_vote>vote[p]){
                                         mini=p;
                                         mini_vote=vote[p];
-                                    }*/
+                                    }
                                      
                                 }
                             }
