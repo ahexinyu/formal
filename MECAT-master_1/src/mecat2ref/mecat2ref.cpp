@@ -661,7 +661,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
     chr_idx_file = NULL;
     for(int i=0;i<filecount;i++){
         sprintf(tempstr,"%s/up%d.r",workpath,filecount);
-        up_file[i]=fopen(tempstr,"w");
+        //up_file[i]=fopen(tempstr,"w");
     }//初始化文件
     for(int ww=1;ww<=filecount;ww++)
     {
@@ -706,7 +706,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         }
                     }
                 }
-            
+                if(pptr[0]->read_id==49){ printf("49出现过\n");}
             
                 for(int k=0;k<num_results;k++){
                     if (mark[k]==1){
@@ -744,7 +744,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                 }
                 //两个数组去重
             int new_num=delete_mini_result(pptr,out_pptr,num_results,p_num);
-           output_query_results(chr_idx, num_chr, pptr, new_num, out);//shuchu
+            output_query_results(chr_idx, num_chr, pptr, new_num, out);//shuchu
                 num_results=0;
                 p_num=0;
             }
@@ -753,7 +753,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
             copy_temp_result(trslt, pptr[num_results]);
             ++num_results;
         }
-            if (num_results) output_query_results(chr_idx, num_chr, pptr, num_results, out);
+           // if (num_results) output_query_results(chr_idx, num_chr, pptr, num_results, out);
             fclose(thread_file);
     }
     for(int i=0;i<trsize;++i)pptr[i]=destroy_temp_result(pptr[i]);
