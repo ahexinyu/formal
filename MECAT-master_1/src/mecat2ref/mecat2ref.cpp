@@ -745,7 +745,8 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                 //两个数组去重
                 
             int new_num=delete_mini_result(pptr,out_pptr,num_results,p_num);
-            if(pptr[0]->read_id==49){ printf("49 2 \n");}
+                if(pptr[0]->read_id==49){ printf("49 2 \n");printf("new_num%d\n",new_num);}
+                
             output_query_results(chr_idx, num_chr, pptr, new_num, out);//shuchu
                 num_results=0;
                 p_num=0;
