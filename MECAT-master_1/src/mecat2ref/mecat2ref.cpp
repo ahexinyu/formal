@@ -748,6 +748,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                 if(pptr[0]->read_id==49){ printf("49 2 \n");printf("new_num%d\n",new_num);}
                 
             output_query_results(chr_idx, num_chr, pptr, new_num, out);//shuchu
+                if(pptr[0]->read_id==49){ printf("49 3 \n");printf("new_num%d\n",new_num);printf("start is %d",pprt[0]->qb);}
                 num_results=0;
                 p_num=0;
             }
