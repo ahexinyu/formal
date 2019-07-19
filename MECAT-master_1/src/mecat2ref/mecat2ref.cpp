@@ -474,7 +474,7 @@ output_query_results(fastaindexinfo* chr_idx, const int num_chr, TempResult** pp
 						  out);
 		++output_cnt;
 		if (output_cnt == num_output) break;
-        if(pptr[0]->read_id==49){printf("output_cnt is%d\n",output_cnt);}
+        //if(pptr[0]->read_id==50){printf("output_cnt is%d\n",output_cnt);}
 	}
 }
 
@@ -561,7 +561,7 @@ extern int meap_ref_impl_large(int, int, int);
 
 
 int delete_mini_result(TempResult **pptr,TempResult **out_pptr,int lenA, int lenB){
-    int ndelcount;
+    int ndelcount=0;
     bool bsame=false;
     int j;
     for(int i=0;i<lenA;i++){
@@ -753,11 +753,9 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                     }
                 }
                 //两个数组去重
-                
-            int new_num=delete_mini_result(pptr,out_pptr,num_results,p_num);
-                if(pptr[0]->read_id==50){ printf("50 2 \n");printf("new_num%d\n",new_num);}
-                
-            output_query_results(chr_idx, num_chr, pptr, new_num, out);//shuchu
+                if(pptr[0]->read_id==50){printf("p_num is %d\n",p_num);}
+                int new_num=delete_mini_result(pptr,out_pptr,num_results,p_num);
+                output_query_results(chr_idx, num_chr, pptr, new_num, out);//shuchu
                 if(pptr[0]->read_id==50){ printf("50 3 \n");printf("new_num%d\n",new_num);printf("start is %d",pptr[0]->qb);}
                 num_results=0;
                 p_num=0;
