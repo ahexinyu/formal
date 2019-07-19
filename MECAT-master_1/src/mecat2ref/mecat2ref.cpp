@@ -596,6 +596,13 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
     TempResult *trslt=create_temp_result();
     char* trf_buffer = (char*)malloc(8192);
     
+    if (output_format == FMT_SAM)
+    {
+        print_sam_header(out);
+        print_sam_references(chr_idx, num_chr, out);
+        print_sam_program(main_argc, main_argv, out);
+    }
+    
     TempResult *refpptr[big_size];
     FILE *thread_ref_file;int num_ref_results=0;
     TempResult *trslt1=create_temp_result();
