@@ -474,7 +474,7 @@ output_query_results(fastaindexinfo* chr_idx, const int num_chr, TempResult** pp
 						  out);
 		++output_cnt;
 		if (output_cnt == num_output) break;
-        if(pptr[0]->read_id==49){printf("output_cnt is\n",output_cnt);}
+        if(pptr[0]->read_id==49){printf("output_cnt is%d\n",output_cnt);}
 	}
 }
 
