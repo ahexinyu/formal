@@ -580,7 +580,7 @@ int delete_mini_result(TempResult **pptr,TempResult **out_pptr,int lenA, int len
     return lenA-ndelcount;
 }
 //**********这部分是将第一次改和第二次改的结果做一次整合****************
-void polish_result(const char *workpath,int filecount,int refcount,char  *refoutfile){
+void polish_result(const char *workpath,int filecount,int refcount,char  *refoutfile,int main_argc, char* main_argv[]){
     char path[200],path2[200];FILE *thread_file; FILE **up_file;int num_count=0;char buffer[1024];
     char *trbuffer=(char *)malloc(8192);char tempstr[200];int temp1,temp2;int r_k;
     int num_results=0;char *ref_name;char *ref_name2;
@@ -596,12 +596,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
     TempResult *trslt=create_temp_result();
     char* trf_buffer = (char*)malloc(8192);
     
-    if (output_format == FMT_SAM)
-    {
-        print_sam_header(out);
-        print_sam_references(chr_idx, num_chr, out);
-        print_sam_program(main_argc, main_argv, out);
-    }
+    
     
     TempResult *refpptr[big_size];
     FILE *thread_ref_file;int num_ref_results=0;
@@ -662,7 +657,14 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         assert(flag == 3);
     }
     fprintf(stderr, "output file name: %s\n", refoutfile);
+    
     FILE* out = fopen(refoutfile, "w");
+    if (output_format == FMT_SAM)
+    {
+        print_sam_header(out);
+        print_sam_references(chr_idx, num_chr, out);
+        print_sam_program(main_argc, main_argv, out);
+    }
     char* out_buffer = (char*)malloc(8192);
     setvbuf(out, out_buffer, _IOFBF, 8192);
     fclose(chr_idx_file);
@@ -914,7 +916,7 @@ int main(int argc, char *argv[])
     sprintf(tempstr1,"%s/ref.fq",saved);
     result_combine(readcount, corenum, saved, outfile,tempstr, argc, argv);
     //result_combine2(refcount, corenum, saved, refoutfile,tempstr1, argc, argv);
-    polish_result(saved,corenum,refcount,refoutfile);
+    polish_result(saved,corenum,refcount,refoutfile,argc,argv);
     gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
