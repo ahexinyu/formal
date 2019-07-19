@@ -474,6 +474,7 @@ output_query_results(fastaindexinfo* chr_idx, const int num_chr, TempResult** pp
 						  out);
 		++output_cnt;
 		if (output_cnt == num_output) break;
+        if(pptr[0]->read_id==49){printf("output_cnt is\n",output_cnt);}
 	}
 }
 
@@ -641,7 +642,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
     FILE* chr_idx_file = fopen(path2, "r");
     if (!chr_idx_file) { fprintf(stderr, "failed to open file %s for reading.\n", path); abort(); }
     int num_chr = 0;
-    while(fgets(buffer, 1024, chr_idx_file)) ++num_chr;
+    while(fgets(buffer, 1024, chr_idx_file)) ++num_chr;//参考基因组
     --num_chr;
     up_file=(FILE **)malloc(filecount*sizeof(FILE *));
     fastaindexinfo* chr_idx = (fastaindexinfo*)malloc(sizeof(fastaindexinfo) * num_chr);
