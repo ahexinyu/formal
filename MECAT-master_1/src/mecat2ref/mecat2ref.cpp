@@ -733,7 +733,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                         mini=k;
                                     }
                                     if (mini_vote==vote[p]) {
-                                        if(pptr[k]->vscore<pptr[j]->vscore){
+                                        if(pptr[k]->vscore<pptr[p]->vscore){
                                             mini=k;
                                         }
                                         else{
