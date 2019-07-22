@@ -716,7 +716,8 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         }
                     }
                 }
-                if(pptr[0]->read_id==50){ printf("50\n");}
+                
+                //if(pptr[0]->read_id==50){ printf("50\n");}
             
                 for(int k=0;k<num_results;k++){
                     if (mark[k]==1){
@@ -732,7 +733,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                         mini=k;
                                     }
                                     if (mini_vote==vote[p]) {
-                                        if(pptr[k]->vscore<pptr[k]->vscore){
+                                        if(pptr[k]->vscore<pptr[j]->vscore){
                                             mini=k;
                                         }
                                         else{
@@ -753,11 +754,11 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                     }
                 }
                 //两个数组去重
-                if(pptr[0]->read_id==50){printf("p_num is %d\n",p_num);}
-                if(pptr[0]->read_id==50){printf("num_results is%d\n",num_results);}
+                //if(pptr[0]->read_id==50){printf("p_num is %d\n",p_num);}
+                //if(pptr[0]->read_id==50){printf("num_results is%d\n",num_results);}
                 int new_num=delete_mini_result(pptr,out_pptr,num_results,p_num);
                 output_query_results(chr_idx, num_chr, pptr, new_num, out);//shuchu
-                if(pptr[0]->read_id==50){ printf("50 3 \n");printf("new_num%d\n",new_num);printf("start is %d",pptr[0]->qb);}
+                //if(pptr[0]->read_id==50){ printf("50 3 \n");printf("new_num%d\n",new_num);printf("start is %d",pptr[0]->qb);}
                 num_results=0;
                 p_num=0;
                 for(int i=0;i<10;i++){mark[i]=0;vote[i]=0;}
