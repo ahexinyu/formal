@@ -687,7 +687,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         int rok=load_temp_result(trslt,thread_file);
         if(rok){copy_temp_result(trslt,pptr[num_results]);++num_results;}
         int last_id=pptr[0]->read_id;int formal_id;int formal_loc;int org_sta,org_end,org_ref_start,org_ref_end;int ref_sid2;int temp_sb,temp_se;
-        int maxi;int or_sta,or_end;int *vote;int *mark;int mini=-1;int mini_vote=-1;int p_num=0;
+        int maxi;int or_sta,or_end;int *vote;int *mark;int mini=-1;int mini_vote=-1;int p_num=0; int delete_flag=0;
         vote=(int *)malloc(16*sizeof(int));
         mark=(int *)malloc(16*sizeof(int));
         for(int i=0;i<16;i++){
@@ -722,6 +722,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                 //if(pptr[0]->read_id==50){ printf("50\n");}
             
                 for(int k=0;k<num_results;k++){
+                    delete_flag=0;
                     if (mark[k]==1){
                         mini_vote=vote[k];
                         mini=k;
@@ -731,6 +732,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                             if(sid==ref_sid2){
                                 mark[p]==2;
                                 if(labs(pptr[p]->qb-pptr[k]->qb)<1000){
+                                    delete_flag=1;
                                     if(mini_vote<vote[p]){
                                         mini=k;
                                     }
@@ -750,8 +752,8 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                 }
                             }
                         }
-                       
-                        out_pptr[p_num]=pptr[mini];
+                        if(delete_flag==1){
+                            out_pptr[p_num]=pptr[mini];}
                         p_num++;
                     }
                 }
