@@ -709,6 +709,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                 if(pptr[i]->sb!=pptr[j]->sb){
                                 if (fabs((pptr[i]->qb-pptr[j]->qb)/(pptr[i]->sb-pptr[j]->sb)-1)<0.9) {//这边有个非法运算
                                     vote[i]=vote[i]+1;
+                                    vote[j]=vote[j]+1;
                                     mark[i]=1;
                                 }
                                 }
