@@ -711,6 +711,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                     vote[i]=vote[i]+1;
                                     vote[j]=vote[j]+1;
                                     mark[i]=1;
+                                    mark[j]=1;
                                 }
                                 }
                             }
