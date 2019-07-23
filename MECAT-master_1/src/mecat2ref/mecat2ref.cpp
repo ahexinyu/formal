@@ -753,8 +753,8 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                             }
                         }
                         if(delete_flag==1){
-                            out_pptr[p_num]=pptr[mini];}
-                        p_num++;
+                            out_pptr[p_num]=pptr[mini];
+                            p_num++;}
                     }
                 }
                 //两个数组去重
