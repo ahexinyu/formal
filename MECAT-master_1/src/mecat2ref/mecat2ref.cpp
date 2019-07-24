@@ -724,8 +724,8 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                 for(int k=0;k<num_results;k++){
                     delete_flag=0;
                     if (mark[k]==1){
-                        mini_vote=vote[k];
-                        mini=k;
+                        maxi_vote=vote[k];
+                        maxi=k;
                         for(int p=k+1;p<num_results;p++){
                             int sid=get_chr_id(chr_idx, num_chr, pptr[k]->sb);
                             ref_sid2=get_chr_id(chr_idx, num_chr, pptr[p]->sb);
