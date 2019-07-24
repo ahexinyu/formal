@@ -687,7 +687,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         int rok=load_temp_result(trslt,thread_file);
         if(rok){copy_temp_result(trslt,pptr[num_results]);++num_results;}
         int last_id=pptr[0]->read_id;int formal_id;int formal_loc;int org_sta,org_end,org_ref_start,org_ref_end;int ref_sid2;int temp_sb,temp_se;
-        int maxi;int or_sta,or_end;int *vote;int *mark;int mini=-1;int mini_vote=-1;int p_num=0; int delete_flag=0;
+        int or_sta,or_end;int *vote;int *mark;int maxi=-1;int maxi_vote=-1;int p_num=0; int delete_flag=0;
         vote=(int *)malloc(16*sizeof(int));
         mark=(int *)malloc(16*sizeof(int));
         for(int i=0;i<16;i++){
@@ -733,36 +733,34 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                 mark[p]==2;
                                 if(labs(pptr[p]->qb-pptr[k]->qb)<1000){
                                     delete_flag=1;
-                                    if(mini_vote<vote[p]){
-                                        mini=k;
+                                    if(maxi_vote>vote[p]){
+                                        maxi=k;
                                     }
-                                    if (mini_vote==vote[p]) {
-                                        if(pptr[k]->vscore<pptr[p]->vscore){
-                                            mini=k;
+                                    if (maxi_vote==vote[p]) {
+                                        if(pptr[k]->vscore>pptr[p]->vscore){
+                                            maxi=k;
                                         }
                                         else{
-                                            mini=p;
+                                            maxi=p;
                                         }
                                     }
-                                    if(mini_vote>vote[p]){
-                                        mini=p;
-                                        mini_vote=vote[p];
+                                    if(maxi_vote<vote[p]){
+                                        maxi=p;
+                                        maxi_vote=vote[p];
                                     }
                                      
                                 }
                             }
                         }
                         if(delete_flag==1){
-                            out_pptr[p_num]=pptr[mini];
+                            out_pptr[p_num]=pptr[maxi];
                             p_num++;}
                     }
                 }
                 //两个数组去重
-                //if(pptr[0]->read_id==50){printf("p_num is %d\n",p_num);}
-                //if(pptr[0]->read_id==50){printf("num_results is%d\n",num_results);}
-                int new_num=delete_mini_result(pptr,out_pptr,num_results,p_num);
-                output_query_results(chr_idx, num_chr, pptr, new_num, out);//shuchu
-                //if(pptr[0]->read_id==50){ printf("50 3 \n");printf("new_num%d\n",new_num);printf("start is %d",pptr[0]->qb);}
+                
+                //int new_num=delete_mini_result(pptr,out_pptr,num_results,p_num);
+                output_query_results(chr_idx, num_chr, out_pptr, p_num, out);//shuchu
                 num_results=0;
                 p_num=0;
                 for(int i=0;i<10;i++){mark[i]=0;vote[i]=0;}
