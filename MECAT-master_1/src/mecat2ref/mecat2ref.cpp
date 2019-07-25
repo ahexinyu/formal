@@ -750,6 +750,14 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                     }
                                      
                                 }
+                                else{
+                                    out_pptr[p_num]=pptr[k];
+                                    p_num++;
+                                    if(p==num_results){
+                                        out_pptr[p_num]=pptr[p];
+                                        p_num++;
+                                    }
+                                }
                             }
                         }
                         if(delete_flag==1){
@@ -763,7 +771,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                 }
                 //两个数组去重
                 
-                //int new_num=delete_mini_result(pptr,out_pptr,num_results,p_num);
+                //int new_num=delete_mini_result(pptr,out_pptr,num_results,p_num);//num_results 从0开始数
                 output_query_results(chr_idx, num_chr, out_pptr, p_num, out);//shuchu
                 num_results=0;
                 p_num=0;
