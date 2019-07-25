@@ -750,14 +750,10 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                     }
                                      
                                 }
-                               /*else{
-                                    out_pptr[p_num]=pptr[k];
-                                    p_num++;
-                                    if(p==num_results-1){
-                                        out_pptr[p_num]=pptr[p];
-                                        p_num++;
-                                    }
-                                }*/
+                                if(p==num_results-1){
+                                     out_pptr[p_num]=pptr[k];
+                                     p_num++;
+                                }
                             }
                         }
                         if(delete_flag==1){
@@ -765,6 +761,10 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                             p_num++;}
                     }
                     else if(mark[k]==0){
+                        out_pptr[p_num]=pptr[k];
+                        p_num++;
+                    }
+                    else if(mark[k]>0&&k==num_results-1){
                         out_pptr[p_num]=pptr[k];
                         p_num++;
                     }
