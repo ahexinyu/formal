@@ -730,8 +730,8 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                             int sid=get_chr_id(chr_idx, num_chr, pptr[k]->sb);
                             ref_sid2=get_chr_id(chr_idx, num_chr, pptr[p]->sb);
                             if(sid==ref_sid2){
-                                mark[p]==2;
                                 if(labs(pptr[p]->qb-pptr[k]->qb)<1000){
+                                    mark[p]==2;
                                     delete_flag=1;
                                     if(maxi_vote>vote[p]){
                                         maxi=k;
@@ -755,6 +755,10 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         if(delete_flag==1){
                             out_pptr[p_num]=pptr[maxi];
                             p_num++;}
+                    }
+                    else if(mark[k]==0){
+                        out_pptr[p_num]=pptr[k];
+                        p_num++;
                     }
                 }
                 //两个数组去重
