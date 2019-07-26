@@ -731,7 +731,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                             ref_sid2=get_chr_id(chr_idx, num_chr, pptr[p]->sb);
                             if(sid==ref_sid2){
                                 if(labs(pptr[p]->qb-pptr[k]->qb)<1000){
-                                    mark[p]==2;
+                                    mark[p]=2;
                                     delete_flag=1;
                                     if(maxi_vote>vote[p]){
                                         maxi=k;
