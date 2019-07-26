@@ -694,7 +694,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
             vote[i]=0;
             mark[i]=0;
         }
-        printf("test\n");
+        //printf("test\n");
         int ref_size;
         while(rok){
             rok=load_temp_result(trslt, thread_file);
@@ -731,7 +731,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                             ref_sid2=get_chr_id(chr_idx, num_chr, pptr[p]->sb);
                             if(sid==ref_sid2){
                                 if(labs(pptr[p]->qb-pptr[k]->qb)<1000){
-                                    mark[p]==2;
+                                    mark[p]==10;
                                     delete_flag=1;
                                     if(maxi_vote>vote[p]){
                                         maxi=k;
@@ -750,10 +750,6 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                     }
                                      
                                 }
-                                if(p==num_results-1){
-                                     out_pptr[p_num]=pptr[k];
-                                     p_num++;
-                                }
                             }
                         }
                         if(delete_flag==1){
@@ -764,7 +760,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         out_pptr[p_num]=pptr[k];
                         p_num++;
                     }
-                    else if(mark[k]>0&&k==num_results-1){
+                    else if(mark[k]>0&&k==num_results-1&&mark[k]<10){
                         out_pptr[p_num]=pptr[k];
                         p_num++;
                     }
