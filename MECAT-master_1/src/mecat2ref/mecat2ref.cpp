@@ -750,6 +750,12 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                     }
                                      
                                 }
+                                else{
+                                    if(p==num_results-1){
+                                        out_pptr[p_num]=pptr[k];
+                                        p_num++;
+                                    }
+                                }
                             }
                         }
                         if(delete_flag==1){
