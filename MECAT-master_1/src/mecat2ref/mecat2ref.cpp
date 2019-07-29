@@ -306,7 +306,7 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
     sprintf(tempstr,"%s/ref.fq",outpath);
     ot=fopen(tempstr,"w");
      printf("2\n");
-     onedata=(char *)malloc(10000000);
+     onedata=(char *)malloc(100000000);
      buff2=(char *)malloc(10000000);
      buff1=(char *)malloc(10000000);
     fq = (char *)malloc(100000000);
@@ -316,7 +316,7 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
     int num_read_items;
     ch=getc(fp);int kk=0;
      printf("3\n");
-    /*if(ch=='>')
+    if(ch=='>')
     {
         kk=0;
         for (; ch!=EOF; ch=getc(fp))
@@ -359,8 +359,8 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
     fclose(ot);
     free(fq);
     free(oq);
-    return (kk);*/
-     return 1;
+    return (kk);
+     //return 1;
 }
 
 
