@@ -341,7 +341,7 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
         }
         onedata[ref_len]='\0';
         fprintf(ot, "%d\t\%d\t%s\n", kk-1,ref_len,onedata);
-        printf("2\n");
+       
     }
     else
     {
@@ -351,7 +351,7 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
             ref_len=strlen(onedata);
             fprintf(ot, "%d\t%d\t%s\n", ++kk,ref_len,onedata);
         }
-        printf("3\n");
+        
     }
     
     fclose(fp);
@@ -900,7 +900,7 @@ int main(int argc, char *argv[])
     gettimeofday(&tpstart, NULL);
     corenum = firsttask(argc, argv);
     printf("first task is sucess\n");//*******
-    gettimeofday(&tpend, NULL);
+    /*gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
     fid1 = fopen("config.txt", "r");
@@ -943,7 +943,7 @@ int main(int argc, char *argv[])
     fprintf(fid2, "The total Time : %f sec\n", timeuse);
     fclose(fid2);
     sprintf(cmd, "cp -r config.txt \"%s.config\"", outfile);
-    sprintf(cmd, "cp -r config.txt \"%s.config\"", refoutfile);
+    sprintf(cmd, "cp -r config.txt \"%s.config\"", refoutfile);*/
     __run_system(cmd);
     
 	
