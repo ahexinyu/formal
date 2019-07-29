@@ -300,7 +300,7 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
  int change_ref_fq(const char *filepath,const char *outpath){
      printf("p\n");
     FILE *fp;FILE *ot;int ref_len;long i;
-    char tempstr[200];char *onedata;char ch;char *fq,*oq;char buff1[1000], *buff2;
+    char tempstr[200];char *onedata;char ch;char *fq,*oq;char *buff1, *buff2;
     fp=fopen(filepath,"r");
     char refname[200];
     sprintf(tempstr,"%s/ref.fq",outpath);
@@ -308,6 +308,7 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
      printf("2\n");
      onedata=(char *)malloc(10000000);
      buff2=(char *)malloc(10000000);
+     buff1=(char *)malloc(10000000);
     fq = (char *)malloc(100000000);
     setvbuf(fp, fq, _IOFBF, 100000000);
     oq = (char *)malloc(100000000);
