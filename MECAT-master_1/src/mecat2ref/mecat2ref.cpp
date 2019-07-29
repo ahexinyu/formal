@@ -298,14 +298,14 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
 }
 //*******更改reference文件格式****************
  int change_ref_fq(const char *filepath,const char *outpath){
-     printf("p\n");
+    
     FILE *fp;FILE *ot;int ref_len;long i;
     char tempstr[200];char *onedata;char ch;char *fq,*oq;char *buff1, *buff2;
     fp=fopen(filepath,"r");
     char refname[200];
     sprintf(tempstr,"%s/ref.fq",outpath);
     ot=fopen(tempstr,"w");
-     printf("2\n");
+     
      onedata=(char *)malloc(100000000);
      buff2=(char *)malloc(10000000);
      buff1=(char *)malloc(10000000);
@@ -315,7 +315,7 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
     setvbuf(ot, oq, _IOFBF, 100000000);
     int num_read_items;
     ch=getc(fp);int kk=0;
-     printf("3\n");
+     
     if(ch=='>')
     {
         kk=0;
@@ -378,7 +378,7 @@ int firsttask(int argc, char *argv[])
     
     int ref_count = change_ref_fq(options->reference,options->wrk_dir);//*********
     
-   /* char kkkkk[1024];
+    char kkkkk[1024];
     sprintf(kkkkk, "config.txt");
     FILE* fileout = fopen(kkkkk, "w");
     fprintf(fileout, "%s\n%s\n%s\n%s\n%s\n%d\t%d\n%d\n", options->wrk_dir, options->reference, options->reads, options->output,options->refoutput,options->num_cores, readcount,ref_count);
@@ -389,8 +389,8 @@ int firsttask(int argc, char *argv[])
 	output_format = options->output_format;
 	tech = options->tech;
 	free(options);
-    return (corenum);*/
-    return 1;
+    return (corenum);
+    //return 1;
     
 }
 
@@ -904,7 +904,7 @@ int main(int argc, char *argv[])
     gettimeofday(&tpstart, NULL);
     corenum = firsttask(argc, argv);
     printf("first task is sucess\n");//*******
-    /*gettimeofday(&tpend, NULL);
+    gettimeofday(&tpend, NULL);
     timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
     fid1 = fopen("config.txt", "r");
@@ -947,7 +947,7 @@ int main(int argc, char *argv[])
     fprintf(fid2, "The total Time : %f sec\n", timeuse);
     fclose(fid2);
     sprintf(cmd, "cp -r config.txt \"%s.config\"", outfile);
-    sprintf(cmd, "cp -r config.txt \"%s.config\"", refoutfile);*/
+    sprintf(cmd, "cp -r config.txt \"%s.config\"", refoutfile);
     __run_system(cmd);
     
 	
