@@ -374,7 +374,7 @@ int firsttask(int argc, char *argv[])
   
     int readcount = chang_fastqfile(options->reads, options->wrk_dir);
     
-    //int ref_count = change_ref_fq(options->reference,options->wrk_dir);//*********
+    /*int ref_count = change_ref_fq(options->reference,options->wrk_dir);//*********
     
     char kkkkk[1024];
     sprintf(kkkkk, "config.txt");
@@ -387,7 +387,9 @@ int firsttask(int argc, char *argv[])
 	output_format = options->output_format;
 	tech = options->tech;
 	free(options);
-    return (corenum);
+    return (corenum);*/
+    return 1;
+    
 }
 
 int cmp_temp_result_ptr(const void* a, const void* b)
