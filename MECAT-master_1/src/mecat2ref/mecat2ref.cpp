@@ -789,7 +789,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
             copy_temp_result(trslt, pptr[num_results]);
             ++num_results;
         }
-           // if (num_results) output_query_results(chr_idx, num_chr, pptr, num_results, out);
+            if (num_results) output_query_results(chr_idx, num_chr, pptr, num_results, out);
             fclose(thread_file);
     }
     for(int i=0;i<trsize;++i)pptr[i]=destroy_temp_result(pptr[i]);
