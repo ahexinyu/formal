@@ -18,7 +18,7 @@ int find_location(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_
     for(i=0;i<SI;i++){
         nn=_loc[i]/CBLL;
         list_sim[i]=(sc[nn].vote);
-        t_score[i]=t_score[i]/list_sim[i];
+        t_score[i]=t_score[i]*list_sim[i];
     }
 
     for(i=0; i<k; i++)
