@@ -703,7 +703,8 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         while(rok){
             rok=load_temp_result(trslt, thread_file);
             if(!rok)break;
-            if(trslt->read_id!=last_id){//这是同一个read的比对写到文件里面
+            if(trslt->read_id!=last_id){
+                //这是同一个read的比对写到文件里面
                 for(int i=0;i<num_results;i++){
                     for(int j=i+1;j<num_results;j++){
                         int sid=get_chr_id(chr_idx, num_chr, pptr[i]->sb);

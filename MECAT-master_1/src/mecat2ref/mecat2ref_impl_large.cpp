@@ -578,21 +578,16 @@ static void get_vote(){
     ave_count=total_count/similarity_count;
     printf("ave_count is% lf\n",ave_count);
     for( j=0;j<similarity_count;j++){
-        if (ave_count==0){
-            sc[j].vote=1;
-        }
-        else{
+        //if (ave_count==0){
+            //sc[j].vote=1;
+        //}
+        //else{
             deviation=sc[j].k_count/ave_count;
             sc[j].vote=deviation;
-        }
+        //}
        //deviation=sqrt(pow((sc[j].k_count-ave_count),2)/similarity_count);//方差
        // sc[j].vote=1;
     }
-    
-    
-  
-    
-    
 }
 int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,long start_loc)//绝了
 {
