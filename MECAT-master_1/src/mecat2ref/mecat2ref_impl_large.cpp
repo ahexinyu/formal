@@ -582,7 +582,7 @@ static void get_vote(){
             sc[j].vote=1;
         }
         else{
-            deviation=fabs(1-pow(ave_count/sc[j].k_count,2));
+            deviation=fabs(1-ave_count/sc[j].k_count);
             sc[j].vote=deviation;
         }
        //deviation=sqrt(pow((sc[j].k_count-ave_count),2)/similarity_count);//方差
