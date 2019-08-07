@@ -578,7 +578,7 @@ static void get_vote(){
     ave_count=total_count/similarity_count;
     printf("ave_count is% lf\n",ave_count);
     for( j=0;j<similarity_count;j++){
-        if (ave_count==0||sc[j].k_count<ave_count){
+        if (ave_count==0){
             sc[j].vote=1;
         }
         else{
