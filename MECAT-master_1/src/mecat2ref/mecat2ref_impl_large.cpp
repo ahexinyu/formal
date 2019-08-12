@@ -590,7 +590,7 @@ static void get_vote(){
                 min=deviation;
             }
             if (deviation<0.5) {
-                deviation=0.5;
+                deviation=1;
             }
             else if(deviation>3){
                 deviation=3;
