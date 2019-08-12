@@ -589,8 +589,8 @@ static void get_vote(){
             else if(deviation<min){
                 min=deviation;
             }
-            if (deviation<0.25) {
-                deviation=0.25;
+            if (deviation<0.5) {
+                deviation=0.5;
             }
             else if(deviation>3){
                 deviation=3;
