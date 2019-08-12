@@ -590,10 +590,13 @@ static void get_vote(){
                 min=deviation;
             }
             if (deviation<0.5) {
-                deviation=1;
+                deviation=0.5;
             }
             else if(deviation>3){
-                deviation=3;
+                deviation=2;
+            }
+            else{
+                 deviation=1
             }
             sc[j].vote=deviation;
         }
