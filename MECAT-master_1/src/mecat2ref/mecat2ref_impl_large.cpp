@@ -582,7 +582,7 @@ static void get_vote(){
             sc[j].vote=1;
         }
         else{
-            deviation=sc[j].k_count/ave_count);
+            deviation=sc[j].k_count/ave_count;
             if(deviation>max){
                 max=deviation;
             }
