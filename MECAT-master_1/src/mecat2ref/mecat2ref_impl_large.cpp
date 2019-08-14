@@ -583,13 +583,8 @@ static void get_vote(){
         }
         else{
             deviation=sc[j].k_count/ave_count;
-            if(deviation>max){
-                max=deviation;
-            }
-            else if(deviation<min){
-                min=deviation;
-            }
-            if (deviation<0.5) {
+            deviation=deviation*(log(seqcount1-12/ave_count));
+           /* if (deviation<0.5) {
                 deviation=0.5;
             }
             else if(deviation>3){
@@ -597,6 +592,12 @@ static void get_vote(){
             }
             else{
                 deviation=sc[j].k_count/ave_count;
+            }*/
+            if(deviation>max){
+                max=deviation;
+            }
+            else if(deviation<min){
+                min=deviation;
             }
             sc[j].vote=deviation;
         }
