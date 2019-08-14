@@ -583,21 +583,15 @@ static void get_vote(){
         }
         else{
             deviation=sc[j].k_count/ave_count;
-            deviation=deviation*(log(seqcount1-12/(ave_count*similarity_count)));
-           /* if (deviation<0.5) {
-                deviation=0.5;
+            //deviation=deviation*(log(seqcount1-12/(ave_count*similarity_count)));
+            if (deviation<1) {
+                deviation=sc[j].k_count/ave_count;
             }
-            else if(deviation>3){
-                deviation=2;
+            else if(deviation>2){
+                deviation=sc[j].k_count/ave_count;
             }
             else{
-                deviation=sc[j].k_count/ave_count;
-            }*/
-            if(deviation>max){
-                max=deviation;
-            }
-            else if(deviation<min){
-                min=deviation;
+                deviation=1;
             }
             sc[j].vote=deviation;
         }
