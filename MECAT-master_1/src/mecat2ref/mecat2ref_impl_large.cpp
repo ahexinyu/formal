@@ -596,7 +596,7 @@ static void get_vote(){
                 deviation=2;
             }
             else{
-                deviation=1;
+                deviation=sc[j].k_count/ave_count;
             }
             sc[j].vote=deviation;
         }
