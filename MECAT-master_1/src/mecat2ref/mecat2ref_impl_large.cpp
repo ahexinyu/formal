@@ -572,6 +572,9 @@ static void get_vote(){
     int start=0;
     int leftnum=8;int nn=0;long total_count=0;float ave_count=0;float deviation; float max=-1;float min=10000;
     for( j=0;j<similarity_count;j++){
+        if(sc[j].k_count<min){
+            min=sc[j].k_count;
+        }
         total_count=total_count+sc[j].k_count;
         
     }
@@ -585,10 +588,10 @@ static void get_vote(){
             deviation=sc[j].k_count/ave_count;
             //deviation=deviation*(log(seqcount1-12/(ave_count*similarity_count)));
             if (deviation<1) {
-                deviation=sc[j].k_count/ave_count;
+                deviation=(sc[j].k_count/ave_count)*log((sc[j].k_count/min));
             }
-            else if(deviation>1.5){
-                deviation=sc[j].k_count/ave_count;
+            else if(deviation>2){
+                deviation=(sc[j].k_count/ave_count)*log((sc[j].k_count/min));
             }
             else{
                 deviation=1;
@@ -599,7 +602,6 @@ static void get_vote(){
        //deviation=sqrt(pow((sc[j].k_count-ave_count),2)/similarity_count);//方差
        // sc[j].vote=1;
     }
-    printf("min is%f\n",min);
     printf("max is%f\n",max);
 }
 int find_location3(int *t_loc,int *t_seedn,int *t_score,long *loc,int k,int *rep_loc,float len,int read_len1, double ddfs_cutoff,long start_loc)//绝了
