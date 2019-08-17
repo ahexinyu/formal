@@ -585,10 +585,10 @@ static void get_vote(){
             deviation=sc[j].k_count/ave_count;
             //deviation=deviation*(log(seqcount1-12/(ave_count*similarity_count)));
             if (deviation<1) {
-                deviation=1.5*(sc[j].k_count/ave_count);
+                deviation=sc[j].k_count/ave_count;
             }
-            else if(deviation>2){
-                deviation=1.5*(sc[j].k_count/ave_count);
+            else if(deviation>1.5){
+                deviation=sc[j].k_count/ave_count;
             }
             else{
                 deviation=1;
