@@ -726,7 +726,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                 
                 //if(pptr[0]->read_id==50){ printf("50\n");}
             
-                for(int k=0;k<num_results;k++){
+                /*for(int k=0;k<num_results;k++){
                     delete_flag=0;
                     if (mark[k]==1){
                         maxi_vote=vote[k];
@@ -777,6 +777,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                     }
                     
                 }
+                 */
                 //两个数组去重
                 
                 //int new_num=delete_mini_result(pptr,out_pptr,num_results,p_num);//num_results 从0开始数
