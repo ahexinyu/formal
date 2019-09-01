@@ -705,7 +705,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
             if(!rok)break;
             if(trslt->read_id!=last_id){
                 //这是同一个read的比对写到文件里面
-                for(int i=0;i<num_results;i++){
+                /*for(int i=0;i<num_results;i++){
                     for(int j=i+1;j<num_results;j++){
                         int sid=get_chr_id(chr_idx, num_chr, pptr[i]->sb);
                         ref_sid2=get_chr_id(chr_idx, num_chr, pptr[j]->sb);
@@ -722,7 +722,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                             }
                         }
                     }
-                }
+                }*/
                 
                 //if(pptr[0]->read_id==50){ printf("50\n");}
             
@@ -783,8 +783,8 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                 //int new_num=delete_mini_result(pptr,out_pptr,num_results,p_num);//num_results 从0开始数
                 output_query_results(chr_idx, num_chr, out_pptr, p_num, out);//shuchu
                 num_results=0;
-                p_num=0;
-                for(int i=0;i<10;i++){mark[i]=0;vote[i]=0;}
+                //p_num=0;
+               // for(int i=0;i<10;i++){mark[i]=0;vote[i]=0;}
             }
             
             last_id = trslt->read_id;
