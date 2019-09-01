@@ -755,10 +755,10 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                     }
                     
                 }
-                output_query_results(chr_idx, num_chr, out_pptr, p_num, out);//shuchu
+                output_query_results(chr_idx, num_chr, out_pptr, num_results, out);//shuchu
                 num_results=0;
-                //p_num=0;
-               // for(int i=0;i<10;i++){mark[i]=0;vote[i]=0;}
+                p_num=0;
+               for(int i=0;i<10;i++){mark[i]=0;vote[i]=0;}
             }
             
             last_id = trslt->read_id;
