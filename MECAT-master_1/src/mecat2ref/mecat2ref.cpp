@@ -739,7 +739,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                         maxi=k;
                                     }
                                     if (maxi_vote==vote[p]) {
-                                        if((pptr[k]->qe-pptr[k]->qe)>(pptr[p]->qe-pptr[p]->qb)){
+                                        if((pptr[k]->qe-pptr[k]->qb)>(pptr[p]->qe-pptr[p]->qb)){
                                             maxi=k;
                                         }
                                         else{
