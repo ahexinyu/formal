@@ -704,7 +704,57 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
             rok=load_temp_result(trslt, thread_file);
             if(!rok)break;
             if(trslt->read_id!=last_id){
-                
+                for(int k=0;k<num_results;k++){
+                    delete_flag=0;
+                    if (mark[k]==1){
+                        maxi_vote=vote[k];
+                        maxi=k;
+                        for(int p=k+1;p<num_results;p++){
+                            int sid=get_chr_id(chr_idx, num_chr, pptr[k]->sb);
+                            ref_sid2=get_chr_id(chr_idx, num_chr, pptr[p]->sb);
+                            if(sid==ref_sid2){
+                                if(labs(pptr[p]->qb-pptr[k]->qb)<1000){
+                                    mark[p]=2;
+                                    delete_flag=1;
+                                    if(maxi_vote>vote[p]){
+                                        maxi=k;
+                                    }
+                                    if (maxi_vote==vote[p]) {
+                                        if(pptr[k]->vscore>pptr[p]->vscore){
+                                            maxi=k;
+                                        }
+                                        else{
+                                            maxi=p;
+                                        }
+                                    }
+                                    if(maxi_vote<vote[p]){
+                                        maxi=p;
+                                        maxi_vote=vote[p];
+                                    }
+                                    
+                                }
+                                else{
+                                    if(p==num_results-1&&delete_flag==0){
+                                        out_pptr[p_num]=pptr[k];
+                                        p_num++;
+                                    }
+                                }
+                            }
+                        }
+                        if(delete_flag==1){
+                            out_pptr[p_num]=pptr[maxi];
+                            p_num++;}
+                        if(k==num_results-1&&mark[k]==1){
+                            out_pptr[p_num]=pptr[k];
+                            p_num++;
+                        }
+                    }
+                    else if(mark[k]==0){
+                        out_pptr[p_num]=pptr[k];
+                        p_num++;
+                    }
+                    
+                }
                 output_query_results(chr_idx, num_chr, out_pptr, num_results, out);//shuchu
                 num_results=0;
                 //p_num=0;
