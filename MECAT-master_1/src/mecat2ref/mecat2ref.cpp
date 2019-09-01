@@ -735,8 +735,9 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                 if(labs(pptr[p]->qb-pptr[k]->qb)<1000){
                                     mark[p]=2;
                                     delete_flag=1;
-                                    if((pptr[k]->qe-pptr[k]->qb)-(pptr[p]->qe-pptr[p]->qb)>3000){
-                                        maxi=k;
+                                    if(labs((pptr[k]->qe-pptr[k]->qb)-(pptr[p]->qe-pptr[p]->qb))>3000){
+                                        if((pptr[k]->qe-pptr[k]->qb)>pptr[p]->qe-pptr[p]->qb)){ maxi=k;}
+                                        else{maxi=p;}
                                     }else{
                                         if(maxi_vote>vote[p]){
                                             maxi=k;
