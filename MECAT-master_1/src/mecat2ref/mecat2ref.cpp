@@ -722,7 +722,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         }
                     }
                 }
-                if(read_id==413){
+                if(pptr[0]->read_id==413){
                     for(int o=0;0<num_results;o++){
                         printf("mark[i] is%d\n",mark[o]);
                     }
@@ -782,7 +782,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                     }//&
                     
                 }
-                if(read_id==413){
+                if(pptr[0]->read_id==413){
                         printf("p-num is%d\n",p_num);
                     
                 }
