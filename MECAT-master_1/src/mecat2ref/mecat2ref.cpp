@@ -757,19 +757,19 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                     
                                     }
                                 }
-                                /*else{
+                                else{
                                     if(p==num_results-1&&delete_flag==0){
                                         out_pptr[p_num]=pptr[k];
                                         p_num++;
                                     }
-                                }*/
+                                }
                             }
-                            else{
+                            /*else{
                                 if(p==num_results-1&&delete_flag==0){
                                     out_pptr[p_num]=pptr[k];
                                     p_num++;
                                 }
-                            }
+                            }*/
                             
                         }
                         if(delete_flag==1){
