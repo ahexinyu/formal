@@ -725,10 +725,14 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
 
                 for(int k=0;k<num_results;k++){
                     delete_flag=0;
-                    if (mark[k]==1){
+                    if(mark[k]==0){
+                        out_pptr[p_num]=pptr[k];
+                        p_num++;
+                    }
+                    if (mark[k]==1){//&
                         maxi_vote=vote[k];
                         maxi=k;
-                        for(int p=k+1;p<num_results;p++){
+                        for(int p=k+1;p<num_results;p++){//*
                             int sid=get_chr_id(chr_idx, num_chr, pptr[k]->sb);
                             ref_sid2=get_chr_id(chr_idx, num_chr, pptr[p]->sb);
                             if(sid==ref_sid2){
@@ -754,7 +758,6 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                             maxi=p;
                                             maxi_vote=vote[p];
                                         }
-                                    
                                     }
                                 }
                                 else{
@@ -764,14 +767,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                     }
                                 }
                             }
-                            /*else{
-                                if(p==num_results-1&&delete_flag==0){
-                                    out_pptr[p_num]=pptr[k];
-                                    p_num++;
-                                }
-                            }*/
-                            
-                        }
+                        }//*
                         if(delete_flag==1){
                             out_pptr[p_num]=pptr[maxi];
                             p_num++;}
@@ -779,11 +775,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                             out_pptr[p_num]=pptr[k];
                             p_num++;
                         }
-                    }
-                    else if(mark[k]==0){
-                        out_pptr[p_num]=pptr[k];
-                        p_num++;
-                    }
+                    }//&
                     
                 }
                 output_query_results(chr_idx, num_chr, out_pptr,p_num, out);//shuchu
