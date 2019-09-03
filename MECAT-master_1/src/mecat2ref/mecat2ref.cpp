@@ -775,11 +775,10 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                         }
                                         if(pptr[q]->read_id==413){
                                             printf("success\n");
+                                            printf("flag3 is%d\n",flag3);
                                         }
                                     }
-                                    if(pptr[q]->read_id==413){
-                                       printf("flag3 is%d\n",flag3);
-                                    }
+                                    
                                     
                                     if(flag3==0){
                                         out_pptr[p_num]=pptr[k];
