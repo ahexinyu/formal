@@ -731,7 +731,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                 }
                 for(int k=0;k<num_results;k++){
                     delete_flag=0;
-                    flag3=0;flag4=0;
+                    flag3=0;
                     if(mark[k]==0){
                         out_pptr[p_num]=pptr[k];
                         ++p_num;
@@ -796,16 +796,22 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                             out_pptr[p_num]=pptr[maxi];
                             ++p_num;}
                         for(int w=k+1;w<num_results;w++){
+                            
                             ref_sid4=get_chr_id(chr_idx, num_chr, pptr[w]->sb);
                             if(sid ==ref_sid4){
                                 flag4=1;
                                 break;//这也说明不是最后一个
+                            }
+                            if(pptr[w]->read_id==413){
+                                
+                                printf("flag4 is%d\n",flag4);
                             }
                         }
                         if(flag4==0){
                             out_pptr[p_num]=pptr[k];
                             ++p_num;
                         }
+                        flag4=0;
                     }//&
                     
                 }
@@ -817,7 +823,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                 num_results=0;
                 p_num=0;
                 
-               for(int i=0;i<10;i++){mark[i]=0;vote[i]=0;}
+               for(int i=0;i<16;i++){mark[i]=0;vote[i]=0;}
             }
             
             last_id = trslt->read_id;
