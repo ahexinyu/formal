@@ -711,7 +711,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         if(sid==ref_sid2){
                             if (labs(pptr[j]->qb-pptr[i]->qb)>1000&&labs(pptr[i]->qe-pptr[j]->qe)>1000) {
                                 if(pptr[i]->sb!=pptr[j]->sb){
-                                    if (fabs((pptr[i]->qb-pptr[j]->qb)/(pptr[i]->sb-pptr[j]->sb)-1)<0.9) {
+                                    if (fabs(labs(pptr[i]->qb-pptr[j]->qb)/labs(pptr[i]->sb-pptr[j]->sb)-1)<0.9) {
                                         vote[i]=vote[i]+1;
                                         vote[j]=vote[j]+1;
                                         mark[i]=1;
@@ -727,7 +727,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                     delete_flag=0;
                     if(mark[k]==0){
                         out_pptr[p_num]=pptr[k];
-                        p_num++;
+                        ++p_num;
                     }
                     if (mark[k]==1){//&
                         maxi_vote=vote[k];
@@ -763,17 +763,17 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                 else{
                                     if(p==num_results-1&&delete_flag==0){
                                         out_pptr[p_num]=pptr[k];
-                                        p_num++;
+                                        ++p_num;
                                     }
                                 }
                             }
                         }//*
                         if(delete_flag==1){
                             out_pptr[p_num]=pptr[maxi];
-                            p_num++;}
+                            ++p_num;}
                         if(k==num_results-1&&mark[k]==1){
                             out_pptr[p_num]=pptr[k];
-                            p_num++;
+                            ++p_num;
                         }
                     }//&
                     
