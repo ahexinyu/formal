@@ -712,7 +712,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         if(sid==ref_sid2){
                             if (labs(pptr[j]->qb-pptr[i]->qb)>1000&&labs(pptr[i]->qe-pptr[j]->qe)>1000) {
                                 if(pptr[i]->sb!=pptr[j]->sb){
-                                    if (fabs(labs(pptr[i]->qb-pptr[j]->qb)/labs(pptr[i]->sb-pptr[j]->sb)-1)<0.9) {
+                                    if (fabs((pptr[i]->qb-pptr[j]->qb)/(pptr[i]->sb-pptr[j]->sb)-1)<0.9) {
                                         vote[i]=vote[i]+1;
                                         vote[j]=vote[j]+1;
                                         mark[i]=1;
