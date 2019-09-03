@@ -769,11 +769,11 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                 else{
                                     for(int q=p+1;q<num_results;q++){
                                         ref_sid3=get_chr_id(chr_idx, num_chr, pptr[q]->sb);
+                                        if(pptr[q]->read_id==413){
+                                            printf("ref_sid3 is%d",ref_sid3);
+                                            printf("sid is%d",sid);
+                                        }
                                         if(sid == ref_sid3){
-                                            if(pptr[q]->read_id==413){
-                                                printf("ref_sid3 is%d",ref_sid3);
-                                                printf("sid is%d",sid);
-                                            }
                                             flag3=1;//说明不是最后一个
                                             break;
                                         }
