@@ -756,8 +756,6 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                         }
                                     
                                     }
-                                    
-                                    
                                 }
                                 /*else{
                                     if(p==num_results-1&&delete_flag==0){
