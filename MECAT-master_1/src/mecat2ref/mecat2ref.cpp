@@ -725,6 +725,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                 }
                 if(pptr[0]->read_id==413){
                     for(int o=0;o<num_results;o++){
+                        printf("qb is%d\n",pptr[o]->qb);
                         printf("mark[i] is%d\n",mark[o]);
                     }
                 }
