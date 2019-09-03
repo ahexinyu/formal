@@ -722,7 +722,11 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         }
                     }
                 }
-
+                if(read_id==413){
+                    for(int o=0;0<num_results;o++){
+                        printf("mark[i] is%d\n",mark[o]);
+                    }
+                }
                 for(int k=0;k<num_results;k++){
                     delete_flag=0;
                     if(mark[k]==0){
@@ -776,6 +780,10 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                             ++p_num;
                         }
                     }//&
+                    
+                }
+                if(read_id==413){
+                        printf("p-num is%d\n",p_num);
                     
                 }
                 output_query_results(chr_idx, num_chr, out_pptr,p_num, out);//shuchu
