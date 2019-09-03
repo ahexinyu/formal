@@ -691,7 +691,8 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         int rok=load_temp_result(trslt,thread_file);
         if(rok){copy_temp_result(trslt,pptr[num_results]);++num_results;}
         int last_id=pptr[0]->read_id;int formal_id;int formal_loc;int org_sta,org_end,org_ref_start,org_ref_end;int ref_sid2;int temp_sb,temp_se;
-        int or_sta,or_end;int *vote;int *mark;int maxi=-1;int maxi_vote=-1;int p_num=0; int delete_flag=0;
+        int or_sta,or_end;int *vote;int *mark;int maxi=-1;int maxi_vote=-1;int p_num=0; int delete_flag=0;int ref_sid3;int flag3=0;int flag4=0;
+        int ref_sid4;
         vote=(int *)malloc(16*sizeof(int));
         mark=(int *)malloc(16*sizeof(int));
         for(int i=0;i<16;i++){
@@ -736,11 +737,11 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                     if (mark[k]==1){//&
                         maxi_vote=vote[k];
                         maxi=k;
+                        int sid=get_chr_id(chr_idx, num_chr, pptr[k]->sb);
                         for(int p=k+1;p<num_results;p++){//*
-                            int sid=get_chr_id(chr_idx, num_chr, pptr[k]->sb);
                             ref_sid2=get_chr_id(chr_idx, num_chr, pptr[p]->sb);
                             if(sid==ref_sid2){
-                                if(labs(pptr[p]->qb-pptr[k]->qb)<1000){
+                                if(labs(pptr[p]->qb-pptr[k]->qb)<1500){
                                     mark[p]=2;
                                     delete_flag=1;
                                     if(labs((pptr[k]->qe-pptr[k]->qb)-(pptr[p]->qe-pptr[p]->qb))>3000){
@@ -765,7 +766,14 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                     }
                                 }
                                 else{
-                                    if(p==num_results-1&&delete_flag==0){
+                                    for(int q=p+1;q<num_results;q++){
+                                        ref_sid3=get_chr_id(chr_idx, num_chr, pptr[q]->sb);
+                                        if(sid == ref_sid3){
+                                            flag3=1;//说明不是最后一个
+                                            continue;
+                                        }
+                                    }
+                                    if(flag3==0){
                                         out_pptr[p_num]=pptr[k];
                                         ++p_num;
                                     }
@@ -775,7 +783,14 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         if(delete_flag==1){
                             out_pptr[p_num]=pptr[maxi];
                             ++p_num;}
-                        if(k==num_results-1&&mark[k]==1){
+                        for(int w=k+1;w<num_results;w++){
+                            ref_sid4=get_chr_id(chr_idx, num_chr, pptr[w]->sb);
+                            if(sid ==ref_sid4){
+                                flag4=1;
+                                continue;//这也说明不是最后一个
+                            }
+                        }
+                        if(flag4==0){
                             out_pptr[p_num]=pptr[k];
                             ++p_num;
                         }
