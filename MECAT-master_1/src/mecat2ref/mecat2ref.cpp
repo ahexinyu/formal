@@ -773,10 +773,11 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                             flag3=1;//说明不是最后一个
                                             continue;
                                         }
+                                        if(pptr[q]->read_id==413){
+                                            printf("success\n");
+                                        }
                                     }
-                                    if(pptr[q]->read_id==413){
-                                        printf("success\n");
-                                    }
+                                    
                                     if(flag3==0){
                                         out_pptr[p_num]=pptr[k];
                                         ++p_num;
