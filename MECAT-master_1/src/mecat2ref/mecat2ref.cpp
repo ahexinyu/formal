@@ -731,7 +731,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                 }
                 for(int k=0;k<num_results;k++){
                     delete_flag=0;
-                    flag3=0;
+                    
                     if(mark[k]==0){
                         out_pptr[p_num]=pptr[k];
                         ++p_num;
@@ -783,12 +783,11 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                             printf("flag3 is%d\n",flag3);
                                         }
                                     }
-                                    
-                                    
                                     if(flag3==0){
                                         out_pptr[p_num]=pptr[k];
                                         ++p_num;
                                     }
+                                    flag3=0;
                                 }
                             }
                         }//*
