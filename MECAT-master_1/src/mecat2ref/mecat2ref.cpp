@@ -774,6 +774,9 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                             continue;
                                         }
                                     }
+                                    if(pptr[q]->read_id==413){
+                                        printf("success\n");
+                                    }
                                     if(flag3==0){
                                         out_pptr[p_num]=pptr[k];
                                         ++p_num;
