@@ -731,6 +731,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                 }
                 for(int k=0;k<num_results;k++){
                     delete_flag=0;
+                    flag3=0;flag4=0;
                     if(mark[k]==0){
                         out_pptr[p_num]=pptr[k];
                         ++p_num;
@@ -815,8 +816,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                 output_query_results(chr_idx, num_chr, out_pptr,p_num, out);//shuchu
                 num_results=0;
                 p_num=0;
-                flag3=0;
-                flag4=0;
+                
                for(int i=0;i<10;i++){mark[i]=0;vote[i]=0;}
             }
             
