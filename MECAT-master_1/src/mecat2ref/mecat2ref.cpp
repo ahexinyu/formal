@@ -777,7 +777,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                             printf("success\n");
                                         }
                                     }
-                                    
+                                    printf("flag3 is%d\n",flag3);
                                     if(flag3==0){
                                         out_pptr[p_num]=pptr[k];
                                         ++p_num;
