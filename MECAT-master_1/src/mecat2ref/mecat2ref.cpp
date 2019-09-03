@@ -771,7 +771,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                         ref_sid3=get_chr_id(chr_idx, num_chr, pptr[q]->sb);
                                         if(sid == ref_sid3){
                                             flag3=1;//说明不是最后一个
-                                            continue;
+                                            break;
                                         }
                                         if(pptr[q]->read_id==413){
                                             printf("success\n");
@@ -792,7 +792,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                             ref_sid4=get_chr_id(chr_idx, num_chr, pptr[w]->sb);
                             if(sid ==ref_sid4){
                                 flag4=1;
-                                continue;//这也说明不是最后一个
+                                break;//这也说明不是最后一个
                             }
                         }
                         if(flag4==0){
