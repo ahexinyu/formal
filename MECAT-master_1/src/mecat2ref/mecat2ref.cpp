@@ -692,7 +692,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
         if(rok){copy_temp_result(trslt,pptr[num_results]);++num_results;}
         int last_id=pptr[0]->read_id;int formal_id;int formal_loc;int org_sta,org_end,org_ref_start,org_ref_end;int ref_sid2;int temp_sb,temp_se;
         int or_sta,or_end;int *vote;int *mark;int maxi=-1;int maxi_vote=-1;int p_num=0; int delete_flag=0;int ref_sid3;int flag3=0;int flag4=0;
-        int ref_sid4;
+        int ref_sid4;int sid;
         vote=(int *)malloc(16*sizeof(int));
         mark=(int *)malloc(16*sizeof(int));
         for(int i=0;i<16;i++){
@@ -738,7 +738,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                     if (mark[k]==1){//&
                         maxi_vote=vote[k];
                         maxi=k;
-                        int sid=get_chr_id(chr_idx, num_chr, pptr[k]->sb);
+                        sid=get_chr_id(chr_idx, num_chr, pptr[k]->sb);
                         for(int p=k+1;p<num_results;p++){//*
                             ref_sid2=get_chr_id(chr_idx, num_chr, pptr[p]->sb);
                             if(sid==ref_sid2){
@@ -770,6 +770,10 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                     for(int q=p+1;q<num_results;q++){
                                         ref_sid3=get_chr_id(chr_idx, num_chr, pptr[q]->sb);
                                         if(sid == ref_sid3){
+                                            if(pptr[q]->read_id==413){
+                                                printf("ref_sid3 is%d",ref_sid3);
+                                                printf("sid is%d",sid);
+                                            }
                                             flag3=1;//说明不是最后一个
                                             break;
                                         }
