@@ -723,12 +723,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         }
                     }
                 }
-                if(pptr[0]->read_id==413){
-                    for(int o=0;o<num_results;o++){
-                        printf("qb is%d\n",pptr[o]->qb);
-                        printf("mark[i] is%d\n",mark[o]);
-                    }
-                }
+                
                 for(int k=0;k<num_results;k++){
                     delete_flag=0;
                     
@@ -770,18 +765,12 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                 else{
                                     for(int q=p+1;q<num_results;q++){
                                         ref_sid3=get_chr_id(chr_idx, num_chr, pptr[q]->sb);
-                                        if(pptr[q]->read_id==413){
-                                            printf("ref_sid3 is%d",ref_sid3);
-                                            printf("sid is%d",sid);
-                                        }
+                                        
                                         if(sid == ref_sid3){
                                             flag3=1;//说明不是最后一个
                                             break;
                                         }
-                                        if(pptr[q]->read_id==413){
-                                            printf("success\n");
-                                            printf("flag3 is%d\n",flag3);
-                                        }
+                                       
                                     }
                                     if(flag3==0){
                                         out_pptr[p_num]=pptr[k];
@@ -801,10 +790,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                                 flag4=1;
                                 break;//这也说明不是最后一个
                             }
-                            if(pptr[w]->read_id==413){
-                                
-                                printf("flag4 is%d\n",flag4);
-                            }
+                           
                         }
                         if(flag4==0){
                             out_pptr[p_num]=pptr[k];
@@ -814,10 +800,7 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                     }//&
                     
                 }
-                if(pptr[0]->read_id==413){
-                        printf("p-num is%d\n",p_num);
-                    
-                }
+                
                 output_query_results(chr_idx, num_chr, out_pptr,p_num, out);//shuchu
                 num_results=0;
                 p_num=0;
