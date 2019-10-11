@@ -13,7 +13,7 @@ static int MAXC = 0;// default MAXC 等于10
 static int TECH = TECH_PACBIO;
 static int REFTECH=TECH_NANOPORE;
 static int num_output = MAXC;
-static const double ddfs_cutoff_pacbio = 0.2;
+static const double ddfs_cutoff_pacbio = 0.18;
 static const double ddfs_cutoff_nanopore = 0.1;
 static double ddfs_cutoff = ddfs_cutoff_pacbio;
 
@@ -586,7 +586,7 @@ static void get_vote(){
         }
         else{
             deviation=sc[j].k_count/ave_count;
-           /* if (deviation<1) {
+            if (deviation<1) {
                 deviation=sc[j].k_count/ave_count;
             }
             else if(deviation>2){
@@ -594,8 +594,9 @@ static void get_vote(){
             }
             else{
                 deviation=1;
-            }*/
-            sc[j].vote=sc[j].k_count/ave_count;
+            }
+            //sc[j].vote=sc[j].k_count/ave_count;
+            sc[j].vote=deviation;
         }
         
        //deviation=sqrt(pow((sc[j].k_count-ave_count),2)/similarity_count);//方差
