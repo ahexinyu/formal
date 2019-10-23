@@ -586,7 +586,7 @@ static void get_vote(){
         }
         else{
             deviation=sc[j].k_count/ave_count;
-            if (deviation<1) {
+            /* if (deviation<1) {
                 deviation=sc[j].k_count/ave_count;
             }
             else if(deviation>2){
@@ -594,7 +594,7 @@ static void get_vote(){
             }
             else{
                 deviation=1;
-            }
+            }*/
             //sc[j].vote=sc[j].k_count/ave_count;
             sc[j].vote=deviation;
         }
