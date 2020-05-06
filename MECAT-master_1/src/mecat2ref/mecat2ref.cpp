@@ -359,6 +359,7 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
     fclose(ot);
     free(fq);
     free(oq);
+    free(onedata)
     return (kk);
      //return 1;
 }
@@ -378,7 +379,7 @@ int firsttask(int argc, char *argv[])
     
     int ref_count = change_ref_fq(options->reference,options->wrk_dir);//*********
     
-    /*char kkkkk[1024];
+    char kkkkk[1024];
     sprintf(kkkkk, "config.txt");
     FILE* fileout = fopen(kkkkk, "w");
     fprintf(fileout, "%s\n%s\n%s\n%s\n%s\n%d\t%d\n%d\n", options->wrk_dir, options->reference, options->reads, options->output,options->refoutput,options->num_cores, readcount,ref_count);
@@ -389,7 +390,7 @@ int firsttask(int argc, char *argv[])
 	output_format = options->output_format;
 	tech = options->tech;
 	free(options);
-    return (corenum);*/
+    return (corenum);
     //return 1;
     
 }
@@ -928,7 +929,7 @@ int main(int argc, char *argv[])
     corenum = firsttask(argc, argv);
     printf("first task is sucess\n");//*******
     gettimeofday(&tpend, NULL);
-    /*timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
+    timeuse = 1000000 * (tpend.tv_sec - tpstart.tv_sec) + tpend.tv_usec - tpstart.tv_usec;
     timeuse /= 1000000;
     fid1 = fopen("config.txt", "r");
 	const char* read_results = NULL;
@@ -971,7 +972,7 @@ int main(int argc, char *argv[])
     fclose(fid2);
     sprintf(cmd, "cp -r config.txt \"%s.config\"", outfile);
     sprintf(cmd, "cp -r config.txt \"%s.config\"", refoutfile);
-    __run_system(cmd);*/
+    __run_system(cmd);
     
 	
 	return EXIT_SUCCESS;
