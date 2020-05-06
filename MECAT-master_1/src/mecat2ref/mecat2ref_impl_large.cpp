@@ -2049,6 +2049,7 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
     ref_fastq=fopen(tempstr2,"r");//***********
     //multi process thread
     printf("create file success\n");
+    return 0;
     fileflag=1;
     while(fileflag)
     {
