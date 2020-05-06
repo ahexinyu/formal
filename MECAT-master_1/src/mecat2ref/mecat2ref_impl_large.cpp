@@ -913,7 +913,7 @@ static void reference_mapping(int threadint)
                                 u_k++;
                             }
                         }
-                       lag_end=find_location3(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,start_loc);
+                       flag_end=find_location3(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff,start_loc);
                         //flag_end=find_location2(temp_list,temp_seedn,temp_score,location_loc,u_k,&repeat_loc,BC,read_len, ddfs_cutoff);
                         if(flag_end==0)continue;
                         if(temp_score[repeat_loc]<6)continue;
