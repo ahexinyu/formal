@@ -376,9 +376,9 @@ int firsttask(int argc, char *argv[])
   
     int readcount = chang_fastqfile(options->reads, options->wrk_dir);
     
-    /*int ref_count = change_ref_fq(options->reference,options->wrk_dir);//*********
+    int ref_count = change_ref_fq(options->reference,options->wrk_dir);//*********
     
-    char kkkkk[1024];
+    /*char kkkkk[1024];
     sprintf(kkkkk, "config.txt");
     FILE* fileout = fopen(kkkkk, "w");
     fprintf(fileout, "%s\n%s\n%s\n%s\n%s\n%d\t%d\n%d\n", options->wrk_dir, options->reference, options->reads, options->output,options->refoutput,options->num_cores, readcount,ref_count);
