@@ -770,7 +770,7 @@ static void reference_mapping(int threadint)
         }
         if(localnum==terminalnum-1)read_end=readcount;
         else read_end=(localnum+1)*PLL;
-        return 0;
+        
         for(read_i=localnum*PLL; read_i<read_end; read_i++)
         {
             read_name=readinfo[read_i].readno;
@@ -1950,7 +1950,7 @@ static void* multithread(void* arg)
    	return NULL;
 }
 //ref的多线程跑
-static void* multithread2(void* arg)
+/*static void* multithread2(void* arg)
 {
     int localthreadno2;
     pthread_mutex_lock(&mutilock2);
@@ -1959,7 +1959,7 @@ static void* multithread2(void* arg)
     pthread_mutex_unlock(&mutilock2);
     reference_map_reference(localthreadno2);
     return NULL;
-}
+}*/
 static int load_fastq(FILE *fq)
 {
     int readlen,readno,sum=0,flag;
