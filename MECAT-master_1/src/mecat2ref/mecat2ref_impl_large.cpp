@@ -756,6 +756,7 @@ static void reference_mapping(int threadint)
 	}
 
     fileid=1;
+    
     while(fileid)
     {
         pthread_mutex_lock(&mutilock);
@@ -769,6 +770,7 @@ static void reference_mapping(int threadint)
         }
         if(localnum==terminalnum-1)read_end=readcount;
         else read_end=(localnum+1)*PLL;
+        return 0;
         for(read_i=localnum*PLL; read_i<read_end; read_i++)
         {
             read_name=readinfo[read_i].readno;
@@ -1944,7 +1946,7 @@ static void* multithread(void* arg)
     localthreadno=runthreadnum;
     runthreadnum++;
     pthread_mutex_unlock(&mutilock);
-    //reference_mapping(localthreadno);
+    reference_mapping(localthreadno);
    	return NULL;
 }
 //ref的多线程跑
