@@ -309,9 +309,9 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
      onedata=(char *)malloc(600000000);
     buff2=(char *)malloc(100000000);
      buff1=(char *)malloc(100000000);
-   /* fq = (char *)malloc(1000000000);
+    fq = (char *)malloc(1000000000);
     setvbuf(fp, fq, _IOFBF, 1000000000);
-    oq = (char *)malloc(1000000000);
+    /*oq = (char *)malloc(1000000000);
     setvbuf(ot, oq, _IOFBF, 1000000000);
     int num_read_items;
     ch=getc(fp);int kk=0;
