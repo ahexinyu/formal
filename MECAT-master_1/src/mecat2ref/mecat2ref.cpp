@@ -359,7 +359,7 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
     fclose(ot);
     free(fq);
     free(oq);
-    free(onedata)
+     free(onedata);
     return (kk);
      //return 1;
 }
