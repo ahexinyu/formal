@@ -2042,13 +2042,15 @@ int meap_ref_impl_large(int maxc, int noutput, int tech)
         outfile[threadno]=fopen(tempstr,"w");
         refoutfile[threadno]=fopen(tempstr2,"w");
     }
+    
     sprintf(tempstr,"%s/0.fq",workpath);
     sprintf(tempstr2,"%s/ref.fq",workpath);//******
     fastq=fopen(tempstr,"r");
     ref_fastq=fopen(tempstr2,"r");//***********
     //multi process thread
+    printf("create file success\n");
     fileflag=1;
-  while(fileflag)
+    while(fileflag)
     {
         fileflag=load_fastq(fastq);
         //load_ref_f(ref_fastq);//************8
