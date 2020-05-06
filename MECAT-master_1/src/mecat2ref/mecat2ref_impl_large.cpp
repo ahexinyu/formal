@@ -39,12 +39,12 @@ static char *save_work;
 static ReadFasta *readinfo;
 static int REFcount;
 float similarity=0;
-typedef struct REF_info{
+/*typedef struct REF_info{
     int refno;
     int reflen;
     char ref_sequ[15000];
-}REF_info;
-REF_info *refinfo;
+}REF_info;*/
+//REF_info *refinfo;
 char *ref_savework;
 int mavalue[2000];
 int similarity_count;
@@ -267,7 +267,7 @@ static void build_read_index(char *path, char *path1){
     seq=read_REFESQ;
     
     char *pre;int lenl=0;
-    int flag;int readno,readlen;int read_count;
+    int flag;int readno,readlen;int read_count=0;
     pre=save_work;
     info=(read_info *)malloc((BVM)*sizeof(read_info));
     int lenth_count=0;int read_len; int temp_len;
@@ -420,7 +420,7 @@ static void creat_ref_index(char *fastafile)
     fastaindex=fopen(nameall,"w");
 
     REFSEQ=(char *)malloc((length+1000)*sizeof(char));
-    refinfo=(REF_info*)malloc((SVM)*sizeof(REF_info));//
+    //refinfo=(REF_info*)malloc((SVM)*sizeof(REF_info));//
     seq=REFSEQ;
     for (ch=getc(fasta),count=0; ch!=EOF; ch=getc(fasta))
     {
@@ -548,7 +548,7 @@ static void creat_ref_index(char *fastafile)
     }
     int lel=0;
     REFcount=0;
-    for(int p=0;p<seqcount;p++){
+    /*for(int p=0;p<seqcount;p++){
         if(lel<split_len){
             refinfo[REFcount].ref_sequ[lel]=seq[p];
             lel++;
@@ -560,7 +560,7 @@ static void creat_ref_index(char *fastafile)
         }
         
     }
-    REFcount=REFcount-1;
+    REFcount=REFcount-1;*/
 }
 //********根据sim数据结构计算各个区域的相似度******
 static void get_vote(){
@@ -1323,7 +1323,7 @@ static void reference_mapping(int threadint)
 	delete[] aln_seqs;
    
 }
-static void reference_map_reference(int threadint)
+/*static void reference_map_reference(int threadint)
 {
     int  seedlenth=13;int rindexcount=67108864;
     int *table;static long **tableindex1,*tableallloc1,tablesumcount1;
@@ -1698,7 +1698,7 @@ static void reference_map_reference(int threadint)
                        }
                        }
                        }
-                       }*/
+                       }
                     
                     endnum=0;
                     read_len=strlen(onedata);
@@ -1933,7 +1933,7 @@ static void reference_map_reference(int threadint)
     free(rev_index_list);
     free(rev_index_score);
     delete[] aln_seqs;
-}
+}*/
 
 
 
