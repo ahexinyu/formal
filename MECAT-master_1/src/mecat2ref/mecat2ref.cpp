@@ -355,11 +355,11 @@ int chang_fastqfile(const char *fastaq, const char *fenfolder)
         
     }
     
-    fclose(fp);
+    /*fclose(fp);
     fclose(ot);
     free(fq);
-    free(oq);
-    return (kk);*/
+    free(oq);*/
+    return (kk);
      //return 1;
 }
 
