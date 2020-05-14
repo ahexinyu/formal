@@ -26,8 +26,13 @@ static int output_format = FMT_REF;
 static const int kDefaultOutputFormat = FMT_REF;
 static int tech;
 static const int kDefaultTech = TECH_PACBIO;
+static const double kDefaultAlpha = 0.5;
+static const double kDefaultBeta = 2.0;
+static const double kDefaultBlock = 200;
 
-
+static double scoreAlpha = 0.5;
+static double scoreBeta = 2.0;
+static double scoreBlock = 200;
 
 
 typedef struct
@@ -42,6 +47,9 @@ typedef struct
 	int			num_output;
 	int			output_format;
 	int 		tech;
+    double      alpha;
+    double      beta;
+    int         block;
 } meap_ref_options;
 
 void init_meap_ref_options(meap_ref_options* options)
@@ -56,6 +64,9 @@ void init_meap_ref_options(meap_ref_options* options)
 	options->num_output = kDefaultNumOutput;
 	options->output_format = kDefaultOutputFormat;
 	options->tech = kDefaultTech;
+    options->alpha = kDefaultAlpha;
+    options->beta = kDefaultBeta;
+    options->block = kDefaultBlock;
 }
 
 void print_usage()
@@ -75,6 +86,9 @@ void print_usage()
 	fprintf(stderr, "-b <integer>\toutput the best b alignments\n\t\tdefault: %d\n", kDefaultNumOutput);
 	fprintf(stderr, "-m <0/1/2>\toutput format: 0 = ref, 1 = m4, 2 = sam\n\t\tdefault: %d\n", kDefaultOutputFormat);
 	fprintf(stderr, "-x <0/1>\tsequencing technology: 0 = pacbio, 1 = nanopore\n\t\tdefault: %d\n", kDefaultTech);
+    fprintf(stderr, "-l <real>\tlower bound of k-mer scoring function for mecat2ref+\n\t\tdefault: %.1f\n", kDefaultAlpha);
+    fprintf(stderr, "-u <real>\tupper bound of k-mer scoring function for mecat2ref+\n\t\tdefault: %.1f\n", kDefaultBeta);
+    fprintf(stderr, "-z <integer>\tsize of similar genome blocks for mecat2ref+\n\t\tdefault: %d\n", kDefaultBlock);
 }
 
 int
@@ -86,7 +100,7 @@ param_read_t(int argc, char* argv[], meap_ref_options* options)
 	int ret = 1;
 	
 	init_meap_ref_options(options);
-	while((opt_char = getopt(argc, argv, "d:r:w:o:p:t:n:b:m:x:")) != -1)
+	while((opt_char = getopt(argc, argv, "d:r:w:o:p:t:n:b:m:x:l:u:z:")) != -1)
 	{
 		switch(opt_char)
 		{
@@ -125,6 +139,15 @@ param_read_t(int argc, char* argv[], meap_ref_options* options)
 				} else {
 					ERROR("Invalid argument to option 'x': %s\n", optarg);
 				}
+				break;
+            case 'l':
+				options->alpha = atof(optarg);
+				break;
+            case 'u':
+				options->beta = atof(optarg);
+				break;
+            case 'z':
+				options->block = atoi(optarg);
 				break;
 			case ':':
 				err_char = (char)optopt;
@@ -374,6 +397,8 @@ int firsttask(int argc, char *argv[])
    
 	int flag = param_read_t(argc, argv, options);
 	if (flag == -1) { print_usage(); exit(1); }
+
+    //printf("%f\t%f\t%d\n", options->alpha, options->beta, options->block);
   
     int readcount = chang_fastqfile(options->reads, options->wrk_dir);
     
@@ -389,6 +414,9 @@ int firsttask(int argc, char *argv[])
 	num_output = options->num_output;
 	output_format = options->output_format;
 	tech = options->tech;
+    scoreAlpha = options->alpha;
+    scoreBeta = options->beta;
+    scoreBlock = options->block;
 	free(options);
     return (corenum);
     //return 1;
@@ -562,7 +590,7 @@ int result_combine(int readcount, int filecount, char *workpath, char *outfile, 
 }
 
 
-extern int meap_ref_impl_large(int, int, int);
+extern int meap_ref_impl_large(int, int, int, double, double, int);
 
 
 int delete_mini_result(TempResult **pptr,TempResult **out_pptr,int lenA, int lenB){
@@ -954,7 +982,7 @@ int main(int argc, char *argv[])
     filelength=get_file_size(fastafile);
     gettimeofday(&mapstart, NULL);
     printf("meap  pre is sucuess\n");
-	meap_ref_impl_large(num_candidates, num_output, tech);
+	meap_ref_impl_large(num_candidates, num_output, tech, scoreAlpha, scoreBeta, scoreBlock);
     gettimeofday(&mapend, NULL);
     timeuse = 1000000 * (mapend.tv_sec - mapstart.tv_sec) + mapend.tv_usec - mapstart.tv_usec;
     timeuse /= 1000000;

@@ -6,9 +6,11 @@
 #include "../common/xdrop_gapalign.h"
 #include <algorithm>
 #define FM  100000
-#define CBL 200
+//#define CBL 200
 using namespace std;
-
+static int CBL = 200;
+static double hereAlpha = 0.5;
+static double hereBeta = 2.0;
 static int MAXC = 0;// default MAXC 等于10
 static int TECH = TECH_PACBIO;
 static int REFTECH=TECH_NANOPORE;
@@ -586,14 +588,14 @@ static void get_vote(){
         }
         else{
             deviation=sc[j].k_count/ave_count;
-             if (deviation<0.5) {
-                deviation=0.5;
+             if (deviation<hereAlpha * 2) {
+                deviation=sc[j].k_count/ave_count;
             }
-            else if(deviation>2){
-                deviation=2;
+            else if(deviation>hereBeta){
+                deviation=sc[j].k_count/ave_count;
             }
             else{
-                deviation=sc[j].k_count/ave_count;
+                deviation=1;
             }
             //sc[j].vote=sc[j].k_count/ave_count;
             sc[j].vote=deviation;
@@ -1989,8 +1991,11 @@ static int load_fastq(FILE *fq)
 }
 
 
-int meap_ref_impl_large(int maxc, int noutput, int tech)
+int meap_ref_impl_large(int maxc, int noutput, int tech, double alpha, double beta, int blockSize)
 {
+    CBL = blockSize;
+    hereAlpha = alpha;
+    hereBeta = beta;
 	MAXC = maxc;//num_candidate
 	TECH = tech;
 	num_output = noutput;
