@@ -28,12 +28,13 @@ static int tech;
 static const int kDefaultTech = TECH_PACBIO;
 static const double kDefaultAlpha = 0.5;
 static const double kDefaultBeta = 2.0;
-static const double kDefaultBlock = 200;
+static const int kDefaultBlock = 200;
+static const double kDefaultDelta = 0.9;
 
 static double scoreAlpha = 0.5;
 static double scoreBeta = 2.0;
 static double scoreBlock = 200;
-
+static double scoreDelta = 0.9;
 
 typedef struct
 {
@@ -50,6 +51,7 @@ typedef struct
     double      alpha;
     double      beta;
     int         block;
+    double      delta;
 } meap_ref_options;
 
 void init_meap_ref_options(meap_ref_options* options)
@@ -67,6 +69,7 @@ void init_meap_ref_options(meap_ref_options* options)
     options->alpha = kDefaultAlpha;
     options->beta = kDefaultBeta;
     options->block = kDefaultBlock;
+    options->delta = kDefaultDelta;
 }
 
 void print_usage()
@@ -89,6 +92,7 @@ void print_usage()
     fprintf(stderr, "-l <real>\tlower bound of k-mer scoring function for mecat2ref+\n\t\tdefault: %.1f\n", kDefaultAlpha);
     fprintf(stderr, "-u <real>\tupper bound of k-mer scoring function for mecat2ref+\n\t\tdefault: %.1f\n", kDefaultBeta);
     fprintf(stderr, "-z <integer>\tsize of similar genome blocks for mecat2ref+\n\t\tdefault: %d\n", kDefaultBlock);
+    fprintf(stderr, "-y <integer>\tthreshold for alignment scoring\n\t\tdefault: %.1f\n", kDefaultDelta);
 }
 
 int
@@ -100,7 +104,7 @@ param_read_t(int argc, char* argv[], meap_ref_options* options)
 	int ret = 1;
 	
 	init_meap_ref_options(options);
-	while((opt_char = getopt(argc, argv, "d:r:w:o:p:t:n:b:m:x:l:u:z:")) != -1)
+	while((opt_char = getopt(argc, argv, "d:r:w:o:p:t:n:b:m:x:l:u:z:y:")) != -1)
 	{
 		switch(opt_char)
 		{
@@ -149,6 +153,9 @@ param_read_t(int argc, char* argv[], meap_ref_options* options)
             case 'z':
 				options->block = atoi(optarg);
 				break;
+            case 'y':
+                options->delta = atof(optarg);
+                break;
 			case ':':
 				err_char = (char)optopt;
 				fprintf(stderr, "Error: unrecogised option \'%c\'\n", err_char);
@@ -417,6 +424,8 @@ int firsttask(int argc, char *argv[])
     scoreAlpha = options->alpha;
     scoreBeta = options->beta;
     scoreBlock = options->block;
+    scoreDelta = options->delta;
+    //printf("%f\n", scoreDelta);
 	free(options);
     return (corenum);
     //return 1;
@@ -741,7 +750,8 @@ void polish_result(const char *workpath,int filecount,int refcount,char  *refout
                         if(sid==ref_sid2){
                             if (labs(pptr[j]->qb-pptr[i]->qb)>1000&&labs(pptr[i]->qe-pptr[j]->qe)>1000) {
                                 if(pptr[i]->sb!=pptr[j]->sb){
-                                    if (fabs((pptr[i]->qb-pptr[j]->qb)/(pptr[i]->sb-pptr[j]->sb)-1)<0.9) {
+                                    if (fabs((pptr[i]->qb-pptr[j]->qb)/(pptr[i]->sb-pptr[j]->sb)-1)<scoreDelta) {
+                                    //if (fabs((pptr[i]->qb-pptr[j]->qb)/(pptr[i]->sb-pptr[j]->sb)-1)<0.9) {
                                         vote[i]=vote[i]+1;
                                         vote[j]=vote[j]+1;
                                         mark[i]=1;
